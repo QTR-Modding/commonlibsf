@@ -14,13 +14,14 @@ namespace RE
 		virtual ~ActorValueOwner();  // 00
 
 		// add
+		// MSVC emits the ModActorValue overloads in reverse vtable order; keep their declarations reversed so calls use the documented slots.
 		virtual float              GetActorValue(const ActorValueInfo& a_info);                                                                        // 01
 		virtual float              GetPermanentActorValue(const ActorValueInfo& a_info);                                                               // 02
 		virtual float              GetBaseActorValue(const ActorValueInfo& a_info);                                                                    // 03
 		virtual void               SetBaseActorValue(const ActorValueInfo& a_info, float a_value);                                                     // 04
 		virtual void               ModBaseActorValue(const ActorValueInfo& a_info, float a_delta);                                                     // 05
-		virtual void               ModActorValue(ACTOR_VALUE_MODIFIER a_modifier, const ActorValueInfo& a_info, float a_delta, TESObjectREFR* a_ref);  // 06 - new
 		virtual void               ModActorValue(ACTOR_VALUE_MODIFIER a_modifier, const ActorValueInfo& a_info, float a_delta);                        // 07
+		virtual void               ModActorValue(ACTOR_VALUE_MODIFIER a_modifier, const ActorValueInfo& a_info, float a_delta, TESObjectREFR* a_ref);  // 06
 		virtual float              GetModifier(ACTOR_VALUE_MODIFIER a_modifier, const ActorValueInfo& a_info);                                         // 08
 		virtual void               RestoreActorValue(const ActorValueInfo& a_info, float a_amount);                                                    // 09
 		virtual void               SetActorValue(const ActorValueInfo& a_info, float a_value);                                                         // 0A
