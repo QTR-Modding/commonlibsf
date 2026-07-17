@@ -279,7 +279,7 @@ namespace RE
 		virtual void         Unk_19A();                                                                              // 19A
 		virtual void         Unk_19B();                                                                              // 19B
 		virtual void         Unk_19C();                                                                              // 19C
-		virtual void         Unk_19D();                                                                              // 19D
+		virtual float        Unk_19D(const ActorValueInfo& a_info, float a_delta);                                   // 19D
 		virtual void         Unk_19E();                                                                              // 19E
 		virtual void         Unk_19F();                                                                              // 19F
 		virtual void         Unk_1A0();                                                                              // 1A0
