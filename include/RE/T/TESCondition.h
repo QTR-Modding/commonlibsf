@@ -37,6 +37,24 @@ namespace RE
 	class TESCondition
 	{
 	public:
+		bool IsTrue(ConditionCheckParams& a_params, bool* a_outDispFailure) const
+		{
+			using func_t = bool (*)(const TESCondition*, ConditionCheckParams&, bool*);
+			static REL::Relocation<func_t> func{ ID::TESCondition::IsTrue };
+			return func(this, a_params, a_outDispFailure);
+		}
+
+		bool IsTrue(ConditionCheckParams& a_params) const
+		{
+			bool outDispFailure = false;
+			return IsTrue(a_params, &outDispFailure);
+		}
+
+		bool operator()(ConditionCheckParams& a_params) const
+		{
+			return IsTrue(a_params);
+		}
+
 		static bool CheckValue(ENUM_COMPARISION_CONDITION a_comparison, float a_valueA, float a_valueB)
 		{
 			using func_t = decltype(&TESCondition::CheckValue);

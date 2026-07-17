@@ -135,6 +135,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107087
 	}
 
+	namespace BGSConditionForm
+	{
+		inline constexpr REL::ID IsTrue{ 114781 };
+	}
+
 	namespace BGSDefaultObjectManager
 	{
 		inline constexpr REL::ID DefaultObjectData{ 0 };  // 761776
@@ -681,6 +686,11 @@ namespace RE::ID
 	namespace ClearShipHudTarget::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 137011
+	}
+
+	namespace ConditionCheckParams
+	{
+		inline constexpr REL::ID ctor{ 71413 };
 	}
 
 	namespace ConsoleLog
@@ -2254,6 +2264,7 @@ namespace RE::ID
 	namespace TESCondition
 	{
 		inline constexpr REL::ID CheckValue{ 0 };  // 116112
+		inline constexpr REL::ID IsTrue{ 71422 };
 	}
 
 	namespace TESConditionItem

@@ -45,8 +45,9 @@ namespace RE
 		TESForm*                 extraForms[5];       // 38
 		std::uint32_t            extraFormCount;      // 60
 		bool                     outDispFailure;      // 64
+		std::uint32_t            unk68;               // 68
 	};
-	static_assert(sizeof(ConditionCheckParams) == 0x68);
+	static_assert(sizeof(ConditionCheckParams) == 0x70);
 
 	struct SCRIPT_EFFECT_DATA
 	{
