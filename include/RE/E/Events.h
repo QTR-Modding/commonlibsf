@@ -2196,6 +2196,9 @@ namespace RE
 
 	struct PlayerControls
 	{
+		class PlayerInputHandler;
+		class JumpHandler;
+
 		struct PlayerIronSightsEndEvent
 		{
 			[[nodiscard]] static BSTEventSource<PlayerControls::PlayerIronSightsEndEvent>* GetEventSource()

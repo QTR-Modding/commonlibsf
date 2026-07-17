@@ -57,6 +57,9 @@ namespace RE
 		SF_RTTI_VTABLE(PlayerCharacter);
 		SF_FORMTYPE(ACHR);
 
+		inline static constexpr std::size_t ACTOR_VALUE_OWNER_VTABLE_INDEX = 32;  // ActorValueOwner at 070
+		inline static constexpr std::size_t PRIMARY_VTABLE_INDEX = 41;            // PlayerCharacter at 000
+
 		~PlayerCharacter() override;  // 00
 
 		// 0Add
