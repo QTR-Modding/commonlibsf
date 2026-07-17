@@ -59,34 +59,54 @@ namespace RE
 
 	struct SCRIPT_FUNCTION
 	{
+		struct ExecuteFunctionArgs
+		{
+			const SCRIPT_PARAMETER* paramInfo;        // 00
+			const char*             scriptData;       // 08
+			TESObjectREFR*          object;           // 10
+			TESObjectREFR*          objectContainer;  // 18
+			Script*                 script;           // 20
+			ScriptLocals*           scriptLocals;     // 28
+			float*                  result;           // 30
+			std::uint32_t*          opcodeOffsetPtr;  // 38
+		};
+
 		using ConditionFunction_t = bool (*)(ConditionCheckParams& a_data, void* a_param2, void* a_param1, float& a_returnValue);
 		using ExecuteFunction_t = bool (*)(const SCRIPT_PARAMETER* a_paramInfo, const char*, TESObjectREFR* a_object, TESObjectREFR* a_objectContainer, Script* a_script, ScriptLocals* a_scriptLocals, float* a_result, std::uint32_t* a_opcodeOffsetPtr);
+		using ExecuteFunctionWithArgs_t = bool (*)(ExecuteFunctionArgs& a_args);
 
 		// members
-		const char*         functionName;         // 00
-		const char*         shortName;            // 08
-		std::uint32_t       output;               // 10
-		std::uint32_t       pad14;                // 14
-		const char*         helpString;           // 18
-		std::uint8_t        referenceFunction;    // 20
-		std::uint8_t        pad21;                // 21
-		std::uint16_t       numParams;            // 22
-		std::uint32_t       pad24;                // 24
-		SCRIPT_PARAMETER*   params;               // 28
-		ExecuteFunction_t   executeFunction;      // 30
-		void*               compileFunction;      // 38
-		ConditionFunction_t conditionFunction;    // 40
-		std::uint8_t        editorFilter;         // 48
-		std::uint8_t        invalidatesCellList;  // 49
-		std::uint8_t        unk4A;                // 4A
-		std::uint8_t        unk4B;                // 4B
-		std::uint8_t        unk4C;                // 4C
-		std::uint8_t        unk4E;                // 4D
-		std::uint8_t        unk4F;                // 4F
-		std::uint8_t        unk50;                // 50
-		std::uint8_t        unk51;                // 51
+		const char*       functionName;       // 00
+		const char*       shortName;          // 08
+		std::uint32_t     output;             // 10
+		std::uint32_t     pad14;              // 14
+		const char*       helpString;         // 18
+		std::uint8_t      referenceFunction;  // 20
+		std::uint8_t      pad21;              // 21
+		std::uint16_t     numParams;          // 22
+		std::uint32_t     pad24;              // 24
+		SCRIPT_PARAMETER* params;             // 28
+		union
+		{
+			ExecuteFunction_t         executeFunction;
+			ExecuteFunctionWithArgs_t executeFunctionWithArgs;
+		};  // 30
+		std::uint8_t        executeFunctionUsesArgs;  // 38
+		std::uint8_t        pad39[7];                 // 39
+		void*               compileFunction;          // 40
+		ConditionFunction_t conditionFunction;        // 48
+		std::uint8_t        editorFilter;             // 50
+		std::uint8_t        invalidatesCellList;      // 51
+		std::uint8_t        pad52[6];                 // 52
 	};
+	static_assert(sizeof(SCRIPT_FUNCTION::ExecuteFunctionArgs) == 0x40);
 	static_assert(sizeof(SCRIPT_FUNCTION) == 0x58);
+	static_assert(offsetof(SCRIPT_FUNCTION, executeFunction) == 0x30);
+	static_assert(offsetof(SCRIPT_FUNCTION, executeFunctionUsesArgs) == 0x38);
+	static_assert(offsetof(SCRIPT_FUNCTION, compileFunction) == 0x40);
+	static_assert(offsetof(SCRIPT_FUNCTION, conditionFunction) == 0x48);
+	static_assert(offsetof(SCRIPT_FUNCTION, editorFilter) == 0x50);
+	static_assert(offsetof(SCRIPT_FUNCTION, invalidatesCellList) == 0x51);
 
 	struct alignas(4) SCRIPT_HEADER
 	{
