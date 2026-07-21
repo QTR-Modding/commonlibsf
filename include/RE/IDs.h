@@ -163,6 +163,19 @@ namespace RE::ID
 		inline constexpr REL::ID ctor{ 59786 };  // 101725
 	}
 
+	namespace BGSPlanet
+	{
+		inline constexpr REL::ID ProgressUpdater{ 52157 };
+		inline constexpr REL::ID ScanLevelWriter{ 52173 };
+		inline constexpr REL::ID ResolvePlanetFromRef{ 52188 };
+	}
+
+	namespace BGSPlanet::Manager
+	{
+		inline constexpr REL::ID Singleton{ 937609 };
+		inline constexpr REL::ID SetCurrentPlanet{ 51735 };
+	}
+
 	namespace BGSPlanet::PlayerKnowledgeFlagSetEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 92501
@@ -236,6 +249,27 @@ namespace RE::ID
 	namespace BSChargenAPI::BIDataUtils::PresetNPCChangedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 141184
+	}
+
+	namespace BSGalaxy
+	{
+		inline constexpr REL::ID GetKnowledgeManager{ 126578 };
+	}
+
+	namespace BSGalaxy::PlayerKnowledge
+	{
+		inline constexpr REL::ID DiscriminatorId{ 938333 };
+		inline constexpr REL::ID HashSpeciesSlot{ 124901 };
+		inline constexpr REL::ID SetScanFlag{ 124898 };
+		inline constexpr REL::ID SetScanPercent{ 124899 };
+		inline constexpr REL::ID MarkTraitKnown{ 52155 };
+	}
+
+	namespace BSComponentDB2
+	{
+		inline constexpr REL::ID Lookup{ 126806 };
+		inline constexpr REL::ID IterateBegin{ 126805 };
+		inline constexpr REL::ID IterateAdvance{ 39372 };
 	}
 
 	namespace BSInputEnableLayer
@@ -403,6 +437,11 @@ namespace RE::ID
 		inline constexpr REL::ID Truncate{ 0 };        // 195959
 		inline constexpr REL::ID Write{ 0 };           // 75363
 		inline constexpr REL::ID operatorEqCopy{ 0 };  // 198448
+	}
+
+	namespace BSTArray
+	{
+		inline constexpr REL::ID U32PushGrow{ 35755 };
 	}
 
 	namespace BSTEventSource
@@ -1233,6 +1272,16 @@ namespace RE::ID
 		inline constexpr REL::ID PlayMenuSoundCtx{ 392439 };      // PTR_144af4430  0x4AF4430
 	}
 
+	namespace MiscStatManager
+	{
+		inline constexpr REL::ID EntryCount{ 889375 };
+		inline constexpr REL::ID TableBase{ 889377 };
+		inline constexpr REL::ID TrackingEnabled{ 894532 };
+		inline constexpr REL::ID NameFloraFullyScanned{ 923219 };
+		inline constexpr REL::ID NameFaunaFullyScanned{ 923220 };
+		inline constexpr REL::ID NameUniqueCreatures{ 923223 };
+	}
+
 	namespace MissionBoard_MissionEntryChanged
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 139500
@@ -1724,6 +1773,15 @@ namespace RE::ID
 		inline constexpr REL::ID GetScriptCommands{ 896669 };
 	}
 
+	namespace ScannableComponent
+	{
+		inline constexpr REL::ID ResolveCanonicalForm{ 83006 };
+		inline constexpr REL::ID DiscriminatorId{ 939118 };
+		inline constexpr REL::ID GetOutlineState{ 83007 };
+		inline constexpr REL::ID SetScanned{ 83008 };
+		inline constexpr REL::ID GetCanonicalId{ 83009 };
+	}
+
 	namespace SecurityMenu_BackOutKey
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 140244
@@ -2054,6 +2112,20 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 151932
 	}
 
+	namespace Survey
+	{
+		inline constexpr REL::ID CheckNotify{ 97853 };
+		inline constexpr REL::ID Aggregator{ 1016657 };
+		inline constexpr REL::ID AggregatorBufferFree{ 65318 };
+		inline constexpr REL::ID ScanCompletePlanet{ 102650 };
+	}
+
+	namespace StarMap
+	{
+		inline constexpr REL::ID RefreshPanelData{ 93988 };
+		inline constexpr REL::ID ScanHandler{ 94011 };
+	}
+
 	namespace StarMap::PlanetTraitKnownEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 92502
@@ -2292,6 +2364,7 @@ namespace RE::ID
 		inline constexpr REL::ID DecRefCount{ 38742 };
 		inline constexpr REL::ID LookupByID{ 47401 };
 		inline constexpr REL::ID LookupByEditorID{ 47403 };
+		inline constexpr REL::ID AllFormsMap{ 883341 };
 	}
 
 	namespace TESFormDeleteEvent
