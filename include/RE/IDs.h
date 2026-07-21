@@ -2439,15 +2439,15 @@ namespace RE::ID
 
 	namespace TESObjectREFR
 	{
-		inline constexpr REL::ID ActivateRef{ 0 };          // 106374
-		inline constexpr REL::ID AddLockChange{ 0 };        // 106386
-		inline constexpr REL::ID GetCalcLevel{ 0 };         // 107531
+		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
+		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
+		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
-		inline constexpr REL::ID GetDistance{ 0 };          // 106562
-		inline constexpr REL::ID GetLinkedRef{ 0 };         // 107578
-		inline constexpr REL::ID GetLock{ 0 };              // 107581
+		inline constexpr REL::ID GetDistance{ 0 };   // 106562
+		inline constexpr REL::ID GetLinkedRef{ 0 };  // 107578
+		inline constexpr REL::ID GetLock{ 0 };       // 107581
 		inline constexpr REL::ID GetParentWorldSpace{ 63417 };
-		inline constexpr REL::ID GetScale{ 0 };             // 106658
+		inline constexpr REL::ID GetScale{ 0 };  // 106658
 		inline constexpr REL::ID GetSpaceship{ 119881 };
 		inline constexpr REL::ID GetSpaceshipParentDock{ 0 };  // 174134
 		inline constexpr REL::ID GetSpaceshipPilot{ 119876 };
@@ -2456,10 +2456,10 @@ namespace RE::ID
 		inline constexpr REL::ID IsCrimeToActivate{ 0 };  // 106755
 		inline constexpr REL::ID IsInSpace{ 63482 };
 		inline constexpr REL::ID IsInSpaceship{ 119881 };
-		inline constexpr REL::ID IsObjectEquipped{ 0 };   // 106991
+		inline constexpr REL::ID IsObjectEquipped{ 0 };  // 106991
 		inline constexpr REL::ID IsSpaceshipDocked{ 120230 };
 		inline constexpr REL::ID IsSpaceshipLanded{ 119909 };
-		inline constexpr REL::ID WornHasKeyword{ 0 };     // 106992
+		inline constexpr REL::ID WornHasKeyword{ 0 };  // 106992
 	}
 
 	namespace TESPickNewIdleEvent
