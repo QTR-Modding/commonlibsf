@@ -25,17 +25,17 @@ namespace RE
 		class PlayerKnowledge
 		{
 		public:
-			static constexpr std::size_t   kPlanetFormKnowledgeIdOffset = 0x54;
-			static constexpr std::size_t   kMapOffset = 0x268;
-			static constexpr std::size_t   kPlanetOverlayMapOffset = 0x300;
+			static constexpr std::size_t    kPlanetFormKnowledgeIdOffset = 0x54;
+			static constexpr std::size_t    kMapOffset = 0x268;
+			static constexpr std::size_t    kPlanetOverlayMapOffset = 0x300;
 			static constexpr std::uintptr_t kLookupNotFound = 0xfe0;
-			static constexpr std::size_t   kEntrySubobjOffset = 0x20;
-			static constexpr std::size_t   kBucketOffsetTable = 0x12;
-			static constexpr std::size_t   kSpeciesHashmapOff = 0x18;
-			static constexpr std::size_t   kSpeciesSlotsPtrOff = 0x40;
-			static constexpr std::size_t   kSpeciesHashEndOff = 0x48;
-			static constexpr std::size_t   kSpeciesSlotStride = 0x30;
-			static constexpr std::uint32_t kAttributeKnownBitsMask = 0x7u;
+			static constexpr std::size_t    kEntrySubobjOffset = 0x20;
+			static constexpr std::size_t    kBucketOffsetTable = 0x12;
+			static constexpr std::size_t    kSpeciesHashmapOff = 0x18;
+			static constexpr std::size_t    kSpeciesSlotsPtrOff = 0x40;
+			static constexpr std::size_t    kSpeciesHashEndOff = 0x48;
+			static constexpr std::size_t    kSpeciesSlotStride = 0x30;
+			static constexpr std::uint32_t  kAttributeKnownBitsMask = 0x7u;
 
 			struct SpeciesSlot
 			{

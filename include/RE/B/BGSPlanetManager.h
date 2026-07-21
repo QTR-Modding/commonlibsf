@@ -47,7 +47,7 @@ namespace RE
 		{
 			using func_t = std::uint64_t (*)(TESObjectREFR*, std::int32_t*, std::int32_t*);
 			static REL::Relocation<func_t> func{ ID::BGSPlanet::ResolvePlanetFromRef };
-			std::int32_t                  secondary = 0;
+			std::int32_t                   secondary = 0;
 			return func(a_ref, a_outPlanet, a_outSecondary ? a_outSecondary : &secondary);
 		}
 	}
