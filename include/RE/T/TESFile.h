@@ -4,19 +4,19 @@ namespace RE
 {
 	enum class TESFileFlags : std::uint32_t
 	{
-		kMaster    = 1 << 0,
+		kMaster = 1 << 0,
 		kLocalized = 1 << 7,
-		kSmall     = 1 << 8,
-		kUpdate    = 1 << 9,
-		kMedium    = 1 << 10,
+		kSmall = 1 << 8,
+		kUpdate = 1 << 9,
+		kMedium = 1 << 10,
 		kBlueprint = 1 << 11
 	};
 
 	struct TESFileIndex
 	{
-		std::uint8_t fullIndex;   // 00
-		std::uint8_t mediumIndex; // 01
-		std::uint16_t smallIndex; // 02
+		std::uint8_t  fullIndex;    // 00
+		std::uint8_t  mediumIndex;  // 01
+		std::uint16_t smallIndex;   // 02
 	};
 	static_assert(sizeof(TESFileIndex) == 0x4);
 
