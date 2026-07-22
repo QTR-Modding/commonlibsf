@@ -33,7 +33,7 @@ namespace RE
 			static constexpr inline std::uint16_t kRawCapacity = 12;
 			// members
 			const char    _data[kRawCapacity];  // 00
-			std::uint16_t _capacity;            // 0C
+			std::uint16_t _bufferSize;          // 0C
 			std::uint16_t _size;                // 0E
 		public:
 			const char* GetText() const
