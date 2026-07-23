@@ -7,7 +7,7 @@ namespace RE
 	public:
 		SF_RTTI_VTABLE(TESFile);
 
-		enum class TESFileFlags
+		enum class Flags
 		{
 			kNone = 0,
 			kMaster = 1 << 0,
@@ -19,15 +19,15 @@ namespace RE
 			kBlueprint = 1 << 11
 		};
 
-		struct TESFileIndex
+		struct TypedIndex
 		{
 			std::uint8_t  fullIndex;    // 00
 			std::uint8_t  mediumIndex;  // 01
 			std::uint16_t smallIndex;   // 02
 		};
-		static_assert(sizeof(TESFileIndex) == 0x4);
+		static_assert(sizeof(TypedIndex) == 0x4);
 
-		struct TESFileText
+		struct TextData
 		{
 		private:
 			static constexpr inline std::uint16_t kRawCapacity = 12;
@@ -42,18 +42,18 @@ namespace RE
 				return _size < kRawCapacity ? result : *std::bit_cast<const char**>(result);
 			}
 		};
-		static_assert(sizeof(TESFileText) == 0x10);
+		static_assert(sizeof(TextData) == 0x10);
 
-		std::uint8_t                               pad0[0x38];       // 000
-		char                                       fileName[260];    // 038
-		std::uint8_t                               pad13C[0x7B];     // 13C
-		std::uint8_t                               compileIndex;     // 1B7
-		REX::TEnumSet<TESFileFlags, std::uint32_t> fileFlags;        // 1B8
-		std::uint8_t                               pad1BC[0x4];      // 1BC
-		std::uint8_t                               pad1C0[0x58];     // 1C0
-		TESFileIndex                               fileIndex;        // 218
-		TESFileText                                fileAuthor;       // 21C
-		TESFileText                                fileDescription;  // 22C
+		std::uint8_t                        pad0[0x38];       // 000
+		char                                fileName[260];    // 038
+		std::uint8_t                        pad13C[0x7B];     // 13C
+		std::uint8_t                        compileIndex;     // 1B7
+		REX::TEnumSet<Flags, std::uint32_t> fileFlags;        // 1B8
+		std::uint8_t                        pad1BC[0x4];      // 1BC
+		std::uint8_t                        pad1C0[0x58];     // 1C0
+		TypedIndex                          fileIndex;        // 218
+		TextData                            fileAuthor;       // 21C
+		TextData                            fileDescription;  // 22C
 	};
 	static_assert(offsetof(TESFile, fileFlags) == 0x1B8);
 	static_assert(offsetof(TESFile, fileIndex) == 0x218);
