@@ -323,6 +323,12 @@ namespace RE::ID
 		inline constexpr REL::ID UnlockWrite{ 35983 };
 	}
 
+	namespace BSScaleformManager
+	{
+		inline constexpr REL::ID Singleton{ 938002 };
+		inline constexpr REL::ID Translate{ 130701 };
+	}
+
 	namespace BSScript
 	{
 		namespace Array
@@ -852,6 +858,21 @@ namespace RE::ID
 	namespace CreationRendererPrivate::Renderer
 	{
 		inline constexpr REL::ID Singleton{ 944397 };
+	}
+
+	namespace CreationRendererPrivate::ScaleformBeginRenderPass
+	{
+		inline constexpr REL::ID ExecuteRenderPass{ 145955 };
+	}
+
+	namespace CreationRendererPrivate::ScaleformCompositeRenderPass
+	{
+		inline constexpr REL::ID ExecuteRenderPass{ 145827 };
+	}
+
+	namespace CreationRendererPrivate::ScaleformEndRenderPass
+	{
+		inline constexpr REL::ID ExecuteRenderPass{ 145956 };
 	}
 
 	namespace CriticalHitEvent::Event
@@ -1388,6 +1409,16 @@ namespace RE::ID
 		inline constexpr REL::ID ToEulerAnglesXYZ{ 0 };  // 210095
 	}
 
+	namespace PauseMenu
+	{
+		inline constexpr REL::ID RebuildActionList{ 93641 };
+	}
+
+	namespace PauseMenuListDataModel
+	{
+		inline constexpr REL::ID QueueAction{ 87656 };
+	}
+
 	namespace PauseMenu_ActionCanceled
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 141614
@@ -1425,7 +1456,8 @@ namespace RE::ID
 
 	namespace PauseMenu_StartAction
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 141621
+		inline constexpr REL::ID GetEventSource{ 93711 };
+		inline constexpr REL::ID ExtractActionType{ 93697 };
 	}
 
 	namespace PauseMenu_StartLoad
@@ -2522,6 +2554,8 @@ namespace RE::ID
 		inline constexpr REL::ID Singleton{ 937580 };
 		inline constexpr REL::ID IsMenuOpen{ 130475 };
 		inline constexpr REL::ID RegisterMenu{ 130463 };
+		inline constexpr REL::ID UpdateMenus{ 99438 };
+		inline constexpr REL::ID AdvanceActiveMenus{ 130455 };
 	}
 
 	namespace UIBlurManager

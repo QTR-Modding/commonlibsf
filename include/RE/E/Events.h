@@ -2005,6 +2005,15 @@ namespace RE
 			static REL::Relocation<func_t> func{ ID::PauseMenu_StartAction::GetEventSource };
 			return func();
 		}
+
+		[[nodiscard]] std::uint32_t GetActionType() const
+		{
+			std::uint32_t result{};
+			using func_t = std::uint32_t* (*)(std::uint32_t*, const PauseMenu_StartAction*);
+			static REL::Relocation<func_t> func{ ID::PauseMenu_StartAction::ExtractActionType };
+			func(std::addressof(result), this);
+			return result;
+		}
 	};
 
 	struct PauseMenu_StartLoad
