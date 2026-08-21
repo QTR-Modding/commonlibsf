@@ -128,6 +128,16 @@ namespace RE
 
 			inline static constexpr REL::ID PRIMARY_VTABLE = RE::VTABLE::StarMap__StarMapMenu[12];
 			inline static constexpr REL::ID BSINPUTEVENTUSER_VTABLE = RE::VTABLE::StarMap__StarMapMenu[13];
+			inline static constexpr std::ptrdiff_t PLAYER_CHARACTER_QUEST_EVENT_SINK_OFFSET = 0x1B0;
+
+			// Rebuilds the shared quest-target tree and synchronously refreshes every
+			// live Star Map state. Owner-thread-only and non-reentrant.
+			void RefreshQuestTargets()
+			{
+				using func_t = void (*)(void*);
+				static REL::Relocation<func_t> func{ ID::StarMap::StarMapMenu::RefreshQuestTargets };
+				func(reinterpret_cast<std::byte*>(this) + PLAYER_CHARACTER_QUEST_EVENT_SINK_OFFSET);
+			}
 
 			void OnButtonEvent(const ButtonEvent* a_event) override
 			{
