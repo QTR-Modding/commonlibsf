@@ -2156,6 +2156,20 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID RefreshPanelData{ 93988 };
 		inline constexpr REL::ID ScanHandler{ 94011 };
+		inline constexpr REL::ID ComposeSurfaceQuestTarget{ 95013 };
+	}
+
+	namespace StarMap::StarMapMenu
+	{
+		inline constexpr REL::ID OnButtonEvent{ 94684 };
+		inline constexpr REL::ID GetSurfaceMapState{ 94755 };
+	}
+
+	namespace StarMap::SurfaceMapState
+	{
+		inline constexpr REL::ID RebuildSurfaceMarkers{ 95000 };
+		inline constexpr REL::ID Refresh{ 95003 };
+		inline constexpr REL::ID GatherSurfaceQuestTargets{ 95012 };
 	}
 
 	namespace StarMap::PlanetTraitKnownEvent

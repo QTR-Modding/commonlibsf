@@ -5,6 +5,7 @@
 #include "RE/B/BSPointerHandle.h"
 #include "RE/B/BSTEvent.h"
 #include "RE/N/NiSmartPointer.h"
+#include "RE/S/StarMap.h"
 
 namespace RE
 {
@@ -3372,19 +3373,6 @@ namespace RE
 			SpellItem* spell;  // 00
 		};
 		static_assert(sizeof(SpellsLearned::Event) == 0x8);
-	};
-
-	struct StarMap
-	{
-		struct PlanetTraitKnownEvent
-		{
-			[[nodiscard]] static BSTEventSource<StarMap::PlanetTraitKnownEvent>* GetEventSource()
-			{
-				using func_t = decltype(&StarMap::PlanetTraitKnownEvent::GetEventSource);
-				static REL::Relocation<func_t> func{ ID::StarMap::PlanetTraitKnownEvent::GetEventSource };
-				return func();
-			}
-		};
 	};
 
 	struct StarMapMenu_LandingInputInProgress
