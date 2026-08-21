@@ -2156,13 +2156,28 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID RefreshPanelData{ 93988 };
 		inline constexpr REL::ID ScanHandler{ 94011 };
+		inline constexpr REL::ID ComposeQuestTargetMarker{ 94701 };
+		inline constexpr REL::ID InsertQuestTargetMarker{ 94758 };
+		inline constexpr REL::ID BuildQuestTargetTree{ 94759 };
 		inline constexpr REL::ID ComposeSurfaceQuestTarget{ 95013 };
 	}
 
 	namespace StarMap::StarMapMenu
 	{
 		inline constexpr REL::ID OnButtonEvent{ 94684 };
+		inline constexpr REL::ID GetGalaxyState{ 94752 };
+		inline constexpr REL::ID GetSystemState{ 94753 };
 		inline constexpr REL::ID GetSurfaceMapState{ 94755 };
+	}
+
+	namespace StarMap::GalaxyState
+	{
+		inline constexpr REL::ID RefreshQuestTargets{ 94300 };
+	}
+
+	namespace StarMap::SystemState
+	{
+		inline constexpr REL::ID RefreshQuestTargets{ 95114 };
 	}
 
 	namespace StarMap::SurfaceMapState

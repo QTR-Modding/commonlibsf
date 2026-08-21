@@ -10,6 +10,19 @@ namespace RE
 {
 	struct StarMap
 	{
+		struct QuestTargetMarkerData
+		{
+			std::uint32_t bodyLocationID;   // 00
+			std::uint32_t pad004;           // 04
+			BSFixedString questTargetText;  // 08
+			std::uint8_t  questActive;      // 10
+			std::byte     pad011[0x7];      // 11
+		};
+		static_assert(offsetof(QuestTargetMarkerData, bodyLocationID) == 0x0);
+		static_assert(offsetof(QuestTargetMarkerData, questTargetText) == 0x8);
+		static_assert(offsetof(QuestTargetMarkerData, questActive) == 0x10);
+		static_assert(sizeof(QuestTargetMarkerData) == 0x18);
+
 		enum class SurfaceMarkerType : std::uint16_t
 		{
 			kQuest = 0x48
@@ -90,6 +103,22 @@ namespace RE
 		};
 		static_assert(offsetof(SurfaceMapState, surfaceMarkers) == 0x8B8);
 
+		class GalaxyState
+		{
+		public:
+			SF_RTTI_VTABLE(StarMap__GalaxyState);
+
+			inline static constexpr REL::ID PRIMARY_VTABLE = RE::VTABLE::StarMap__GalaxyState[4];
+		};
+
+		class SystemState
+		{
+		public:
+			SF_RTTI_VTABLE(StarMap__SystemState);
+
+			inline static constexpr REL::ID PRIMARY_VTABLE = RE::VTABLE::StarMap__SystemState[0];
+		};
+
 		class StarMapMenu :
 			public GameMenuBase
 		{
@@ -105,6 +134,24 @@ namespace RE
 				using func_t = void (*)(BSInputEventUser*, const ButtonEvent*);
 				static REL::Relocation<func_t> func{ ID::StarMap::StarMapMenu::OnButtonEvent };
 				func(this, a_event);
+			}
+
+			// Returns a non-owning owner-thread pointer. It is invalidated by Star Map
+			// state transition and menu destruction; do not retain it.
+			[[nodiscard]] GalaxyState* GetGalaxyState()
+			{
+				using func_t = GalaxyState* (*)(StarMapMenu*);
+				static REL::Relocation<func_t> func{ ID::StarMap::StarMapMenu::GetGalaxyState };
+				return func(this);
+			}
+
+			// Returns a non-owning owner-thread pointer. It is invalidated by Star Map
+			// state transition and menu destruction; do not retain it.
+			[[nodiscard]] SystemState* GetSystemState()
+			{
+				using func_t = SystemState* (*)(StarMapMenu*);
+				static REL::Relocation<func_t> func{ ID::StarMap::StarMapMenu::GetSystemState };
+				return func(this);
 			}
 
 			// Returns a non-owning owner-thread pointer. It is invalidated by Star Map
