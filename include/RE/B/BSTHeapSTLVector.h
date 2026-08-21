@@ -52,6 +52,12 @@ namespace RE
 		[[nodiscard]] constexpr pointer       data() noexcept { return _begin; }
 		[[nodiscard]] constexpr const_pointer data() const noexcept { return _begin; }
 
+		// Raw capacity sentinel for validating engine-owned vectors before using
+		// size() or capacity(). Those helpers subtract pointers and therefore require
+		// an already-valid vector representation.
+		[[nodiscard]] constexpr pointer       capacity_end() noexcept { return _capacityEnd; }
+		[[nodiscard]] constexpr const_pointer capacity_end() const noexcept { return _capacityEnd; }
+
 		[[nodiscard]] constexpr size_type size() const noexcept
 		{
 			return static_cast<size_type>(_end - _begin);
