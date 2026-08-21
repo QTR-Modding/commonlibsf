@@ -1088,7 +1088,7 @@ namespace RE::ID
 		inline constexpr REL::ID dtor{ 0 };               // 187216
 		inline constexpr REL::ID ShouldHandleEvent{ 0 };  // 187262
 		inline constexpr REL::ID OnThumbstickEvent{ 0 };  // 187235
-		inline constexpr REL::ID OnButtonEvent{ 0 };      // 187234
+		inline constexpr REL::ID OnButtonEvent{ 130632 };
 		inline constexpr REL::ID LoadMovie{ 0 };          // 187240
 		inline constexpr REL::ID ProcessMessage{ 0 };     // 187247
 		inline constexpr REL::ID Unk09{ 0 };              // 80440
