@@ -3,6 +3,9 @@
 #include "RE/B/BSFixedString.h"
 #include "RE/M/MemoryManager.h"
 
+#include <type_traits>
+#include <utility>
+
 namespace RE
 {
 	class ButtonEvent;
@@ -51,8 +54,13 @@ namespace RE
 		virtual ~InputEvent() = default;  // 00
 
 		// add
-		virtual bool                HasIDCode() const { return false; }
-		virtual const BSFixedString QUserEvent() const { return ""; }
+		virtual bool HasIDCode() const { return false; }
+
+		virtual const BSFixedString& QUserEvent() const
+		{
+			static const BSFixedString empty;
+			return empty;
+		}
 
 		// members
 		DeviceType    deviceType{ DeviceType::kNone };             // 08
@@ -64,6 +72,7 @@ namespace RE
 		Status        status{ Status::kUnhandled };                // 24
 	};
 	static_assert(sizeof(InputEvent) == 0x28);
+	static_assert(std::is_same_v<decltype(std::declval<const InputEvent&>().QUserEvent()), const BSFixedString&>);
 
 	class IDEvent :
 		public InputEvent
@@ -76,9 +85,10 @@ namespace RE
 		// override (InputEvent)
 		virtual bool HasIDCode() const override { return true; }
 
-		virtual const BSFixedString QUserEvent() const override
+		virtual const BSFixedString& QUserEvent() const override
 		{
-			return disabled ? "DISABLED" : strUserEvent;
+			static const BSFixedString disabledEvent{ "DISABLED" };
+			return disabled ? disabledEvent : strUserEvent;
 		}
 
 		// members
@@ -87,6 +97,7 @@ namespace RE
 		bool          disabled{ false };  // 34
 	};
 	static_assert(sizeof(IDEvent) == 0x38);
+	static_assert(std::is_same_v<decltype(std::declval<const IDEvent&>().QUserEvent()), const BSFixedString&>);
 
 	class ICanBeChorded
 	{

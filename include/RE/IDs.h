@@ -1088,7 +1088,7 @@ namespace RE::ID
 		inline constexpr REL::ID dtor{ 0 };               // 187216
 		inline constexpr REL::ID ShouldHandleEvent{ 0 };  // 187262
 		inline constexpr REL::ID OnThumbstickEvent{ 0 };  // 187235
-		inline constexpr REL::ID OnButtonEvent{ 0 };      // 187234
+		inline constexpr REL::ID OnButtonEvent{ 130632 };
 		inline constexpr REL::ID LoadMovie{ 0 };          // 187240
 		inline constexpr REL::ID ProcessMessage{ 0 };     // 187247
 		inline constexpr REL::ID Unk09{ 0 };              // 80440
@@ -2156,6 +2156,36 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID RefreshPanelData{ 93988 };
 		inline constexpr REL::ID ScanHandler{ 94011 };
+		inline constexpr REL::ID ComposeQuestTargetMarker{ 94701 };
+		inline constexpr REL::ID InsertQuestTargetMarker{ 94758 };
+		inline constexpr REL::ID BuildQuestTargetTree{ 94759 };
+		inline constexpr REL::ID ComposeSurfaceQuestTarget{ 95013 };
+	}
+
+	namespace StarMap::StarMapMenu
+	{
+		inline constexpr REL::ID RefreshQuestTargets{ 94682 };
+		inline constexpr REL::ID OnButtonEvent{ 94684 };
+		inline constexpr REL::ID GetGalaxyState{ 94752 };
+		inline constexpr REL::ID GetSystemState{ 94753 };
+		inline constexpr REL::ID GetSurfaceMapState{ 94755 };
+	}
+
+	namespace StarMap::GalaxyState
+	{
+		inline constexpr REL::ID RefreshQuestTargets{ 94300 };
+	}
+
+	namespace StarMap::SystemState
+	{
+		inline constexpr REL::ID RefreshQuestTargets{ 95114 };
+	}
+
+	namespace StarMap::SurfaceMapState
+	{
+		inline constexpr REL::ID RebuildSurfaceMarkers{ 95000 };
+		inline constexpr REL::ID Refresh{ 95003 };
+		inline constexpr REL::ID GatherSurfaceQuestTargets{ 95012 };
 	}
 
 	namespace StarMap::PlanetTraitKnownEvent
@@ -2506,7 +2536,8 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
-		inline constexpr REL::ID IsStageDone{ 0 };  // 112585
+		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
+		inline constexpr REL::ID ToggleTracking{ 91440 };
 	}
 
 	namespace TESQuestRewardEvent
