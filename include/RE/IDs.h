@@ -2506,7 +2506,8 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
-		inline constexpr REL::ID IsStageDone{ 0 };  // 112585
+		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
+		inline constexpr REL::ID ToggleTracking{ 91440 };
 	}
 
 	namespace TESQuestRewardEvent
