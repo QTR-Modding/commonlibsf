@@ -42,6 +42,13 @@ namespace RE
 		virtual bool IsSpell();                                         // 9E - return { GetSpellType() == 0; }
 		virtual void SetSpellType(MagicSystem::SpellType a_spellType);  // 9F
 
+		[[nodiscard]] bool PlayPowerSelectionSound()
+		{
+			using func_t = decltype(&SpellItem::PlayPowerSelectionSound);
+			static REL::Relocation<func_t> func{ ID::SpellItem::PlayPowerSelectionSound };
+			return func(this);
+		}
+
 		// members
 		Data data;  // 1F0
 	};
