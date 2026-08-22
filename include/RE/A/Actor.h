@@ -5,6 +5,7 @@
 #include "RE/A/ActorValueStorage.h"
 #include "RE/I/IMovementStateStore.h"
 #include "RE/I/IStoreAnimationActions.h"
+#include "RE/M/MagicSystem.h"
 #include "RE/M/MagicTarget.h"
 #include "RE/P/PerkRankData.h"
 #include "RE/T/TESNPC.h"
@@ -18,6 +19,7 @@ namespace RE
 	class CombatGroup;
 	class MovementControllerNPC;
 	class MovementMessageUpdateRequestImmediate;
+	class SpellItem;
 	class TESFaction;
 	class TESRace;
 
@@ -299,6 +301,31 @@ namespace RE
 			using func_t = decltype(&Actor::EvaluatePackage);
 			static REL::Relocation<func_t> func{ ID::Actor::EvaluatePackage };
 			func(this, a_immediate, a_resetAI);
+		}
+
+		[[nodiscard]] SpellItem* GetEquippedSpell(MagicSystem::CastingSource a_source)
+		{
+			if (a_source < MagicSystem::CastingSource::kLeftHand ||
+				a_source > MagicSystem::CastingSource::kInstant) {
+				return nullptr;
+			}
+
+			using func_t = SpellItem* (*)(void*, std::uint32_t, Actor*, std::uint32_t);
+			static REL::Relocation<func_t> func{ ID::Actor::GetEquippedSpell };
+			return func(nullptr, 0, this, std::to_underlying(a_source));
+		}
+
+		void UnequipSpell(SpellItem* a_spell, MagicSystem::CastingSource a_source)
+		{
+			if (!a_spell ||
+				a_source < MagicSystem::CastingSource::kLeftHand ||
+				a_source >= MagicSystem::CastingSource::kInstant) {
+				return;
+			}
+
+			using func_t = void (*)(void*, std::uint32_t, Actor*, SpellItem*, std::uint32_t);
+			static REL::Relocation<func_t> func{ ID::Actor::UnequipSpell };
+			func(nullptr, 0, this, a_spell, std::to_underlying(a_source));
 		}
 
 		[[nodiscard]] ActorKnowledge* GetActorKnowledge(Actor* a_actor)

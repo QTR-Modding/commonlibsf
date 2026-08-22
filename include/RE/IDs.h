@@ -17,11 +17,13 @@ namespace RE::ID
 		inline constexpr REL::ID EquipItem{ 101349 };
 		inline constexpr REL::ID EvaluatePackage{ 0 };    // 150640
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
+		inline constexpr REL::ID GetEquippedSpell{ 116694 };
 		inline constexpr REL::ID IsHostileToActor{ 0 };   // 150777
 		inline constexpr REL::ID IsJumping{ 0 };          // 150985
 		inline constexpr REL::ID IsOverEncumbered{ 0 };   // 150999
 		inline constexpr REL::ID IsSneaking{ 0 };         // 151014
 		inline constexpr REL::ID SetSkinTone{ 97400 };
+		inline constexpr REL::ID UnequipSpell{ 116682 };
 		inline constexpr REL::ID UpdateAppearance{ 101306 };
 		inline constexpr REL::ID UpdateChargenAppearance{ 97399 };
 	}
@@ -958,6 +960,11 @@ namespace RE::ID
 	namespace ExtraDataList
 	{
 		inline constexpr REL::ID HasQuestObjectAlias{ 0 };  // 83336
+	}
+
+	namespace FavoritesManager
+	{
+		inline constexpr REL::ID UseQuickkey{ 113918 };
 	}
 
 	namespace FavoritesMenu_AssignQuickkey
