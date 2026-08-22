@@ -11,6 +11,10 @@ namespace RE
 	public:
 		SF_RTTI(ActorValueOwner);
 
+		using ModActorValueNoSource_t = void (*)(ActorValueOwner*, ACTOR_VALUE_MODIFIER, const ActorValueInfo&, float);
+
+		inline static constexpr std::size_t kModActorValueNoSourceVFunc = 0x07;
+
 		virtual ~ActorValueOwner();  // 00
 
 		// add
