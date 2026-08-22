@@ -40,11 +40,11 @@ namespace RE
 			return func(this, a_actor, a_object, a_slot, a_queueEquip, a_forceEquip, a_playSounds, a_applyNow, a_locked);
 		}
 
-		bool UseInventoryItem(Actor* a_actor, const InventoryInterface::Handle* a_handle, std::uint8_t a_result, bool a_allowUnequip, bool a_unk5, bool a_unk6)
+		bool UseInventoryItem(Actor* a_actor, const InventoryInterface::Handle* a_handle, std::uint8_t a_unk3, bool a_allowUnequip, bool a_unk5, bool a_unk6)
 		{
 			using func_t = decltype(&ActorEquipManager::UseInventoryItem);
 			static REL::Relocation<func_t> func{ ID::ActorEquipManager::UseInventoryItem };
-			return func(this, a_actor, a_handle, a_result, a_allowUnequip, a_unk5, a_unk6);
+			return func(this, a_actor, a_handle, a_unk3, a_allowUnequip, a_unk5, a_unk6);
 		}
 
 		bool UnequipObject(Actor* a_actor, const BGSObjectInstance& a_object, const BGSEquipSlot* a_slot, bool a_queueUnequip, bool a_forceUnequip, bool a_playSounds, bool a_applyNow, const BGSEquipSlot* a_slotBeingReplaced)

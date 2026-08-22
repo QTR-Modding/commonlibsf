@@ -3,6 +3,8 @@
 #include "RE/B/BSTArray.h"
 #include "RE/B/BSTEvent.h"
 #include "RE/B/BSTSingleton.h"
+#include "RE/B/BSTSmartPointer.h"
+#include "RE/T/TBO_InstanceData.h"
 
 namespace RE
 {
@@ -56,22 +58,29 @@ namespace RE
 
 		[[nodiscard]] TESBoundObject* GetInventoryObject(const std::uint32_t& a_handleID) const
 		{
-			struct UnkStruct
+			struct InventoryObject
 			{
-				TESBoundObject** ppObj;
+				TESBoundObject*                   object{};
+				BSTSmartPointer<TBO_InstanceData> instanceData{};
+			};
+			static_assert(sizeof(InventoryObject) == 0x10);
+
+			struct Result
+			{
+				InventoryObject* object;
 				std::uint64_t    unk08;
 			};
 
-			std::uint32_t   handle = a_handleID;
-			TESBoundObject* pObj = 0;
-			UnkStruct       outstruct = { .ppObj = &pObj, .unk08 = 0 };
-			UnkStruct*      pOutstruct = &outstruct;
+			std::uint32_t handle = a_handleID;
+			InventoryObject inventoryObject;
+			Result          result{ .object = &inventoryObject, .unk08 = 0 };
+			Result*         resultPtr = &result;
 
-			using func_t = bool (*)(const BGSInventoryInterface*, const std::uint32_t*, UnkStruct**);
+			using func_t = bool (*)(const BGSInventoryInterface*, const std::uint32_t*, Result**);
 			static REL::Relocation<func_t> GetInventoryObjectHelperFn{ ID::BGSInventoryInterface::GetInventoryObjectSub };
-			GetInventoryObjectHelperFn(this, &handle, &pOutstruct);
+			GetInventoryObjectHelperFn(this, &handle, &resultPtr);
 
-			return pObj;
+			return inventoryObject.object;
 		}
 
 		virtual ~BGSInventoryInterface();  // 00
