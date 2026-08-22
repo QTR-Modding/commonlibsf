@@ -317,6 +317,7 @@
 #include "RE/IDs_NiRTTI.h"
 #include "RE/IDs_RTTI.h"
 #include "RE/IDs_VTABLE.h"
+#include "RE/J/Jetpack.h"
 #include "RE/L/LinkerProcessor.h"
 #include "RE/L/Location.h"
 #include "RE/L/LockPickedEvent.h"

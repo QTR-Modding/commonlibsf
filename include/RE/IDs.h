@@ -135,6 +135,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107087
 	}
 
+	namespace BGSConditionForm
+	{
+		inline constexpr REL::ID IsTrue{ 114781 };
+	}
+
 	namespace BGSDefaultObjectManager
 	{
 		inline constexpr REL::ID DefaultObjectData{ 0 };  // 761776
