@@ -43,6 +43,7 @@ namespace RE::ID
 		inline constexpr REL::ID Singleton{ 938503 };      // 879425
 		inline constexpr REL::ID EquipObject{ 101949 };    // 151991
 		inline constexpr REL::ID UnequipObject{ 101951 };  // 152007
+		inline constexpr REL::ID UseInventoryItem{ 101954 };
 	}
 
 	namespace ActorCellChangeEvent::Event
