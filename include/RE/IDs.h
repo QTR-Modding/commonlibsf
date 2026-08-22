@@ -26,6 +26,7 @@ namespace RE::ID
 		inline constexpr REL::ID UnequipSpell{ 116682 };
 		inline constexpr REL::ID UpdateAppearance{ 101306 };
 		inline constexpr REL::ID UpdateChargenAppearance{ 97399 };
+		inline constexpr REL::ID UseSpell{ 101916 };
 	}
 
 	namespace ActorUtils
@@ -2150,6 +2151,11 @@ namespace RE::ID
 	namespace SpaceshipWeaponBinding::SpaceshipWeaponBindingChangedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 130322
+	}
+
+	namespace SpellItem
+	{
+		inline constexpr REL::ID PlayPowerSelectionSound{ 113904 };
 	}
 
 	namespace SpellsLearned::Event

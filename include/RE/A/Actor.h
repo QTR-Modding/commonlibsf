@@ -328,6 +328,13 @@ namespace RE
 			func(nullptr, 0, this, a_spell, std::to_underlying(a_source));
 		}
 
+		void UseSpell(SpellItem* a_spell)
+		{
+			using func_t = decltype(&Actor::UseSpell);
+			static REL::Relocation<func_t> func{ ID::Actor::UseSpell };
+			func(this, a_spell);
+		}
+
 		[[nodiscard]] ActorKnowledge* GetActorKnowledge(Actor* a_actor)
 		{
 			using func_t = decltype(&Actor::GetActorKnowledge);
