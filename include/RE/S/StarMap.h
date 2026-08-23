@@ -23,6 +23,16 @@ namespace RE
 		static_assert(offsetof(QuestTargetMarkerData, questActive) == 0x10);
 		static_assert(sizeof(QuestTargetMarkerData) == 0x18);
 
+		struct QuestTargetMarkerInsertResult
+		{
+			void*     node;          // 00
+			bool      inserted;      // 08
+			std::byte pad009[0x7];  // 09
+		};
+		static_assert(offsetof(QuestTargetMarkerInsertResult, node) == 0x0);
+		static_assert(offsetof(QuestTargetMarkerInsertResult, inserted) == 0x8);
+		static_assert(sizeof(QuestTargetMarkerInsertResult) == 0x10);
+
 		enum class SurfaceMarkerType : std::uint16_t
 		{
 			kQuest = 0x48
