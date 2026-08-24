@@ -71,6 +71,13 @@ namespace RE
 			return *singleton;
 		}
 
+		void SetControlsDriven(bool a_controlsDriven)
+		{
+			using func_t = decltype(&PlayerCharacter::SetControlsDriven);
+			static REL::Relocation<func_t> func{ ID::PlayerCharacter::SetControlsDriven };
+			return func(this, a_controlsDriven);
+		}
+
 		[[nodiscard]] bool IsInChargen()
 		{
 			return *(REX::ADJUST_POINTER<bool>(this, 0xF24));

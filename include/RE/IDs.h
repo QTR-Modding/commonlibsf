@@ -1578,6 +1578,7 @@ namespace RE::ID
 	namespace PlayerCharacter
 	{
 		inline constexpr REL::ID Singleton{ 922868 };
+		inline constexpr REL::ID SetControlsDriven{ 102880 };
 	}
 
 	namespace PlayerControls::PlayerIronSightsEndEvent
