@@ -262,6 +262,7 @@
 #include "RE/F/FactionRank.h"
 #include "RE/F/FlameProjectile.h"
 #include "RE/F/FormTypes.h"
+#include "RE/G/Game.h"
 #include "RE/G/GameMenuBase.h"
 #include "RE/G/GameSettingCollection.h"
 #include "RE/G/GameVM.h"

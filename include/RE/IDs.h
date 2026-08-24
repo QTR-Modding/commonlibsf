@@ -1008,6 +1008,12 @@ namespace RE::ID
 		inline constexpr REL::ID PopContext{ 124143 };
 	}
 
+	namespace Game
+	{
+		inline constexpr REL::ID StartDialogueCameraOrCenterOnTarget{ 117507 };
+		inline constexpr REL::ID StopDialogueCamera{ 117508 };
+	}
+
 	namespace GameMenuBase
 	{
 		inline constexpr REL::ID ctor{ 0 };   // 130577
