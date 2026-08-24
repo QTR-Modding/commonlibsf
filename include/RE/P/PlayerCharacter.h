@@ -71,6 +71,13 @@ namespace RE
 			return *singleton;
 		}
 
+		[[nodiscard]] bool StartDialogueCamera(bool a_force = false)
+		{
+			using func_t = decltype(&PlayerCharacter::StartDialogueCamera);
+			static REL::Relocation<func_t> func{ ID::PlayerCharacter::StartDialogueCamera };
+			return func(this, a_force);
+		}
+
 		void SetControlsDriven(bool a_controlsDriven)
 		{
 			using func_t = decltype(&PlayerCharacter::SetControlsDriven);
