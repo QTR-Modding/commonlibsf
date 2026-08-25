@@ -2592,6 +2592,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107200
 	}
 
+	namespace ThirdPersonState
+	{
+		inline constexpr REL::ID EnableCameraNearFarMode{ 113516 };
+	}
+
 	namespace TraitDiscoveryTextEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 138718
