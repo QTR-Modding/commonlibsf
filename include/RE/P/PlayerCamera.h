@@ -2,6 +2,7 @@
 
 #include "RE/B/BSInputEventReceiver.h"
 #include "RE/B/BSTEvent.h"
+#include "RE/D/DialogueCameraState.h"
 #include "RE/T/TESCamera.h"
 #include "RE/T/ThirdPersonState.h"
 
@@ -93,6 +94,16 @@ namespace RE
 			using func_t = decltype(&PlayerCamera::ForceThirdPerson);
 			static REL::Relocation<func_t> func{ ID::PlayerCamera::ForceThirdPerson };
 			return func(this);
+		}
+
+		[[nodiscard]] DialogueCameraState* GetDialogueCameraState() noexcept
+		{
+			return static_cast<DialogueCameraState*>(cameraStates[CameraState::kDialogue]);
+		}
+
+		[[nodiscard]] const DialogueCameraState* GetDialogueCameraState() const noexcept
+		{
+			return static_cast<const DialogueCameraState*>(cameraStates[CameraState::kDialogue]);
 		}
 
 		[[nodiscard]] ThirdPersonState* GetThirdPersonState() noexcept
