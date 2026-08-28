@@ -2597,6 +2597,11 @@ namespace RE::ID
 		inline constexpr REL::ID EnableCameraNearFarMode{ 113516 };
 	}
 
+	namespace TLS
+	{
+		inline constexpr REL::ID LogicalThreadIDCounter{ 834263 };
+	}
+
 	namespace TraitDiscoveryTextEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 138718
@@ -2615,6 +2620,7 @@ namespace RE::ID
 	namespace UI
 	{
 		inline constexpr REL::ID Singleton{ 937580 };
+		inline constexpr REL::ID MenuArrayLock{ 937070 };
 		inline constexpr REL::ID IsMenuOpen{ 130475 };
 		inline constexpr REL::ID RegisterMenu{ 130463 };
 		inline constexpr REL::ID UpdateMenus{ 99438 };
