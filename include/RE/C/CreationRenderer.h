@@ -6,6 +6,39 @@
 
 namespace RE::CreationRendererPrivate
 {
+	class RenderPass;
+	struct RenderPassContext;
+	struct RenderPassExecutionData;
+
+	// RenderPass vtable slot 7. The pointed-to engine types remain opaque, but
+	// the call ABI is verified for Starfield 1.16.244.
+	using ExecuteRenderPass_t = void(RenderPass*, RenderPassContext*, RenderPassExecutionData*);
+	inline constexpr std::size_t kExecuteRenderPassVTableIndex = 7;
+
+	namespace ScaleformRenderPass
+	{
+		struct Begin
+		{
+			static constexpr auto RTTI{ RE::RTTI::CreationRendererPrivate____ScaleformBeginRenderPass };
+			static constexpr auto VTABLE{ RE::VTABLE::CreationRendererPrivate____ScaleformBeginRenderPass };
+			static constexpr auto Execute{ RE::ID::CreationRendererPrivate::ScaleformBeginRenderPass::ExecuteRenderPass };
+		};
+
+		struct Composite
+		{
+			static constexpr auto RTTI{ RE::RTTI::CreationRendererPrivate__ScaleformCompositeRenderPass };
+			static constexpr auto VTABLE{ RE::VTABLE::CreationRendererPrivate__ScaleformCompositeRenderPass };
+			static constexpr auto Execute{ RE::ID::CreationRendererPrivate::ScaleformCompositeRenderPass::ExecuteRenderPass };
+		};
+
+		struct End
+		{
+			static constexpr auto RTTI{ RE::RTTI::CreationRendererPrivate____ScaleformEndRenderPass };
+			static constexpr auto VTABLE{ RE::VTABLE::CreationRendererPrivate____ScaleformEndRenderPass };
+			static constexpr auto Execute{ RE::ID::CreationRendererPrivate::ScaleformEndRenderPass::ExecuteRenderPass };
+		};
+	}
+
 	struct DeviceProperties;
 
 	namespace detail
