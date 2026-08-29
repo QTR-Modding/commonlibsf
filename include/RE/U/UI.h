@@ -89,6 +89,9 @@ namespace RE
 			return entry ? entry->menu : nullptr;
 		}
 
+		// Returns a retained reference to the first menu considered during input dispatch.
+		[[nodiscard]] Scaleform::Ptr<IMenu> GetTopInputMenu() const;
+
 		Scaleform::Ptr<Scaleform::GFx::Movie> GetMenuMovie(const BSFixedString& a_menuName) const
 		{
 			auto menu = GetMenu(a_menuName);
