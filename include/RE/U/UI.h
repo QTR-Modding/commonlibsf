@@ -105,6 +105,7 @@ namespace RE
 			return func(this, a_name);
 		}
 
+		// Adapted from ozooma10/commonlibsf commit 008b431c455537f17179d9a8fc435c18fb628301.
 		void ModifyMenuPauseCounter(const BSFixedString& a_menuName, bool a_increment)
 		{
 			using func_t = decltype(&UI::ModifyMenuPauseCounter);
@@ -152,6 +153,7 @@ namespace RE
 		std::uint64_t                   unk450[4];       // 450
 		UIMenuMap                       menuMap;         // 470
 		std::uint8_t                    pad4A8[0x0C];    // 4A8
+		// Layout adapted from ozooma10/commonlibsf commit 008b431c455537f17179d9a8fc435c18fb628301.
 		std::uint32_t                   pauseRequestCount;  // 4B4
 		std::uint8_t                    pad4B8[0x28];    // 4B8
 		std::uint64_t                   unk4E0;          // 4E0

@@ -37,6 +37,12 @@ xmake project -k compile_commands
 
 CommonLibSF is intended to replace SFSE as a static dependency. However, the runtime component of SFSE is still required.
 
+## Fork Modifications
+
+This fork contains modifications by [Quantumyilmaz](https://github.com/Quantumyilmaz).
+
+On 2026-08-30, the menu lifecycle ownership APIs for `BSInputEnableLayer`, `UI`, and `MenuCursor` were adapted from [ozooma10/commonlibsf](https://github.com/ozooma10/commonlibsf/tree/11b56c6ba00f9d066726e87034b8b952fedcd667) at commits [`6d819bcc`](https://github.com/ozooma10/commonlibsf/commit/6d819bcc371e8b0ff72511d25cdbd50a3330a6b8), [`008b431c`](https://github.com/ozooma10/commonlibsf/commit/008b431c455537f17179d9a8fc435c18fb628301), and [`c6828bf`](https://github.com/ozooma10/commonlibsf/commit/c6828bf744b215562370cee607e32efc21444406).
+
 ## License
 
 [GPL-3.0-or-later][LICENSE] WITH [Modding Exception AND GPL-3.0 Linking Exception (with Corresponding Source)](EXCEPTIONS).
