@@ -105,6 +105,13 @@ namespace RE
 			return func(this, a_name);
 		}
 
+		void ModifyMenuPauseCounter(const BSFixedString& a_menuName, bool a_increment)
+		{
+			using func_t = decltype(&UI::ModifyMenuPauseCounter);
+			static REL::Relocation<func_t> func{ ID::UI::ModifyMenuPauseCounter };
+			func(this, a_menuName, a_increment);
+		}
+
 		[[nodiscard]] bool IsMenuRegistered(const BSFixedString& a_name) const
 		{
 			return menuMap.contains(a_name);
@@ -144,7 +151,9 @@ namespace RE
 		BSTArray<Scaleform::Ptr<IMenu>> menusToAdvance;  // 440
 		std::uint64_t                   unk450[4];       // 450
 		UIMenuMap                       menuMap;         // 470
-		std::uint8_t                    pad4A8[0x38];    // 4A8
+		std::uint8_t                    pad4A8[0x0C];    // 4A8
+		std::uint32_t                   pauseRequestCount;  // 4B4
+		std::uint8_t                    pad4B8[0x28];    // 4B8
 		std::uint64_t                   unk4E0;          // 4E0
 		std::uint64_t                   unk4E8;          // 4E8
 		float                           unk4F0;          // 4F0
@@ -162,6 +171,7 @@ namespace RE
 	static_assert(offsetof(UI, menuArray) == 0x430);
 	static_assert(offsetof(UI, menusToAdvance) == 0x440);
 	static_assert(offsetof(UI, menuMap) == 0x470);
+	static_assert(offsetof(UI, pauseRequestCount) == 0x4B4);
 	static_assert(offsetof(UI, advanceDelta) == 0x4F4);
 	static_assert(offsetof(UI, unk500) == 0x500);
 	static_assert(offsetof(UI, unk538) == 0x538);

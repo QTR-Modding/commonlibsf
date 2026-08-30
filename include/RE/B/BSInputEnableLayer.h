@@ -9,10 +9,9 @@ namespace RE
 	public:
 		inline void DecRef()
 		{
-			const auto count = REX::W32::InterlockedDecrement(&m_refCount);
-			if (count == 1) {
-				// TODO: BSInputEnableManager::LayerFreed (inlined)
-			}
+			using func_t = decltype(&BSInputEnableLayer::DecRef);
+			static REL::Relocation<func_t> func{ ID::BSInputEnableLayer::DecRef };
+			func(this);
 		}
 
 		inline void EnableUserEvent(USER_EVENT_FLAG a_flags, bool a_enable, USER_EVENT_SENDER_ID a_sender = USER_EVENT_SENDER_ID::None)

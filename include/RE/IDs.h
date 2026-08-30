@@ -283,6 +283,7 @@ namespace RE::ID
 
 	namespace BSInputEnableLayer
 	{
+		inline constexpr REL::ID DecRef{ 45194 };
 	}
 
 	namespace BSInputEnableManager
@@ -1280,6 +1281,11 @@ namespace RE::ID
 		// 1.16.242: no standalone GetThreadScrapHeap exists; the TLS getter is inlined engine-wide
 		inline constexpr REL::ID CreateThreadScrapHeap{ 123806 };
 		inline constexpr REL::ID ScrapHeapTlsIndex{ 952578 };
+	}
+
+	namespace MenuCursor
+	{
+		inline constexpr REL::ID Singleton{ 937972 };
 	}
 
 	namespace MenuTopicManager
@@ -2623,6 +2629,7 @@ namespace RE::ID
 		inline constexpr REL::ID MenuArrayLock{ 937070 };
 		inline constexpr REL::ID IsMenuOpen{ 130475 };
 		inline constexpr REL::ID RegisterMenu{ 130463 };
+		inline constexpr REL::ID ModifyMenuPauseCounter{ 130472 };
 		inline constexpr REL::ID UpdateMenus{ 99438 };
 		inline constexpr REL::ID AdvanceActiveMenus{ 130455 };
 	}
