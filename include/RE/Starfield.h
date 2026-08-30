@@ -362,6 +362,7 @@
 #include "RE/P/PlasmaProjectile.h"
 #include "RE/P/PlayerCamera.h"
 #include "RE/P/PlayerCharacter.h"
+#include "RE/P/PlayerControlsManager.h"
 #include "RE/P/PlayerKnowledge.h"
 #include "RE/P/ProcessLists.h"
 #include "RE/P/Profiler.h"
