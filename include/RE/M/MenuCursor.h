@@ -4,8 +4,9 @@
 
 namespace RE
 {
-	// Partial field overlay for the engine-owned singleton; do not construct or
-	// use it for virtual dispatch.
+	// Singleton mapping and partial field overlay adapted from ozooma10/commonlibsf
+	// commit c6828bf744b215562370cee607e32efc21444406. Do not construct or use it for
+	// virtual dispatch.
 	class MenuCursor
 	{
 	public:

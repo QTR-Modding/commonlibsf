@@ -7,6 +7,7 @@ namespace RE
 	class BSInputEnableLayer
 	{
 	public:
+		// Adapted from ozooma10/commonlibsf commit 6d819bcc371e8b0ff72511d25cdbd50a3330a6b8.
 		inline void DecRef()
 		{
 			using func_t = decltype(&BSInputEnableLayer::DecRef);
