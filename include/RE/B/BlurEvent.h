@@ -15,8 +15,9 @@ namespace RE
 
 		[[nodiscard]] static BSTEventSource<BlurEvent>* GetEventSource()
 		{
-			static REL::Relocation<BSTEventSource<BlurEvent>*> source{ ID::BlurEvent::GetEventSource };
-			return source.get();
+			using func_t = BSTEventSource<BlurEvent>* (*)();
+			static REL::Relocation<func_t> func{ ID::BlurEvent::GetEventSource };
+			return func();
 		}
 
 		Type type;  // 00

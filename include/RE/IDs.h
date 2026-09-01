@@ -242,7 +242,7 @@ namespace RE::ID
 
 	namespace BlurEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 940149 };
+		inline constexpr REL::ID GetEventSource{ 113469 };
 	}
 
 	namespace BooksRead::Event
