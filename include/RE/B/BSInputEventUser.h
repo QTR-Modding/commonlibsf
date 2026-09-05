@@ -118,6 +118,42 @@ namespace RE
 		std::uint64_t pad00;
 	};
 
+	class ThumbstickEvent :
+		public IDEvent
+	{
+	public:
+		SF_RTTI_VTABLE(ThumbstickEvent);
+
+		enum class InputType : std::int32_t
+		{
+			kLeftThumbstick = 0x0B,
+			kRightThumbstick = 0x0C
+		};
+
+		virtual ~ThumbstickEvent() = default;  // 00
+
+		[[nodiscard]] bool IsLeft() const noexcept
+		{
+			return idCode == std::to_underlying(InputType::kLeftThumbstick);
+		}
+
+		[[nodiscard]] bool IsRight() const noexcept
+		{
+			return idCode == std::to_underlying(InputType::kRightThumbstick);
+		}
+
+		[[nodiscard]] bool IsOffHand() const noexcept { return IsLeft(); }
+		[[nodiscard]] bool IsMainHand() const noexcept { return IsRight(); }
+
+		// members
+		float        xValue{ 0.0F };  // 38
+		float        yValue{ 0.0F };  // 3C
+		std::uint8_t unk40{ 0 };      // 40
+		std::uint8_t unk41{ 0 };      // 41
+		std::uint8_t pad42[0x6]{};    // 42
+	};
+	static_assert(sizeof(ThumbstickEvent) == 0x48);
+
 	class ButtonEvent :
 		public IDEvent,
 		public ICanBeDebounced
