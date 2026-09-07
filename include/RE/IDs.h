@@ -967,7 +967,7 @@ namespace RE::ID
 
 	namespace ExtraDataList
 	{
-		inline constexpr REL::ID HasQuestObjectAlias{ 0 };  // 83336
+		inline constexpr REL::ID HasQuestObjectAlias{ 45044 };
 	}
 
 	namespace FavoritesManager
