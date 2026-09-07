@@ -34,6 +34,13 @@ namespace RE
 
 		[[nodiscard]] bool IsEquipped() const noexcept { return flags.any(Flag::kSlotMask); }
 
+		[[nodiscard]] bool IsQuestObject() const
+		{
+			using func_t = decltype(&BGSInventoryItem::IsQuestObject);
+			static REL::Relocation<func_t> func{ ID::BGSInventoryItem::IsQuestObject };
+			return func(this);
+		}
+
 		// members
 		TESBoundObject*                    object;        // 00
 		BSTSmartPointer<TBO_InstanceData>  instanceData;  // 08
