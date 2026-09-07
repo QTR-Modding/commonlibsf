@@ -167,6 +167,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetInventoryObjectSub{ 63846 };
 	}
 
+	namespace BGSInventoryItem
+	{
+		inline constexpr REL::ID IsQuestObject{ 48520 };
+	}
+
 	namespace BGSObjectInstance
 	{
 		inline constexpr REL::ID ctor{ 59786 };  // 101725
