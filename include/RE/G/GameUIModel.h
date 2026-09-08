@@ -43,6 +43,29 @@ namespace RE
 			return false;
 		}
 
+		// Queues native row eviction while the session-owned model is lifetime-locked.
+		// Do not call this from an inventory item publication callback; the queueing path
+		// reacquires the inventory-index lock held by that callback.
+		[[nodiscard]] static bool QueueRemovePlayerInventoryItem(
+			const InventoryInterface::Handle& a_handle)
+		{
+			static REL::Relocation<BSReadWriteLock*> lock{ ID::GameUIModel::DataModelLock };
+			const BSAutoReadLock guard{ lock.get() };
+
+			const auto singleton = GetSingleton();
+			if (!singleton || !singleton->initialized) {
+				return false;
+			}
+
+			for (const auto model : singleton->ownedModels) {
+				if (const auto inventory = starfield_cast<PlayerInventoryDataModel*>(model)) {
+					return inventory->QueueRemoveItem(a_handle);
+				}
+			}
+
+			return false;
+		}
+
 		// members
 		IDataModel*            unk10;           // 10
 		bool                   initialized;     // 18

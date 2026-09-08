@@ -1656,6 +1656,7 @@ namespace RE::ID
 
 	namespace PlayerInventoryDataModel
 	{
+		inline constexpr REL::ID QueueRemoveItem{ 88112 };
 		inline constexpr REL::ID Reconcile{ 88101 };
 	}
 
