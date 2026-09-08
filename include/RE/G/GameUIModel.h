@@ -17,8 +17,8 @@ namespace RE
 
 		[[nodiscard]] static GameUIModel* GetSingleton()
 		{
-			static REL::Relocation<GameUIModel*> singleton{ ID::GameUIModel::Singleton };
-			return singleton.get();
+			static REL::Relocation<GameUIModel**> singleton{ ID::GameUIModel::Singleton };
+			return *singleton;
 		}
 
 		// Finds and invokes the session-owned model without allowing its pointer to escape
