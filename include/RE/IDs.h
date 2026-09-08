@@ -1049,6 +1049,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetSetting{ 49324 };
 	}
 
+	namespace GameUIModel
+	{
+		inline constexpr REL::ID DataModelLock{ 918742 };
+		inline constexpr REL::ID Singleton{ 938074 };
+	}
+
 	namespace GameVM
 	{
 		inline constexpr REL::ID Singleton{ 937585 };
@@ -1646,6 +1652,11 @@ namespace RE::ID
 	namespace PlayerFastTravel::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153668
+	}
+
+	namespace PlayerInventoryDataModel
+	{
+		inline constexpr REL::ID Reconcile{ 88101 };
 	}
 
 	namespace PlayerJailEvent
