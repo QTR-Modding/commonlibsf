@@ -12,6 +12,7 @@ namespace RE
 	class BGSPreviewTransform;
 	class BGSSaveFormBuffer;
 	class BGSSnapTemplateComponent;
+	class TBO_InstanceData;
 	class TESObjectREFR;
 
 	namespace BGSMod::Template
@@ -84,7 +85,7 @@ namespace RE
 		virtual void                               GetFormDetailedString(char* a_dest, std::uint32_t a_size) const;                  // 23
 		virtual bool                               GetKnown() const;                                                                 // 24
 		virtual bool                               GetRandomAnim() const;                                                            // 25
-		virtual bool                               GetPlayable() const;                                                              // 26
+		virtual bool                               GetPlayable(const TBO_InstanceData* a_instanceData = nullptr) const;              // 26
 		virtual void                               SetPlayable(bool a_set);                                                          // 27
 		virtual void                               Unk_28();                                                                         // 28
 		virtual void                               Unk_29();                                                                         // 29
