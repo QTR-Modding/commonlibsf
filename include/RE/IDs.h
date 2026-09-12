@@ -873,6 +873,12 @@ namespace RE::ID
 	namespace CreationRendererPrivate::Renderer
 	{
 		inline constexpr REL::ID Singleton{ 944397 };
+		inline constexpr REL::ID RenderFrameIndex{ 883900 };
+	}
+
+	namespace CreationRendererPrivate::PresentRequest
+	{
+		inline constexpr REL::ID Execute{ 142976 };
 	}
 
 	namespace CreationRendererPrivate::ScaleformBeginRenderPass
