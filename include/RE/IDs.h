@@ -1153,6 +1153,11 @@ namespace RE::ID
 		inline constexpr REL::ID Unk1A{ 0 };              // 187232
 	}
 
+	namespace Havok::WorldReadGuard
+	{
+		inline constexpr REL::ID Acquire{ 43095 };
+	}
+
 	namespace INIPrefSettingCollection
 	{
 		inline constexpr REL::ID Singleton{ 944391 };
