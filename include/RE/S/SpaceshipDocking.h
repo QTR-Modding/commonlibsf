@@ -1,10 +1,12 @@
 #pragma once
 
+#include "RE/B/BSTArray.h"
 #include "RE/N/NiMatrix3.h"
 #include "RE/N/NiQuaternion.h"
 
 namespace RE
 {
+	class TESIdleForm;
 	class TESObjectREFR;
 
 	namespace Spaceship::Docking
@@ -16,8 +18,34 @@ namespace RE
 			NiPoint3     translation;
 		};
 
+		struct InteractionEntry
+		{
+			NiQuaternion  rotation;     // 00 - relative to the target ship
+			NiPoint3      translation;  // 10
+			std::uint32_t unk1C;        // 1C
+			TESIdleForm*  idle;         // 20 - borrowed
+			std::byte     unk28[0x18];  // 28
+		};
+		static_assert(offsetof(InteractionEntry, translation) == 0x10);
+		static_assert(offsetof(InteractionEntry, idle) == 0x20);
+		static_assert(sizeof(InteractionEntry) == 0x40);
+
+		struct InteractionGroup
+		{
+			std::uint32_t                  index;    // 00
+			std::uint32_t                  unk04;    // 04
+			BSScrapArray<InteractionEntry> entries;  // 08 - owns its scratch allocation
+		};
+		static_assert(offsetof(InteractionGroup, entries) == 0x08);
+		static_assert(sizeof(InteractionGroup) == 0x20);
+
 		// Selects a compatible target port for the source ship. The returned reference is borrowed.
 		[[nodiscard]] TESObjectREFR* FindPort(TESObjectREFR* a_source, TESObjectREFR* a_target);
+
+		// Queries the start locations using the same full-rotation/placement options as vanilla Dock.
+		// Replaces a_out; groups/entries own their scratch storage, while idle form pointers are borrowed.
+		// Requires a valid source ship and a port returned by FindPort. Does not move either reference.
+		[[nodiscard]] bool GetStartLocations(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, BSScrapArray<InteractionGroup>& a_out);
 
 		// Copies vanilla's initial interaction pose relative to the target ship (the docking parent).
 		// Compose with the target's current body transform before flight; this is not an absolute pose.

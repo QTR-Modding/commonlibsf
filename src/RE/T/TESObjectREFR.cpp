@@ -1,5 +1,6 @@
 #include "RE/T/TESObjectREFR.h"
 
+#include "RE/B/BGSGenericBaseForm.h"
 #include "RE/B/BGSInventoryItem.h"
 #include "RE/E/ExtraLock.h"
 
@@ -21,6 +22,28 @@ namespace RE
 				}
 			}
 		}
+	}
+
+	bool TESObjectREFR::GetBodyPose(Spaceship::BodyPose& a_out) const
+	{
+		struct NativeBodyPoseResult
+		{
+			Spaceship::BodyPose pose;
+			bool                hasValue;
+			std::byte           unk61[0x0F];
+		};
+		static_assert(offsetof(NativeBodyPoseResult, hasValue) == 0x60);
+		static_assert(sizeof(NativeBodyPoseResult) == 0x70);
+
+		using func_t = NativeBodyPoseResult* (*)(NativeBodyPoseResult*, const TESObjectREFR*);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetBodyPose };
+		NativeBodyPoseResult           result{};
+		func(std::addressof(result), this);
+		if (!result.hasValue) {
+			return false;
+		}
+		a_out = result.pose;
+		return true;
 	}
 
 	BGSLocation* TESObjectREFR::GetCurrentLocation()
@@ -69,6 +92,20 @@ namespace RE
 		using func_t = decltype(&TESObjectREFR::GetScale);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetScale };
 		return func(this);
+	}
+
+	bool TESObjectREFR::GetSpaceTransform(NiPoint3& a_translation, NiMatrix3& a_rotation) const
+	{
+		using func_t = bool (*)(const TESObjectREFR*, NiPoint3A*, NiMatrix3*);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetSpaceTransform };
+		NiPoint3A                      translation{};
+		NiMatrix3                      rotation{};
+		if (!func(this, std::addressof(translation), std::addressof(rotation))) {
+			return false;
+		}
+		a_translation = translation;
+		a_rotation = rotation;
+		return true;
 	}
 
 	TESObjectREFR* TESObjectREFR::GetSpaceship(bool a_arg1)
@@ -130,6 +167,19 @@ namespace RE
 		using func_t = decltype(&TESObjectREFR::IsObjectEquipped);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::IsObjectEquipped };
 		return func(this, a_object);
+	}
+
+	bool TESObjectREFR::IsPlayerPilotedSpaceship() const
+	{
+		using func_t = bool (*)(const TESObjectREFR*);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::IsPlayerPilotedSpaceship };
+		return func(this);
+	}
+
+	bool TESObjectREFR::IsSpaceship() const noexcept
+	{
+		const auto* base = data.objectReference.get();
+		return base && base->Is(FormType::kGBFM) && static_cast<const BGSGenericBaseForm*>(base)->IsSpaceship();
 	}
 
 	bool TESObjectREFR::IsSpaceshipDocked()

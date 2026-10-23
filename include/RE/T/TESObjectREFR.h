@@ -15,6 +15,7 @@
 #include "RE/I/IPostAnimationChannelUpdateFunctor.h"
 #include "RE/N/NiPoint.h"
 #include "RE/N/NiSmartPointer.h"
+#include "RE/S/SpaceshipReference.h"
 #include "RE/T/TESBoundObject.h"
 #include "RE/T/TESHandleForm.h"
 
@@ -231,7 +232,7 @@ namespace RE
 		virtual bool         ShouldBackgroundClone() const;                                                                                                                                                                                                                                           // 0A9
 		virtual bool         IsReadyForAttach([[maybe_unused]] const IO_TASK_PRIORITY& a_priority) const;                                                                                                                                                                                             // 0AA
 		virtual void         Unk_AB();                                                                                                                                                                                                                                                                // 0AB - { return Get3D(a_objectOut) };?
-		virtual void         Unk_AC();                                                                                                                                                                                                                                                                // 0AC - Get3D(NiPointer<NiAVObject>&)?
+		virtual NiPointer<NiAVObject> Get3D() const;                                                                                                                                                                                                                                                           // 0AC - returns a retained 3D pointer
 		virtual void         Unk_AD();                                                                                                                                                                                                                                                                // 0AD
 		virtual void         Unk_AE();                                                                                                                                                                                                                                                                // 0AE
 		virtual TESModel*    GetTESModel() const;                                                                                                                                                                                                                                                     // 0AF
@@ -241,9 +242,9 @@ namespace RE
 		virtual void         Unk_B3();                                                                                                                                                                                                                                                                // 0B3
 		virtual NiPoint3     GetBoundMin() const;                                                                                                                                                                                                                                                     // 0B4
 		virtual NiPoint3     GetBoundMax() const;                                                                                                                                                                                                                                                     // 0B5
-		virtual void         Unk_B6();                                                                                                                                                                                                                                                                // 0B6
-		virtual void         Unk_B7();                                                                                                                                                                                                                                                                // 0B7
-		virtual void         Unk_B8();                                                                                                                                                                                                                                                                // 0B8
+		virtual float                 GetBoundRadius() const;                                                                                                                                                                                                                                                  // 0B6 - maximum symmetric XY half-extent, not a 3D hull sphere
+		virtual float                 GetBoundWidth() const;                                                                                                                                                                                                                                                   // 0B7
+		virtual float                 GetBoundHeight() const;                                                                                                                                                                                                                                                  // 0B8
 		virtual void         Unk_B9();                                                                                                                                                                                                                                                                // 0B9
 		virtual void         Unk_BA();                                                                                                                                                                                                                                                                // 0BA
 		virtual void         Unk_BB();                                                                                                                                                                                                                                                                // 0BB
@@ -373,6 +374,11 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetAngleZ() const { return data.angle.z; }
 		[[nodiscard]] NiPointer<TESBoundObject>       GetBaseObject() { return data.objectReference; }
 		[[nodiscard]] NiPointer<const TESBoundObject> GetBaseObject() const { return data.objectReference; }
+		// Copies the current native body pose; failure leaves a_out unchanged.
+		// A reference without its own DynamicState can resolve to its containing body's pose.
+		// Call on the game thread; no pointer into the component database escapes this call.
+		[[nodiscard]] bool GetBodyPose(Spaceship::BodyPose& a_out) const;
+
 		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
@@ -384,6 +390,11 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetPositionY() const noexcept { return data.location.y; }
 		[[nodiscard]] constexpr float                 GetPositionZ() const noexcept { return data.location.z; }
 		[[nodiscard]] float                           GetScale() const;
+		// In a qualifying space context, physical ships use the parent cell's body frame and
+		// other references use local data. Outside that context this returns world reference data.
+		// Failure leaves both outputs unchanged. Do not mix this frame with GetBodyPose.
+		[[nodiscard]] bool GetSpaceTransform(NiPoint3& a_translation, NiMatrix3& a_rotation) const;
+
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
@@ -393,6 +404,14 @@ namespace RE
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);
 		[[nodiscard]] bool                            IsLocked() const;
 		[[nodiscard]] bool                            IsObjectEquipped(TESBoundObject* a_object);
+		// The native docking camera predicate: the ship's resolved pilot is the player.
+		// This does not test ownership, home-ship identity, or merely being aboard the ship.
+		[[nodiscard]] bool IsPlayerPilotedSpaceship() const;
+
+		// GBFM + base flag 0x40, matching Papyrus SpaceshipReference classification.
+		// This classification alone does not establish a hull, physics body, or ship AI.
+		[[nodiscard]] bool IsSpaceship() const noexcept;
+
 		[[nodiscard]] bool                            IsSpaceshipDocked();
 		[[nodiscard]] bool                            IsSpaceshipLanded();
 		void                                          Lock();
