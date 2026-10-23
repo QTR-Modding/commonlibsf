@@ -3149,7 +3149,18 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::DockEvent::GetEventSource };
 				return func();
 			}
+
+			// References are borrowed for the callback; parentShip can be null during cleanup.
+			TESObjectREFR* dockingShip;  // 00
+			TESObjectREFR* parentShip;   // 08
+			std::uint32_t complete;     // 10 - 0 started, 1 finished
+			std::uint32_t undocking;    // 14 - 0 docking, 1 undocking
 		};
+		static_assert(offsetof(DockEvent, dockingShip) == 0x00);
+		static_assert(offsetof(DockEvent, parentShip) == 0x08);
+		static_assert(offsetof(DockEvent, complete) == 0x10);
+		static_assert(offsetof(DockEvent, undocking) == 0x14);
+		static_assert(sizeof(DockEvent) == 0x18);
 
 		struct DynamicNavmeshCompleted
 		{

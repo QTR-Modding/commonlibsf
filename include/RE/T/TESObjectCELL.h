@@ -87,6 +87,10 @@ namespace RE
 
 		~TESObjectCELL() override;  // 00
 
+		// Resolves the owning reference for native cell subtypes 1 and 5.
+		// The smart pointer retains the reference; unsupported/unregistered cells return empty.
+		[[nodiscard]] NiPointer<TESObjectREFR> GetParentRef() const;
+
 		[[nodiscard]] bool IsAttached() const noexcept { return cellState == CELL_STATE::kAttached; }
 		[[nodiscard]] bool IsExterior() const noexcept { return !IsInterior(); }
 		[[nodiscard]] bool IsInterior() const noexcept { return cellFlags.any(Flag::kInterior); }

@@ -7,27 +7,7 @@ namespace RE::Spaceship::Docking
 {
 	namespace
 	{
-		struct InteractionEntry
-		{
-			NiQuaternion  rotation;     // 00
-			NiPoint3      translation;  // 10
-			std::uint32_t unk1C;        // 1C
-			TESIdleForm*  idle;         // 20 - borrowed
-			std::byte     unk28[0x18];  // 28
-		};
 		static_assert(offsetof(TESIdleForm, conditions) == 0x48);
-		static_assert(offsetof(InteractionEntry, translation) == 0x10);
-		static_assert(offsetof(InteractionEntry, idle) == 0x20);
-		static_assert(sizeof(InteractionEntry) == 0x40);
-
-		struct InteractionGroup
-		{
-			std::uint32_t                 index;    // 00
-			std::uint32_t                 unk04;    // 04
-			BSScrapArray<InteractionEntry> entries;  // 08
-		};
-		static_assert(offsetof(InteractionGroup, entries) == 0x08);
-		static_assert(sizeof(InteractionGroup) == 0x20);
 
 		// The docking caller initializes only these two references and zeroes the remaining context.
 		// Keep the unresolved native tail private instead of reusing Script.h's different layout.
@@ -47,6 +27,20 @@ namespace RE::Spaceship::Docking
 		}
 	}
 
+	bool IsInRange(TESObjectREFR* a_source, TESObjectREFR* a_target)
+	{
+		using func_t = decltype(&IsInRange);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Docking::IsInRange };
+		return func(a_source, a_target);
+	}
+
+	Availability GetAvailability(TESObjectREFR* a_source, TESObjectREFR* a_target)
+	{
+		using func_t = decltype(&GetAvailability);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Docking::GetAvailability };
+		return func(a_source, a_target);
+	}
+
 	TESObjectREFR* FindPort(TESObjectREFR* a_source, TESObjectREFR* a_target)
 	{
 		using func_t = decltype(&FindPort);
@@ -54,12 +48,18 @@ namespace RE::Spaceship::Docking
 		return func(a_source, a_target);
 	}
 
-	bool GetStartPose(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, StartPose& a_out)
+	bool GetStartLocations(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, BSScrapArray<InteractionGroup>& a_out)
 	{
 		using func_t = bool (*)(TESObjectREFR*, void*, std::int32_t, bool, bool, void*, TESObjectREFR*, BSScrapArray<InteractionGroup>&, bool, bool, bool);
 		static REL::Relocation<func_t> func{ ID::Spaceship::Docking::GetInteractionLocations };
+		a_out.clear();
+		return func(a_source, nullptr, -1, false, false, nullptr, a_targetPort, a_out, true, true, true);
+	}
+
+	bool GetStartPose(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, StartPose& a_out)
+	{
 		BSScrapArray<InteractionGroup> groups;
-		if (!func(a_source, nullptr, -1, false, false, nullptr, a_targetPort, groups, true, true, true) || groups.empty() || groups.front().entries.empty()) {
+		if (!GetStartLocations(a_source, a_targetPort, groups) || groups.empty() || groups.front().entries.empty()) {
 			return false;
 		}
 
@@ -85,5 +85,12 @@ namespace RE::Spaceship::Docking
 		using func_t = decltype(&BeginDock);
 		static REL::Relocation<func_t> func{ ID::Spaceship::Docking::BeginDock };
 		return func(a_source, a_target, a_targetPort);
+	}
+
+	bool BeginUndock(TESObjectREFR* a_ship, TESObjectREFR* a_otherShip)
+	{
+		using func_t = decltype(&BeginUndock);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Docking::BeginUndock };
+		return func(a_ship, a_otherShip);
 	}
 }

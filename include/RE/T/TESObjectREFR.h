@@ -15,6 +15,7 @@
 #include "RE/I/IPostAnimationChannelUpdateFunctor.h"
 #include "RE/N/NiPoint.h"
 #include "RE/N/NiSmartPointer.h"
+#include "RE/S/SpaceshipReference.h"
 #include "RE/T/TESBoundObject.h"
 #include "RE/T/TESHandleForm.h"
 
@@ -231,7 +232,7 @@ namespace RE
 		virtual bool         ShouldBackgroundClone() const;                                                                                                                                                                                                                                           // 0A9
 		virtual bool         IsReadyForAttach([[maybe_unused]] const IO_TASK_PRIORITY& a_priority) const;                                                                                                                                                                                             // 0AA
 		virtual void         Unk_AB();                                                                                                                                                                                                                                                                // 0AB - { return Get3D(a_objectOut) };?
-		virtual void         Unk_AC();                                                                                                                                                                                                                                                                // 0AC - Get3D(NiPointer<NiAVObject>&)?
+		virtual NiPointer<NiAVObject> Get3D() const;                                                                                                                                                                                                                                                           // 0AC - returns a retained 3D pointer
 		virtual void         Unk_AD();                                                                                                                                                                                                                                                                // 0AD
 		virtual void         Unk_AE();                                                                                                                                                                                                                                                                // 0AE
 		virtual TESModel*    GetTESModel() const;                                                                                                                                                                                                                                                     // 0AF
@@ -241,9 +242,9 @@ namespace RE
 		virtual void         Unk_B3();                                                                                                                                                                                                                                                                // 0B3
 		virtual NiPoint3     GetBoundMin() const;                                                                                                                                                                                                                                                     // 0B4
 		virtual NiPoint3     GetBoundMax() const;                                                                                                                                                                                                                                                     // 0B5
-		virtual void         Unk_B6();                                                                                                                                                                                                                                                                // 0B6
-		virtual void         Unk_B7();                                                                                                                                                                                                                                                                // 0B7
-		virtual void         Unk_B8();                                                                                                                                                                                                                                                                // 0B8
+		virtual float                 GetBoundRadius() const;                                                                                                                                                                                                                                                  // 0B6 - maximum symmetric XY half-extent, not a 3D hull sphere
+		virtual float                 GetBoundWidth() const;                                                                                                                                                                                                                                                   // 0B7
+		virtual float                 GetBoundHeight() const;                                                                                                                                                                                                                                                  // 0B8
 		virtual void         Unk_B9();                                                                                                                                                                                                                                                                // 0B9
 		virtual void         Unk_BA();                                                                                                                                                                                                                                                                // 0BA
 		virtual void         Unk_BB();                                                                                                                                                                                                                                                                // 0BB
@@ -308,7 +309,8 @@ namespace RE
 		virtual void         Unk_F6();                                                                                                                                                                                                                                                                // 0F6
 		virtual void         SetObjectReference(TESBoundObject* a_object, bool a_clearData);                                                                                                                                                                                                          // 0F7
 		virtual void         Unk_F8();                                                                                                                                                                                                                                                                // 0F8
-		virtual void         Unk_F9();                                                                                                                                                                                                                                                                // 0F9
+		// Native velocity readout; missing physical/loaded-3D data produces zero. Game thread only.
+		virtual void GetLinearVelocity(NiPoint3& a_out) const;  // 0F9
 		virtual void         Unk_FA();                                                                                                                                                                                                                                                                // 0FA
 		virtual void         Unk_FB();                                                                                                                                                                                                                                                                // 0FB
 		virtual void         Unk_FC();                                                                                                                                                                                                                                                                // 0FC
@@ -373,8 +375,15 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetAngleZ() const { return data.angle.z; }
 		[[nodiscard]] NiPointer<TESBoundObject>       GetBaseObject() { return data.objectReference; }
 		[[nodiscard]] NiPointer<const TESBoundObject> GetBaseObject() const { return data.objectReference; }
+		// Copies the current native body pose; failure leaves a_out unchanged.
+		// A reference without its own DynamicState can resolve to its containing body's pose.
+		// Call on the game thread; no pointer into the component database escapes this call.
+		[[nodiscard]] bool GetBodyPose(Spaceship::BodyPose& a_out) const;
+
 		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
-		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
+		// Physical-aware native distance; FLT_MAX for a missing/deleted target, a disallowed
+		// disabled target, or incompatible coordinate frames. Call on the game thread.
+		[[nodiscard]] float GetDistance(const TESObjectREFR* a_other, bool a_allowDisabled = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
 		[[nodiscard]] REFR_LOCK*                      GetLock() const;
 		[[nodiscard]] LOCK_LEVEL                      GetLockLevel() const;
@@ -384,7 +393,18 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetPositionY() const noexcept { return data.location.y; }
 		[[nodiscard]] constexpr float                 GetPositionZ() const noexcept { return data.location.z; }
 		[[nodiscard]] float                           GetScale() const;
+		// In a qualifying space context, physical ships use the parent cell's body frame and
+		// other references use local data. Outside that context this returns world reference data.
+		// Failure leaves both outputs unchanged. Do not mix this frame with GetBodyPose.
+		[[nodiscard]] bool GetSpaceTransform(NiPoint3& a_translation, NiMatrix3& a_rotation) const;
+
+		// Copies the resolved space body's linear velocity in its physics-world frame.
+		// The native call retains the provider; failure leaves a_out unchanged.
+		// Call on the game thread. Separate calls do not form a coherent physics snapshot.
+		[[nodiscard]] bool GetSpaceLinearVelocity(NiPoint3& a_out) const;
+
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
+		// Resolves the marker-linked docking partner; borrowed, and null when no partner resolves.
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
 		[[nodiscard]] std::int32_t                    GetValue();
@@ -393,6 +413,18 @@ namespace RE
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);
 		[[nodiscard]] bool                            IsLocked() const;
 		[[nodiscard]] bool                            IsObjectEquipped(TESBoundObject* a_object);
+		// The native docking camera predicate: the ship's resolved pilot is the player.
+		// This does not test ownership, home-ship identity, or merely being aboard the ship.
+		[[nodiscard]] bool IsPlayerPilotedSpaceship() const;
+
+		// GBFM + base flag 0x40, matching Papyrus SpaceshipReference classification.
+		// This classification alone does not establish a hull, physics body, or ship AI.
+		[[nodiscard]] bool IsSpaceship() const noexcept;
+
+		// Checks the marker-linked docking partner in either direction, without waiting for animation.
+		// A null other ship instead tests that this ship is undocked, matching the native condition.
+		[[nodiscard]] bool IsDockedWith(TESObjectREFR* a_otherShip) const;
+
 		[[nodiscard]] bool                            IsSpaceshipDocked();
 		[[nodiscard]] bool                            IsSpaceshipLanded();
 		void                                          Lock();

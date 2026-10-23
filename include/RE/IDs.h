@@ -39,6 +39,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetSingleton{ 43134 };  // 36266
 	}
 
+	namespace ActorValueStorage
+	{
+		inline constexpr REL::ID GetBaseValue{ 102018 };
+		inline constexpr REL::ID GetModifierSum{ 102012 };
+	}
+
 	namespace ActorEquipManager
 	{
 		inline constexpr REL::ID Singleton{ 938503 };      // 879425
@@ -158,6 +164,11 @@ namespace RE::ID
 	namespace BGSEntryPoint
 	{
 		inline constexpr REL::ID HandleEntryPoint{ 0 };  // 110912
+	}
+
+	namespace BGSGenericBaseForm
+	{
+		inline constexpr REL::ID IsSpaceshipBase{ 57346 };
 	}
 
 	namespace BGSInventoryInterface
@@ -1142,6 +1153,11 @@ namespace RE::ID
 		inline constexpr REL::ID Unk1A{ 0 };              // 187232
 	}
 
+	namespace Havok::WorldReadGuard
+	{
+		inline constexpr REL::ID Acquire{ 43095 };
+	}
+
 	namespace INIPrefSettingCollection
 	{
 		inline constexpr REL::ID Singleton{ 944391 };
@@ -2063,6 +2079,9 @@ namespace RE::ID
 
 	namespace Spaceship::Docking
 	{
+		inline constexpr REL::ID IsInRange{ 120213 };
+		inline constexpr REL::ID GetAvailability{ 120214 };
+		inline constexpr REL::ID BeginUndock{ 120227 };
 		inline constexpr REL::ID FindPort{ 120212 };
 		inline constexpr REL::ID GetInteractionLocations{ 48431 };
 		inline constexpr REL::ID BeginDock{ 120224 };
@@ -2559,6 +2578,11 @@ namespace RE::ID
 		inline constexpr REL::ID CanUseArmor{ 0 };  // 103501
 	}
 
+	namespace TESObjectCELL
+	{
+		inline constexpr REL::ID GetParentRef{ 1015271 };
+	}
+
 	namespace TESObjectLoadedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107177
@@ -2566,17 +2590,21 @@ namespace RE::ID
 
 	namespace TESObjectREFR
 	{
+		inline constexpr REL::ID GetBodyPose{ 56975 };
+		inline constexpr REL::ID GetSpaceTransform{ 116271 };
+		inline constexpr REL::ID GetSpaceLinearVelocity{ 1015264 };
+		inline constexpr REL::ID IsPlayerPilotedSpaceship{ 119880 };
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
 		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
 		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
-		inline constexpr REL::ID GetDistance{ 0 };   // 106562
+		inline constexpr REL::ID GetDistance{ 63359 };
 		inline constexpr REL::ID GetLinkedRef{ 0 };  // 107578
 		inline constexpr REL::ID GetLock{ 0 };       // 107581
 		inline constexpr REL::ID GetParentWorldSpace{ 63417 };
-		inline constexpr REL::ID GetScale{ 0 };  // 106658
+		inline constexpr REL::ID GetScale{ 63258 };
 		inline constexpr REL::ID GetSpaceship{ 119881 };
-		inline constexpr REL::ID GetSpaceshipParentDock{ 0 };  // 174134
+		inline constexpr REL::ID GetSpaceshipParentDock{ 120236 };
 		inline constexpr REL::ID GetSpaceshipPilot{ 119876 };
 		inline constexpr REL::ID GetValue{ 0 };  // 107605
 		inline constexpr REL::ID HasKeyword{ 42794 };
@@ -2584,6 +2612,7 @@ namespace RE::ID
 		inline constexpr REL::ID IsInSpace{ 63482 };
 		inline constexpr REL::ID IsInSpaceship{ 119881 };
 		inline constexpr REL::ID IsObjectEquipped{ 0 };  // 106991
+		inline constexpr REL::ID IsDockedWith{ 120231 };
 		inline constexpr REL::ID IsSpaceshipDocked{ 120230 };
 		inline constexpr REL::ID IsSpaceshipLanded{ 119909 };
 		inline constexpr REL::ID WornHasKeyword{ 0 };  // 106992
