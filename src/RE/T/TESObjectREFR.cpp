@@ -53,11 +53,11 @@ namespace RE
 		return func(this);
 	}
 
-	float TESObjectREFR::GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs, bool a_ignoreWorldspace) const
+	float TESObjectREFR::GetDistance(const TESObjectREFR* a_other, bool a_allowDisabled) const
 	{
-		using func_t = decltype(&TESObjectREFR::GetDistance);
+		using func_t = float (*)(const TESObjectREFR*, const TESObjectREFR*, bool);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetDistance };
-		return func(this, a_other, a_disabledRefs, a_ignoreWorldspace);
+		return func(this, a_other, a_allowDisabled);
 	}
 
 	TESObjectREFR* TESObjectREFR::GetLinkedRef(BGSKeyword* a_keyword)
@@ -105,6 +105,18 @@ namespace RE
 		}
 		a_translation = translation;
 		a_rotation = rotation;
+		return true;
+	}
+
+	bool TESObjectREFR::GetSpaceLinearVelocity(NiPoint3& a_out) const
+	{
+		using func_t = bool (*)(const TESObjectREFR*, NiPoint3A*);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetSpaceLinearVelocity };
+		NiPoint3A                      velocity{};
+		if (!func(this, std::addressof(velocity))) {
+			return false;
+		}
+		a_out = velocity;
 		return true;
 	}
 
@@ -180,6 +192,13 @@ namespace RE
 	{
 		const auto* base = data.objectReference.get();
 		return base && base->Is(FormType::kGBFM) && static_cast<const BGSGenericBaseForm*>(base)->IsSpaceship();
+	}
+
+	bool TESObjectREFR::IsDockedWith(TESObjectREFR* a_otherShip) const
+	{
+		using func_t = decltype(&TESObjectREFR::IsDockedWith);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::IsDockedWith };
+		return func(this, a_otherShip);
 	}
 
 	bool TESObjectREFR::IsSpaceshipDocked()

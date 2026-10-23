@@ -309,7 +309,8 @@ namespace RE
 		virtual void         Unk_F6();                                                                                                                                                                                                                                                                // 0F6
 		virtual void         SetObjectReference(TESBoundObject* a_object, bool a_clearData);                                                                                                                                                                                                          // 0F7
 		virtual void         Unk_F8();                                                                                                                                                                                                                                                                // 0F8
-		virtual void         Unk_F9();                                                                                                                                                                                                                                                                // 0F9
+		// Native velocity readout; missing physical/loaded-3D data produces zero. Game thread only.
+		virtual void GetLinearVelocity(NiPoint3& a_out) const;  // 0F9
 		virtual void         Unk_FA();                                                                                                                                                                                                                                                                // 0FA
 		virtual void         Unk_FB();                                                                                                                                                                                                                                                                // 0FB
 		virtual void         Unk_FC();                                                                                                                                                                                                                                                                // 0FC
@@ -380,7 +381,9 @@ namespace RE
 		[[nodiscard]] bool GetBodyPose(Spaceship::BodyPose& a_out) const;
 
 		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
-		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
+		// Physical-aware native distance; FLT_MAX for a missing/deleted target, a disallowed
+		// disabled target, or incompatible coordinate frames. Call on the game thread.
+		[[nodiscard]] float GetDistance(const TESObjectREFR* a_other, bool a_allowDisabled = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
 		[[nodiscard]] REFR_LOCK*                      GetLock() const;
 		[[nodiscard]] LOCK_LEVEL                      GetLockLevel() const;
@@ -395,7 +398,13 @@ namespace RE
 		// Failure leaves both outputs unchanged. Do not mix this frame with GetBodyPose.
 		[[nodiscard]] bool GetSpaceTransform(NiPoint3& a_translation, NiMatrix3& a_rotation) const;
 
+		// Copies the resolved space body's linear velocity in its physics-world frame.
+		// The native call retains the provider; failure leaves a_out unchanged.
+		// Call on the game thread. Separate calls do not form a coherent physics snapshot.
+		[[nodiscard]] bool GetSpaceLinearVelocity(NiPoint3& a_out) const;
+
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
+		// Resolves the marker-linked docking partner; borrowed, and null when no partner resolves.
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
 		[[nodiscard]] std::int32_t                    GetValue();
@@ -411,6 +420,10 @@ namespace RE
 		// GBFM + base flag 0x40, matching Papyrus SpaceshipReference classification.
 		// This classification alone does not establish a hull, physics body, or ship AI.
 		[[nodiscard]] bool IsSpaceship() const noexcept;
+
+		// Checks the marker-linked docking partner in either direction, without waiting for animation.
+		// A null other ship instead tests that this ship is undocked, matching the native condition.
+		[[nodiscard]] bool IsDockedWith(TESObjectREFR* a_otherShip) const;
 
 		[[nodiscard]] bool                            IsSpaceshipDocked();
 		[[nodiscard]] bool                            IsSpaceshipLanded();
