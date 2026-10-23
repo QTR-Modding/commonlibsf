@@ -2074,6 +2074,9 @@ namespace RE::ID
 
 	namespace Spaceship::Docking
 	{
+		inline constexpr REL::ID IsInRange{ 120213 };
+		inline constexpr REL::ID GetAvailability{ 120214 };
+		inline constexpr REL::ID BeginUndock{ 120227 };
 		inline constexpr REL::ID FindPort{ 120212 };
 		inline constexpr REL::ID GetInteractionLocations{ 48431 };
 		inline constexpr REL::ID BeginDock{ 120224 };
