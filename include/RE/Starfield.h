@@ -393,6 +393,7 @@
 #include "RE/S/ScannableComponent.h"
 #include "RE/S/SceneGraph.h"
 #include "RE/S/Script.h"
+#include "RE/S/SpaceshipDocking.h"
 #include "RE/S/Setting.h"
 #include "RE/S/SettingCollection.h"
 #include "RE/S/SettingCollectionList.h"
