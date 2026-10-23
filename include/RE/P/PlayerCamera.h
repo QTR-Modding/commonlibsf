@@ -2,6 +2,7 @@
 
 #include "RE/B/BSInputEventReceiver.h"
 #include "RE/B/BSTEvent.h"
+#include "RE/B/BSTSmartPointer.h"
 #include "RE/D/DialogueCameraState.h"
 #include "RE/T/TESCamera.h"
 #include "RE/T/ThirdPersonState.h"
@@ -133,6 +134,37 @@ namespace RE
 			return func(this, a_cameraState);
 		}
 
+		// Changes only the saved destination used when the current camera state restores its predecessor.
+		[[nodiscard]] bool SetCameraRestoreState(CameraState a_cameraState)
+		{
+			if (a_cameraState >= CameraState::kTotal) {
+				return false;
+			}
+			auto* state = static_cast<TESCameraState*>(cameraStates[a_cameraState]);
+			if (!state) {
+				return false;
+			}
+			const auto capacity = cameraRestoreStateCapacityFlags & 0x7FFFFFFF;
+			const bool local = (cameraRestoreStateCapacityFlags & 0x80000000) != 0;
+			if (cameraRestoreStateCount > capacity ||
+				(local && capacity > sizeof(cameraRestoreStateStorage) / sizeof(BSTSmartPointer<TESCameraState>))) {
+				return false;
+			}
+			if (cameraRestoreStateCount == 0) {
+				return state == cameraStates[CameraState::kFirstPerson];
+			}
+			auto* states = local ? reinterpret_cast<BSTSmartPointer<TESCameraState>*>(cameraRestoreStateStorage) :
+				*reinterpret_cast<BSTSmartPointer<TESCameraState>**>(cameraRestoreStateStorage);
+			if (!states) {
+				return false;
+			}
+			auto& restoreState = states[cameraRestoreStateCount - 1];
+			if (restoreState.get() != state) {
+				restoreState = BSTSmartPointer<TESCameraState>{ state };
+			}
+			return true;
+		}
+
 		void ToggleFreeCameraMode(std::uint32_t a_cameraStateIndex, bool a_flag)
 		{
 			using func_t = decltype(&PlayerCamera::ToggleFreeCameraMode);
@@ -146,10 +178,19 @@ namespace RE
 		}
 
 		// members
-		std::byte unkA0[0x188 - 0xA0];                // 0A0
-		void*     cameraStates[CameraState::kTotal];  // 188
+		std::byte     unkA0[0xB8 - 0xA0];               // 0A0
+		std::uint32_t cameraRestoreStateCount;           // 0B8
+		std::uint32_t padBC;                             // 0BC
+		std::uint32_t cameraRestoreStateCapacityFlags;   // 0C0
+		std::uint32_t padC4;                             // 0C4
+		alignas(BSTSmartPointer<TESCameraState>)
+			std::byte cameraRestoreStateStorage[0xC0];   // 0C8
+		void* cameraStates[CameraState::kTotal];         // 188
 
 		// ...
 	};
+	static_assert(offsetof(PlayerCamera, cameraRestoreStateCount) == 0xB8);
+	static_assert(offsetof(PlayerCamera, cameraRestoreStateCapacityFlags) == 0xC0);
+	static_assert(offsetof(PlayerCamera, cameraRestoreStateStorage) == 0xC8);
 	static_assert(offsetof(PlayerCamera, cameraStates) == 0x188);
 }

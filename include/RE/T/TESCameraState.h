@@ -13,6 +13,7 @@ namespace RE
 	{
 	public:
 		SF_RTTI_VTABLE(TESCameraState);
+		using BSInputEventUser::operator delete;
 
 		~TESCameraState() override;  // 00
 
