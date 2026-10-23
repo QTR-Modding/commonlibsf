@@ -193,6 +193,7 @@ namespace RE
 				emplace_back(i);
 			}
 			a_rhs.clear();
+			return *this;
 		}
 
 		~BSTArray()

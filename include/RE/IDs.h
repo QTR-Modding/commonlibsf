@@ -2061,6 +2061,13 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 167220
 	}
 
+	namespace Spaceship::Docking
+	{
+		inline constexpr REL::ID FindPort{ 120212 };
+		inline constexpr REL::ID GetInteractionLocations{ 48431 };
+		inline constexpr REL::ID BeginDock{ 120224 };
+	}
+
 	namespace Spaceship::TakeOffEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 120552 };
@@ -2445,6 +2452,7 @@ namespace RE::ID
 	namespace TESCondition
 	{
 		inline constexpr REL::ID CheckValue{ 0 };  // 116112
+		inline constexpr REL::ID IsTrue{ 71422 };
 	}
 
 	namespace TESConditionItem
