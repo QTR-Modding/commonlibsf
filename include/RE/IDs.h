@@ -1602,6 +1602,7 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID Singleton{ 922868 };
 		inline constexpr REL::ID StartDialogueCamera{ 102807 };
+		inline constexpr REL::ID StopDialogueCamera{ 102808 };
 		inline constexpr REL::ID SetControlsDriven{ 102880 };
 	}
 
