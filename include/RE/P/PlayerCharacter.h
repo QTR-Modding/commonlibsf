@@ -78,6 +78,13 @@ namespace RE
 			return func(this, a_force);
 		}
 
+		void StopDialogueCamera(bool a_considerResume = false, bool a_switchingToFirstPerson = false)
+		{
+			using func_t = decltype(&PlayerCharacter::StopDialogueCamera);
+			static REL::Relocation<func_t> func{ ID::PlayerCharacter::StopDialogueCamera };
+			func(this, a_considerResume, a_switchingToFirstPerson);
+		}
+
 		void SetControlsDriven(bool a_controlsDriven)
 		{
 			using func_t = decltype(&PlayerCharacter::SetControlsDriven);
