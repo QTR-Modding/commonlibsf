@@ -2061,6 +2061,17 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 167220
 	}
 
+	namespace Spaceship::Cruise
+	{
+		inline constexpr REL::ID CanStart{ 1016255 };
+		inline constexpr REL::ID IsActive{ 1016812 };
+		inline constexpr REL::ID Course{ 1141339 };
+		inline constexpr REL::ID ToggleCourse{ 1016246 };
+		inline constexpr REL::ID Start{ 1016257 };
+		inline constexpr REL::ID RequestExit{ 1016264 };
+		inline constexpr REL::ID Stop{ 1016263 };
+	}
+
 	namespace Spaceship::Docking
 	{
 		inline constexpr REL::ID FindPort{ 120212 };
