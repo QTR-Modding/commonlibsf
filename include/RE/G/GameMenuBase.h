@@ -12,6 +12,22 @@ namespace RE
 			str(a_str)
 		{}
 
+		// Queue a named HUD mode change through the engine's UI message path.
+		// The resulting visibility update is asynchronous.
+		void Add() const
+		{
+			using func_t = decltype(&HUDModeType::Add);
+			static REL::Relocation<func_t> func{ ID::HUDModeType::Add };
+			func(this);
+		}
+
+		void Remove() const
+		{
+			using func_t = decltype(&HUDModeType::Remove);
+			static REL::Relocation<func_t> func{ ID::HUDModeType::Remove };
+			func(this);
+		}
+
 		// members
 		BSFixedString str;  // 00
 	};
