@@ -6,6 +6,34 @@
 
 namespace RE
 {
+	namespace
+	{
+		using LinkedParentCallback = std::function<void(BGSKeyword*, TESObjectREFR*)>;
+
+		struct LinkedParentVisitor
+		{
+			struct VTable
+			{
+				std::uintptr_t opaque00;
+				std::uint64_t (*invoke)(LinkedParentVisitor*, BGSKeyword*, TESObjectREFR*);
+			};
+
+			static std::uint64_t Invoke(LinkedParentVisitor* a_self, BGSKeyword* a_keyword, TESObjectREFR* a_parent)
+			{
+				if (a_parent) {
+					(*a_self->callback)(a_keyword, a_parent);
+				}
+				return 1;
+			}
+
+			const VTable*               vtable;
+			const LinkedParentCallback* callback;
+		};
+		static_assert(std::is_standard_layout_v<LinkedParentVisitor>);
+		static_assert(offsetof(LinkedParentVisitor::VTable, invoke) == 0x8);
+		constexpr LinkedParentVisitor::VTable linkedParentVTable{ 0, LinkedParentVisitor::Invoke };
+	}
+
 	void TESObjectREFR::ForEachEquippedItem(std::function<BSContainer::ForEachResult(const BGSInventoryItem&)> a_callback) const
 	{
 		ForEachInventoryItem([&](const BGSInventoryItem& a_invItem) {
@@ -71,6 +99,16 @@ namespace RE
 		using func_t = TESObjectREFR* (*)(ExtraDataList*, BGSKeyword*, bool);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetLinkedRef };
 		return extraDataList ? func(extraDataList.get(), a_keyword, true) : nullptr;
+	}
+
+	void TESObjectREFR::ForEachLinkedParent(LinkedParentCallback a_callback) const
+	{
+		if (extraDataList) {
+			LinkedParentVisitor visitor{ std::addressof(linkedParentVTable), std::addressof(a_callback) };
+			using func_t = std::uint64_t (*)(ExtraDataList*, LinkedParentVisitor*);
+			static REL::Relocation<func_t> func{ ID::ExtraDataList::ForEachLinkedParent };
+			func(extraDataList.get(), std::addressof(visitor));
+		}
 	}
 
 	REFR_LOCK* TESObjectREFR::GetLock() const
@@ -156,6 +194,13 @@ namespace RE
 		using func_t = decltype(&TESObjectREFR::IsCrimeToActivate);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::IsCrimeToActivate };
 		return func(this);
+	}
+
+	bool TESObjectREFR::IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations)
+	{
+		using func_t = decltype(&TESObjectREFR::IsFurnitureMarkerInUse);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::IsFurnitureMarkerInUse };
+		return IsFurniture() && func(this, a_marker, a_ignoreReservations);
 	}
 
 	bool TESObjectREFR::IsInSpace(bool a_arg1)

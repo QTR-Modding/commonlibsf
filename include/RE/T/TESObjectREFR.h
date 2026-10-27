@@ -386,6 +386,9 @@ namespace RE
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
+		// Visits resolved incoming links, including alias links, on the game thread.
+		// Callback pointers are borrowed; do not modify links during traversal.
+		void ForEachLinkedParent(std::function<void(BGSKeyword*, TESObjectREFR*)> a_callback) const;
 		[[nodiscard]] REFR_LOCK*                      GetLock() const;
 		[[nodiscard]] LOCK_LEVEL                      GetLockLevel() const;
 		[[nodiscard]] TESWorldSpace*                  GetParentWorldSpace();
@@ -404,6 +407,8 @@ namespace RE
 		[[nodiscard]] std::int32_t                    GetValue();
 		[[nodiscard]] bool                            HasKeyword(BGSKeyword* a_keyword);
 		[[nodiscard]] bool                            IsCrimeToActivate();
+		// Includes marker reservations unless a_ignoreReservations is true. Game thread only.
+		[[nodiscard]] bool IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations = false);
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);
 		// Resolves ship-interior ownership before comparing cells or worldspaces.
 		// Optional parent-world matching follows the native worldspace flags.

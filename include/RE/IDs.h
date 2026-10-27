@@ -989,6 +989,7 @@ namespace RE::ID
 
 	namespace ExtraDataList
 	{
+		inline constexpr REL::ID ForEachLinkedParent{ 45112 };
 		inline constexpr REL::ID HasQuestObjectAlias{ 45044 };
 	}
 
@@ -2673,6 +2674,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetValue{ 0 };  // 107605
 		inline constexpr REL::ID HasKeyword{ 42794 };
 		inline constexpr REL::ID IsCrimeToActivate{ 0 };  // 106755
+		inline constexpr REL::ID IsFurnitureMarkerInUse{ 64240 };
 		inline constexpr REL::ID IsInSpace{ 63482 };
 		inline constexpr REL::ID IsInSameSpace{ 63349 };
 		inline constexpr REL::ID IsInSpaceship{ 119881 };
