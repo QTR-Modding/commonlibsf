@@ -1096,7 +1096,13 @@ namespace RE::ID
 
 	namespace HUDModeEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 133039
+		inline constexpr REL::ID GetEventSource{ 86273 };
+	}
+
+	namespace HUDModeType
+	{
+		inline constexpr REL::ID Add{ 91180 };
+		inline constexpr REL::ID Remove{ 91181 };
 	}
 
 	namespace HUDNotification_MissionActiveWidgetUpdate
