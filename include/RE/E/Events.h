@@ -2186,15 +2186,14 @@ namespace RE
 			return func();
 		}
 
-		// pickedRefID is a reference FormID, not a pointer-handle value. Resolve
-		// and retain the reference during dispatch before queuing asynchronous work.
-		TESFormID    pickedRefID;   // 00
-		bool         refChanged;    // 04
-		bool         rangeChanged;  // 05
-		std::uint8_t unk06;         // 06
-		std::byte    pad07;         // 07
+		// Resolve an owned reference during dispatch before queuing asynchronous work.
+		BSPointerHandle<TESObjectREFR> pickedRef;     // 00
+		bool                           refChanged;    // 04
+		bool                           rangeChanged;  // 05
+		std::uint8_t                   unk06;         // 06
+		std::byte                      pad07;         // 07
 	};
-	static_assert(offsetof(PickRefUpdateEvent, pickedRefID) == 0x0);
+	static_assert(offsetof(PickRefUpdateEvent, pickedRef) == 0x0);
 	static_assert(offsetof(PickRefUpdateEvent, refChanged) == 0x4);
 	static_assert(offsetof(PickRefUpdateEvent, rangeChanged) == 0x5);
 	static_assert(sizeof(PickRefUpdateEvent) == 0x8);
