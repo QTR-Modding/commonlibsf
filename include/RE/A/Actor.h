@@ -231,8 +231,8 @@ namespace RE
 		virtual void         Unk_168();                                                                              // 168
 		virtual void         UpdateAlpha();                                                                          // 169
 		virtual void         Unk_16A();                                                                              // 16A
-		virtual void         Unk_16B();                                                                              // 16B
-		virtual bool         IsInCombat() const;                                                                     // 16C
+		virtual bool         IsInCombat() const;                                                                     // 16B
+		virtual void         Unk_16C();                                                                              // 16C
 		virtual void         Unk_16D();                                                                              // 16D
 		virtual void         StopCombat();                                                                           // 16E
 		virtual void         Unk_16F();                                                                              // 16F

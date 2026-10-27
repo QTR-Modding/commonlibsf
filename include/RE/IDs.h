@@ -2082,6 +2082,27 @@ namespace RE::ID
 		inline constexpr REL::ID FindPort{ 120212 };
 		inline constexpr REL::ID GetInteractionLocations{ 48431 };
 		inline constexpr REL::ID BeginDock{ 120224 };
+		inline constexpr REL::ID GetPhysicalBodyPose{ 56975 };
+		inline constexpr REL::ID FloatingOrigin{ 893886 };
+		inline constexpr REL::ID GetMarkerPlacement{ 48445 };
+		inline constexpr REL::ID GetInverseDockerTransform{ 48447 };
+		inline constexpr REL::ID GetPortRotation{ 63286 };
+	}
+
+	namespace Spaceship::Movement
+	{
+		inline constexpr REL::ID ResolveActor{ 120140 };
+		inline constexpr REL::ID CreateRequest{ 82053 };
+		inline constexpr REL::ID ConfigurePoint{ 100920 };
+		inline constexpr REL::ID Submit{ 100905 };
+		inline constexpr REL::ID QueryCurrent{ 82033 };
+		inline constexpr REL::ID GetController{ 82026 };
+		inline constexpr REL::ID LookupInterface{ 49356 };
+		inline constexpr REL::ID RegisterRequest{ 135799 };
+		inline constexpr REL::ID EventManager{ 938947 };
+		inline constexpr REL::ID ReleaseControllerLease{ 126666 };
+		inline constexpr REL::ID StateInterfaceKey{ 932460 };
+		inline constexpr REL::ID CancelRequest{ 82032 };
 	}
 
 	namespace Spaceship::Travel
@@ -2090,6 +2111,27 @@ namespace RE::ID
 		inline constexpr REL::ID AbortGravJump{ 119863 };
 		inline constexpr REL::ID ShouldPlayLandingAnimation{ 94931 };
 		inline constexpr REL::ID RequestLanding{ 97897 };
+		inline constexpr REL::ID GetCurrentBodyID{ 97914 };
+		inline constexpr REL::ID ForEachCelestialBody{ 57665 };
+		inline constexpr REL::ID GetCelestialBodyName{ 47497 };
+		inline constexpr REL::ID BodyToSystem{ 124608 };
+		inline constexpr REL::ID GetBodyType{ 124776 };
+		inline constexpr REL::ID RequestTakeOff{ 119907 };
+		inline constexpr REL::ID RequestUndock{ 120226 };
+		inline constexpr REL::ID CollectAuthoredWorlds{ 39360 };
+		inline constexpr REL::ID StockWorldCollectorVtable{ 446013 };
+		inline constexpr REL::ID CollectRegisteredWorlds{ 94196 };
+		inline constexpr REL::ID AddPlayerOutposts{ 93928 };
+		inline constexpr REL::ID AddCurrentSite{ 93931 };
+		inline constexpr REL::ID DestroyLandingRows{ 94118 };
+		inline constexpr REL::ID SharedLandingAdmission{ 1016672 };
+		inline constexpr REL::ID LocationAdmission{ 1016671 };
+		inline constexpr REL::ID CheckLandingAvailability{ 96248 };
+		inline constexpr REL::ID ShipFits{ 119890 };
+		inline constexpr REL::ID GetBodyKnowledge{ 52172 };
+		inline constexpr REL::ID GetPlayerScannerLevel{ 97847 };
+		inline constexpr REL::ID GetLandingSourceShip{ 97902 };
+		inline constexpr REL::ID FreeNativeSmallStringHeap{ 123786 };
 	}
 
 	namespace Spaceship::TakeOffEvent

@@ -71,6 +71,10 @@ namespace RE
 	public:
 		BSPointerHandle() noexcept = default;
 
+		explicit BSPointerHandle(typename Handle::HandleType a_handle) noexcept :
+			_handle(a_handle)
+		{}
+
 		template <class Y>
 		BSPointerHandle(BSPointerHandle<Y, Handle> a_rhs) noexcept
 			requires(std::convertible_to<Y*, T*>)
