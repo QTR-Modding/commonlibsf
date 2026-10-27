@@ -99,7 +99,7 @@ namespace RE
 			return BSPointerHandleManagerInterface<T>::GetSmartPointer(*this);
 		}
 
-		[[nodiscard]] Handle::HandleType get_handle() noexcept
+		[[nodiscard]] Handle::HandleType get_handle() const noexcept
 		{
 			return _handle.value();
 		}
