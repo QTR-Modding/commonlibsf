@@ -342,6 +342,14 @@ namespace RE
 			return func(this, a_actor);
 		}
 
+		// Call on the game thread with a valid other actor.
+		[[nodiscard]] std::uint32_t GetFactionReaction(Actor* a_other)
+		{
+			using func_t = std::uint32_t (*)(void*, std::uint32_t, Actor*, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetFactionReaction };
+			return func(nullptr, 0, this, a_other);
+		}
+
 		[[nodiscard]] TESNPC* GetNPC()
 		{
 			return GetBaseObject()->As<TESNPC>();

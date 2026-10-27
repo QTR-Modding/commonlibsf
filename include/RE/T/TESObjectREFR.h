@@ -18,12 +18,15 @@
 #include "RE/T/TESBoundObject.h"
 #include "RE/T/TESHandleForm.h"
 
+#include <vector>
+
 namespace RE
 {
 	enum class LOCK_LEVEL;
 	enum class IO_TASK_PRIORITY;
 
 	class TESContainer;
+	class TESFaction;
 	class Actor;
 	class ActorCause;
 	class BGSEquipSlot;
@@ -373,7 +376,14 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetAngleZ() const { return data.angle.z; }
 		[[nodiscard]] NiPointer<TESBoundObject>       GetBaseObject() { return data.objectReference; }
 		[[nodiscard]] NiPointer<const TESBoundObject> GetBaseObject() const { return data.objectReference; }
+		// Explicit ownership from this reference; returned pointers are borrowed.
+		// Call on the game thread and retain an actor owner before queuing it.
+		[[nodiscard]] Actor*                          GetActorRefOwner() const;
+		[[nodiscard]] TESFaction*                     GetFactionOwner() const;
 		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
+		// Copies keyword-matching exterior references with owned lifetimes.
+		// Requires a valid ship and non-null keyword; call on the game thread.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
 		[[nodiscard]] REFR_LOCK*                      GetLock() const;
@@ -387,10 +397,17 @@ namespace RE
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
+		// Physical cockpit queries for a valid ship on the game thread.
+		// The seat is borrowed; the occupant owns its resolved reference.
+		[[nodiscard]] TESObjectREFR*                  GetSpaceshipPilotSeat();
+		[[nodiscard]] NiPointer<Actor>                GetSpaceshipPilotSeatOccupant();
 		[[nodiscard]] std::int32_t                    GetValue();
 		[[nodiscard]] bool                            HasKeyword(BGSKeyword* a_keyword);
 		[[nodiscard]] bool                            IsCrimeToActivate();
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);
+		// Resolves ship-interior ownership before comparing cells or worldspaces.
+		// Optional parent-world matching follows the native worldspace flags.
+		[[nodiscard]] bool IsInSameSpace(const TESObjectREFR* a_other, bool a_allowParentWorld = false) const;
 		[[nodiscard]] bool                            IsLocked() const;
 		[[nodiscard]] bool                            IsObjectEquipped(TESBoundObject* a_object);
 		[[nodiscard]] bool                            IsSpaceshipDocked();

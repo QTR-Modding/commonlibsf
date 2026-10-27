@@ -33,12 +33,15 @@ namespace RE
 		struct OpenSpaceRequestView
 		{
 			RequestPrefix prefix;
-			std::byte     unk90[0x130];
+			std::byte     unk90[0xD8];
+			std::byte     avoidanceHeader[0x20];
+			std::byte     unk188[0x38];
 			std::uint32_t entityID;
 			TESFormID     shipID;
 			TESFormID     exemptTargetID;
 			std::uint8_t  specialFlight;
 		};
+		static_assert(offsetof(OpenSpaceRequestView, avoidanceHeader) == 0x168);
 		static_assert(offsetof(OpenSpaceRequestView, shipID) == 0x1C4);
 		static_assert(offsetof(OpenSpaceRequestView, specialFlight) == 0x1CC);
 		static_assert(sizeof(OpenSpaceRequestView) == 0x1D0);
@@ -48,7 +51,7 @@ namespace RE
 			if (!a_object) {
 				return;
 			}
-			auto* bytes = static_cast<std::byte*>(a_object);
+			auto*           bytes = static_cast<std::byte*>(a_object);
 			std::atomic_ref count{ *reinterpret_cast<std::uint32_t*>(bytes + a_refCountOffset) };
 			if (count.fetch_sub(1) == 1) {
 				using destructor_t = void* (*)(void*, std::uint32_t);
@@ -150,9 +153,9 @@ namespace RE
 				return nullptr;
 			}
 			using lookup_t = SetStateInterface* (*)(void*, const void*);
-			static REL::Relocation<lookup_t> lookup{ ID::Spaceship::Movement::LookupInterface };
+			static REL::Relocation<lookup_t>    lookup{ ID::Spaceship::Movement::LookupInterface };
 			static REL::Relocation<const void*> key{ ID::Spaceship::Movement::StateInterfaceKey };
-			auto* state = lookup(a_lease.controller->interfaces, key.get());
+			auto*                               state = lookup(a_lease.controller->interfaces, key.get());
 			if (!state) {
 				return nullptr;
 			}
@@ -236,7 +239,8 @@ namespace RE
 		}
 
 		bool RequestPoint(TESObjectREFR* a_ship, const NiPoint3& a_position, TESObjectCELL* a_cell,
-			TESWorldSpace* a_worldspace, float a_radius, PointRequest& a_out, const NiPoint3* a_facingPoint)
+			TESWorldSpace* a_worldspace, float a_radius, PointRequest& a_out, const NiPoint3* a_facingPoint,
+			TESObjectREFR* a_avoidanceTarget)
 		{
 			if (!std::isfinite(a_radius) || a_radius <= 0.0F || !BSPathEvent::GetEventSource()) {
 				return false;
@@ -252,11 +256,11 @@ namespace RE
 			pending._ship.reset(a_ship);
 			using create_t = void (*)(Actor*, TESObjectREFR*, PathingRequest**);
 			static REL::Relocation<create_t> create{ ID::Spaceship::Movement::CreateRequest };
-			create(actor.get(), nullptr, std::addressof(pending._request));
+			create(actor.get(), a_avoidanceTarget, std::addressof(pending._request));
 			if (!pending._request) {
 				return false;
 			}
-			const auto& openSpace = *reinterpret_cast<const OpenSpaceRequestView*>(pending._request);
+			const auto&                            openSpace = *reinterpret_cast<const OpenSpaceRequestView*>(pending._request);
 			static REL::Relocation<std::uintptr_t> requestTable{ VTABLE::PathingRequestOpenSpace[0] };
 			if (reinterpret_cast<std::uintptr_t>(openSpace.prefix.vtable) != requestTable.address() ||
 				openSpace.shipID != a_ship->GetFormID()) {
@@ -273,13 +277,20 @@ namespace RE
 				request.facingPoint = *a_facingPoint;
 				request.goalFlags = static_cast<std::uint8_t>((request.goalFlags & ~0x14U) | 0x08U);
 			}
+			if (a_avoidanceTarget) {
+				using exemption_t = void (*)(void*, TESFormID, std::uintptr_t, bool);
+				static REL::Relocation<exemption_t> exempt{ ID::Spaceship::Movement::SetAvoidanceExemption };
+				// The native ABI leaves its third slot unused and takes enable in R9B.
+				auto& request = *reinterpret_cast<OpenSpaceRequestView*>(pending._request);
+				exempt(request.avoidanceHeader, a_avoidanceTarget->GetFormID(), 0, true);
+			}
 			using submit_t = bool (*)(Actor*, PathingRequest**);
 			static REL::Relocation<submit_t> submit{ ID::Spaceship::Movement::Submit };
 			if (!submit(actor.get(), std::addressof(pending._request))) {
 				return false;
 			}
 			using register_t = std::int32_t (*)(void*, PathingRequest*);
-			static REL::Relocation<void**> manager{ ID::Spaceship::Movement::EventManager };
+			static REL::Relocation<void**>     manager{ ID::Spaceship::Movement::EventManager };
 			static REL::Relocation<register_t> registerRequest{ ID::Spaceship::Movement::RegisterRequest };
 			pending._listenerID = registerRequest(*manager, pending._request);
 			if (pending._listenerID == -1) {
@@ -288,6 +299,15 @@ namespace RE
 			}
 			a_out = std::move(pending);
 			return true;
+		}
+
+		void RequestStop(TESObjectREFR* a_ship)
+		{
+			if (auto actor = ResolveActor(a_ship)) {
+				using func_t = void (*)(Actor*, float);
+				static REL::Relocation<func_t> func{ ID::Spaceship::Movement::RequestStop };
+				func(actor.get(), 1.0F);
+			}
 		}
 
 		FlightOrientation::~FlightOrientation() { Release(); }
@@ -309,12 +329,12 @@ namespace RE
 		bool CaptureOrientation(TESObjectREFR* a_ship, FlightOrientation& a_out)
 		{
 			ControllerLease lease;
-			auto* agent = GetFlightAgent(a_ship, lease);
+			auto*           agent = GetFlightAgent(a_ship, lease);
 			if (!agent) {
 				return false;
 			}
 			FlightOrientation snapshot;
-			std::atomic_ref count{ *reinterpret_cast<std::uint32_t*>(reinterpret_cast<std::byte*>(agent) + 0x8) };
+			std::atomic_ref   count{ *reinterpret_cast<std::uint32_t*>(reinterpret_cast<std::byte*>(agent) + 0x8) };
 			count.fetch_add(1);
 			snapshot._agent = agent;
 			{
@@ -329,7 +349,7 @@ namespace RE
 		bool SetUpVector(TESObjectREFR* a_ship, const NiPoint3& a_up)
 		{
 			ControllerLease lease;
-			auto* agent = GetFlightAgent(a_ship, lease);
+			auto*           agent = GetFlightAgent(a_ship, lease);
 			if (!agent) {
 				return false;
 			}
@@ -343,7 +363,7 @@ namespace RE
 				return false;
 			}
 			ControllerLease lease;
-			auto* agent = GetFlightAgent(a_ship, lease);
+			auto*           agent = GetFlightAgent(a_ship, lease);
 			if (agent != a_snapshot._agent) {
 				return false;
 			}

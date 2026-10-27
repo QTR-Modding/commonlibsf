@@ -10,6 +10,7 @@
 namespace RE
 {
 	class Actor;
+	class ActorValueInfo;
 	class BGSAttackData;
 	class BGSLocation;
 	class bhkNPCollisionObject;
@@ -53,6 +54,30 @@ namespace RE
 			}
 		};
 	};
+
+	namespace ActorValueEvents
+	{
+		struct ActorValueChangedEvent
+		{
+			[[nodiscard]] static BSTEventSource<ActorValueChangedEvent>* GetEventSource()
+			{
+				using func_t = decltype(&ActorValueChangedEvent::GetEventSource);
+				static REL::Relocation<func_t> func{ ID::ActorValueEvents::ActorValueChangedEvent::GetEventSource };
+				return func();
+			}
+
+			// Pointers are borrowed during dispatch. The reported delta may be the
+			// requested modifier change; read the current value to obtain its result.
+			float           delta;      // 00
+			std::uint32_t   pad04;      // 04
+			ActorValueInfo* actorValue; // 08
+			TESObjectREFR*  reference;  // 10
+		};
+		static_assert(offsetof(ActorValueChangedEvent, delta) == 0x0);
+		static_assert(offsetof(ActorValueChangedEvent, actorValue) == 0x8);
+		static_assert(offsetof(ActorValueChangedEvent, reference) == 0x10);
+		static_assert(sizeof(ActorValueChangedEvent) == 0x18);
+	}
 
 	struct ActorCellChangeEvent
 	{
@@ -2152,13 +2177,27 @@ namespace RE
 
 	struct PickRefUpdateEvent
 	{
+		// Global source for space-target cursor updates. Walking updates use
+		// PlayerCharacter::GetPickRefUpdateEventSource().
 		[[nodiscard]] static BSTEventSource<PickRefUpdateEvent>* GetEventSource()
 		{
 			using func_t = decltype(&PickRefUpdateEvent::GetEventSource);
 			static REL::Relocation<func_t> func{ ID::PickRefUpdateEvent::GetEventSource };
 			return func();
 		}
+
+		// pickedRefID is a reference FormID, not a pointer-handle value. Resolve
+		// and retain the reference during dispatch before queuing asynchronous work.
+		TESFormID    pickedRefID;   // 00
+		bool         refChanged;    // 04
+		bool         rangeChanged;  // 05
+		std::uint8_t unk06;         // 06
+		std::byte    pad07;         // 07
 	};
+	static_assert(offsetof(PickRefUpdateEvent, pickedRefID) == 0x0);
+	static_assert(offsetof(PickRefUpdateEvent, refChanged) == 0x4);
+	static_assert(offsetof(PickRefUpdateEvent, rangeChanged) == 0x5);
+	static_assert(sizeof(PickRefUpdateEvent) == 0x8);
 
 	struct PlayBink_CloseMenu
 	{

@@ -24,8 +24,10 @@ namespace RE
 
 		struct WorldDockingPoses
 		{
-			Pose start;
-			Pose docked;
+			Pose     start;
+			Pose     docked;
+			NiPoint3 targetOrigin;
+			NiPoint3 facingPoint;
 		};
 
 		// Native XY target-bounds allowance used by HUD distance and docking range,
@@ -41,8 +43,13 @@ namespace RE
 		// Requires a valid source ship and a port returned by FindPort for that ship/target pair.
 		[[nodiscard]] bool GetStartPose(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, StartPose& a_out);
 
+		// Copies the current physical body pose in current-origin common XYZ.
+		// Rotation rows are world-space axes. Failure leaves a_out unchanged.
+		[[nodiscard]] bool GetWorldPose(TESObjectREFR* a_ship, Pose& a_out);
+
 		// Copies the animation start and final docked poses using one target-body
-		// snapshot. Translation is current-origin common XYZ for native movement;
+		// snapshot, with the target body origin and the stock start-facing point.
+		// Translations and points use current-origin common XYZ for native movement;
 		// rotation rows are world-space axes. Does not move the ship.
 		// Requires a compatible source/target/port pair. Failure leaves a_out unchanged.
 		[[nodiscard]] bool GetWorldDockingPoses(TESObjectREFR* a_source, TESObjectREFR* a_target, TESObjectREFR* a_targetPort, WorldDockingPoses& a_out);

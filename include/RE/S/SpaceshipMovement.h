@@ -16,7 +16,7 @@ namespace RE
 
 	struct BSPathEvent
 	{
-		// Result 0 is completion; 1 is failure/replacement, 2 replaces Idle, 3 interrupts.
+		// Result 0 is completion; 1 is failure/replacement, 2 replaces StopMoving, 3 interrupts.
 		std::int32_t  listenerID;
 		std::uint32_t result;
 
@@ -46,7 +46,7 @@ namespace RE
 			[[nodiscard]] bool Cancel() const;
 
 		private:
-			friend bool RequestPoint(TESObjectREFR*, const NiPoint3&, TESObjectCELL*, TESWorldSpace*, float, PointRequest&, const NiPoint3*);
+			friend bool RequestPoint(TESObjectREFR*, const NiPoint3&, TESObjectCELL*, TESWorldSpace*, float, PointRequest&, const NiPoint3*, TESObjectREFR*);
 			void Release() noexcept;
 
 			NiPointer<TESObjectREFR> _ship;
@@ -63,11 +63,18 @@ namespace RE
 		// Native movement parameters and obstacle avoidance remain in charge. Radius must be positive.
 		// Optional facingPoint uses the same origin-resolved coordinate system, not a direction.
 		// It preserves the native angular tolerance and gates the final node's forward angle.
+		// Optional avoidanceTarget must be a valid physical ship; its steering constraint is exempt.
+		// Other obstacles and physical collisions remain enabled. Null preserves ordinary avoidance.
 		// Completion does not certify roll alignment or zero physical velocity.
 		// Register an event sink first and match ListenerID; submission replaces previous movement.
 		// On failure a_out is unchanged. Native submission may already have replaced an old request.
 		[[nodiscard]] bool RequestPoint(TESObjectREFR* a_ship, const NiPoint3& a_position, TESObjectCELL* a_cell,
-			TESWorldSpace* a_worldspace, float a_radius, PointRequest& a_out, const NiPoint3* a_facingPoint = nullptr);
+			TESWorldSpace* a_worldspace, float a_radius, PointRequest& a_out, const NiPoint3* a_facingPoint = nullptr,
+			TESObjectREFR* a_avoidanceTarget = nullptr);
+
+		// Requests a normal stop through the ship AI actor, respecting native admission.
+		// This can replace current movement and reports neither acceptance nor physical rest.
+		void RequestStop(TESObjectREFR* a_ship);
 
 		// Opaque native facing target, both scales and up vector, with strong agent ownership.
 		// Keep this snapshot for restoration; it is not an orientation-completion certificate.
