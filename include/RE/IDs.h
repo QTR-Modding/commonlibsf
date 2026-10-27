@@ -406,6 +406,11 @@ namespace RE::ID
 		}
 	}
 
+	namespace BSService::CommandQueue
+	{
+		inline constexpr REL::ID Allocate{ 123895 };
+	}
+
 	namespace BSService::TaskQueue
 	{
 		inline constexpr REL::ID Singleton{ 883606 };
@@ -2077,6 +2082,14 @@ namespace RE::ID
 		inline constexpr REL::ID FindPort{ 120212 };
 		inline constexpr REL::ID GetInteractionLocations{ 48431 };
 		inline constexpr REL::ID BeginDock{ 120224 };
+	}
+
+	namespace Spaceship::Travel
+	{
+		inline constexpr REL::ID ExecuteRoute{ 119842 };
+		inline constexpr REL::ID AbortGravJump{ 119863 };
+		inline constexpr REL::ID ShouldPlayLandingAnimation{ 94931 };
+		inline constexpr REL::ID RequestLanding{ 97897 };
 	}
 
 	namespace Spaceship::TakeOffEvent

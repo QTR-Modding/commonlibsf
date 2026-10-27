@@ -89,6 +89,12 @@ namespace RE
 			return entry ? entry->menu : nullptr;
 		}
 
+		// Owns the callable until execution on the UI owner thread, after movie advancement.
+		// The callable must be nonempty and must not throw. UI teardown destroys pending callables
+		// without invoking them. Enqueue only while UI is alive;
+		// resolve the current menu/movie inside the callable instead of retaining borrowed pointers.
+		void QueueTask(std::move_only_function<void()> a_task);
+
 		// Returns a retained reference to the first menu considered during input dispatch.
 		[[nodiscard]] Scaleform::Ptr<IMenu> GetTopInputMenu() const;
 

@@ -395,6 +395,7 @@
 #include "RE/S/Script.h"
 #include "RE/S/SpaceshipCruise.h"
 #include "RE/S/SpaceshipDocking.h"
+#include "RE/S/SpaceshipTravel.h"
 #include "RE/S/Setting.h"
 #include "RE/S/SettingCollection.h"
 #include "RE/S/SettingCollectionList.h"
