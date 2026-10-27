@@ -75,6 +75,12 @@ namespace RE
 		// Call on the game thread after gameplay initialization.
 		[[nodiscard]] std::uint32_t GetCurrentBodyID();
 
+		// Resolves the nearest star, planet, moon or belt ancestor used by the ship
+		// HUD's orbital-context comparison. Uses the containing ship when present.
+		// Returns zero when no native body/ancestor is found, including unparented space.
+		// Call on the game thread with a valid in-space reference.
+		[[nodiscard]] std::uint32_t GetOrbitBodyID(TESObjectREFR* a_reference);
+
 		// Native system containing this celestial body. Requires a valid body ID.
 		[[nodiscard]] std::uint32_t GetBodySystemID(std::uint32_t a_bodyID);
 
