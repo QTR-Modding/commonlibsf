@@ -1,8 +1,10 @@
 #pragma once
 
+#include "RE/B/BSContainer.h"
 #include "RE/B/BSFixedString.h"
 #include "RE/B/BSPointerHandle.h"
 #include "RE/B/BSTArray.h"
+#include "RE/N/NiSmartPointer.h"
 
 namespace RE
 {
@@ -84,6 +86,15 @@ namespace RE
 		// Names are owned; no database view or callback is retained. Call on the
 		// game thread after gameplay initialization with a valid reference body.
 		[[nodiscard]] BSTArray<CelestialBodyInfo> GetOtherBodiesInSystem(std::uint32_t a_referenceBodyID);
+
+		// Visits references from the native space-body iterator in engine order.
+		// Uses the source ship's FormID and includes references from space cells.
+		// Callbacks run synchronously under native read views; do not change
+		// body/cell membership. Copy a NiPointer to retain a reference.
+		// Call on the game thread with a valid orbital ship. The caller supplies
+		// range, visibility and gameplay filtering.
+		BSContainer::ForEachResult ForEachSpaceReference(TESObjectREFR* a_source,
+			std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback);
 
 		// Copies flat, ungrouped surface-marker rows on the current body, with stock
 		// labels, coordinates and visibility. Excludes foot-to-ship actions and empty

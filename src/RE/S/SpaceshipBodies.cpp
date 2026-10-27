@@ -1,17 +1,17 @@
 #include "RE/S/SpaceshipTravel.h"
 
-#include "RE/B/BSContainer.h"
+#include "RE/T/TESObjectREFR.h"
 
 namespace RE::Spaceship::Travel
 {
 	namespace
 	{
-		struct BodyCollector;
-		using BodyCallback = BSContainer::ForEachResult (*)(BodyCollector*, std::uint32_t, const void*, const void*, const void*);
+		using ReferenceCallback = std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)>;
+		using BodyCallback = BSContainer::ForEachResult (*)(void*, std::uint32_t, const void*, const void*, const NiPointer<TESObjectREFR>&);
 
 		// The synchronous iterator reads only target.vtable[2], never the two
 		// preceding slots. It neither copies, destroys nor retains this target.
-		// Borrowed BodyDrawData/reference arguments remain opaque to the collector.
+		// Borrowed BodyDrawData arguments remain opaque to these collectors.
 		struct BodyCollectorDispatch
 		{
 			std::uintptr_t unusedSlots[2]{};
@@ -27,17 +27,43 @@ namespace RE::Spaceship::Travel
 		};
 		static_assert(offsetof(BodyCollector, dispatch) == 0x00);
 
-		BSContainer::ForEachResult CollectBody(BodyCollector* a_collector, std::uint32_t a_bodyID, const void*, const void*, const void*)
+		struct ReferenceCollector
 		{
+			const BodyCollectorDispatch* dispatch;
+			const ReferenceCallback* callback;
+		};
+		static_assert(offsetof(ReferenceCollector, dispatch) == 0x00);
+
+		BSContainer::ForEachResult CollectBody(void* a_context, std::uint32_t a_bodyID, const void*, const void*, const NiPointer<TESObjectREFR>&)
+		{
+			const auto* collector = static_cast<BodyCollector*>(a_context);
 			const auto systemID = GetBodySystemID(a_bodyID);
-			if (systemID == a_collector->systemID) {
+			if (systemID == collector->systemID) {
 				BSFixedString name;
 				using func_t = BSFixedString* (*)(BSFixedString*, std::uint32_t);
 				static REL::Relocation<func_t> func{ ID::Spaceship::Travel::GetCelestialBodyName };
 				func(std::addressof(name), a_bodyID);
-				a_collector->bodies->push_back({ { systemID, a_bodyID }, std::move(name), GetBodyType(a_bodyID) });
+				collector->bodies->push_back({ { systemID, a_bodyID }, std::move(name), GetBodyType(a_bodyID) });
 			}
 			return BSContainer::ForEachResult::kContinue;
+		}
+
+		BSContainer::ForEachResult CollectReference(void* a_context, std::uint32_t a_bodyID, const void*, const void*, const NiPointer<TESObjectREFR>& a_reference)
+		{
+			const auto* collector = static_cast<ReferenceCollector*>(a_context);
+			if (a_reference) {
+				return (*collector->callback)(a_reference);
+			}
+			auto* form = TESForm::LookupByID(a_bodyID);
+			NiPointer<TESObjectREFR> reference{ form ? form->AsReference() : nullptr };
+			return reference ? (*collector->callback)(reference) : BSContainer::ForEachResult::kContinue;
+		}
+
+		BSContainer::ForEachResult VisitBodies(std::uint32_t a_sourceID, bool a_includeCellReferences, void* a_visitor)
+		{
+			using func_t = decltype(&VisitBodies);
+			static REL::Relocation<func_t> func{ ID::Spaceship::Travel::ForEachCelestialBody };
+			return func(a_sourceID, a_includeCellReferences, a_visitor);
 		}
 	}
 
@@ -62,9 +88,14 @@ namespace RE::Spaceship::Travel
 		BSTArray<CelestialBodyInfo> bodies;
 		static const BodyCollectorDispatch dispatch{ {}, CollectBody };
 		BodyCollector collector{ std::addressof(dispatch), GetBodySystemID(a_referenceBodyID), std::addressof(bodies) };
-		using func_t = BSContainer::ForEachResult (*)(std::uint32_t, bool, BodyCollector*);
-		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::ForEachCelestialBody };
-		func(a_referenceBodyID, false, std::addressof(collector));
+		VisitBodies(a_referenceBodyID, false, std::addressof(collector));
 		return bodies;
+	}
+
+	BSContainer::ForEachResult ForEachSpaceReference(TESObjectREFR* a_source, ReferenceCallback a_callback)
+	{
+		static const BodyCollectorDispatch dispatch{ {}, CollectReference };
+		ReferenceCollector collector{ std::addressof(dispatch), std::addressof(a_callback) };
+		return VisitBodies(a_source->GetFormID(), true, std::addressof(collector));
 	}
 }
