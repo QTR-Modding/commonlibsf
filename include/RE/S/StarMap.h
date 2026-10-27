@@ -156,6 +156,17 @@ namespace RE
 				func(this, a_event);
 			}
 
+			// Requests native focus on a valid celestial body, using default marker
+			// selection. The engine chooses the view from the body's type and owns
+			// continuation across view transitions; return does not mean completion.
+			// Call on the menu's owner thread. A system-root body opens System view.
+			void FocusBody(std::uint32_t a_bodyID)
+			{
+				using func_t = void (*)(StarMapMenu*, std::uint32_t, std::int32_t, std::int32_t);
+				static REL::Relocation<func_t> func{ ID::StarMap::StarMapMenu::FocusBody };
+				func(this, a_bodyID, -1, -1);
+			}
+
 			// Returns a non-owning owner-thread pointer. It is invalidated by Star Map
 			// state transition and menu destruction; do not retain it.
 			[[nodiscard]] GalaxyState* GetGalaxyState()
