@@ -1,6 +1,8 @@
 #pragma once
 
+#include "RE/B/BSContainer.h"
 #include "RE/B/BSTEvent.h"
+#include "RE/N/NiSmartPointer.h"
 
 namespace RE
 {
@@ -12,6 +14,7 @@ namespace RE
 	class Sky;
 	class TESActorBase;
 	class TESObjectCELL;
+	class TESObjectREFR;
 	class TESWorldSpace;
 
 	struct PositionPlayerEvent;
@@ -43,6 +46,10 @@ namespace RE
 			static REL::Relocation<func_t> func{ ID::TES::GetDeadCount };
 			return func(this, a_actorBase);
 		}
+
+		// Visits the native attached-cell snapshot synchronously. References are borrowed
+		// under the cell read lock; copy a NiPointer to retain one, and do not change cell membership.
+		BSContainer::ForEachResult ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback);
 
 		// members
 		std::byte      pad010[216];   // 010
