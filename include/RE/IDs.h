@@ -2126,6 +2126,8 @@ namespace RE::ID
 		inline constexpr REL::ID ForEachCelestialBody{ 57665 };
 		inline constexpr REL::ID GetCelestialBodyName{ 47497 };
 		inline constexpr REL::ID BodyToSystem{ 124608 };
+		inline constexpr REL::ID ResolveReferenceBody{ 1015263 };
+		inline constexpr REL::ID BodyToOrbit{ 124610 };
 		inline constexpr REL::ID GetBodyType{ 124776 };
 		inline constexpr REL::ID RequestTakeOff{ 119907 };
 		inline constexpr REL::ID RequestUndock{ 120226 };
