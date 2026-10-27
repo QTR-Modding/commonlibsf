@@ -2309,6 +2309,7 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID RefreshQuestTargets{ 94682 };
 		inline constexpr REL::ID OnButtonEvent{ 94684 };
+		inline constexpr REL::ID FocusBody{ 94713 };
 		inline constexpr REL::ID GetGalaxyState{ 94752 };
 		inline constexpr REL::ID GetSystemState{ 94753 };
 		inline constexpr REL::ID GetSurfaceMapState{ 94755 };
