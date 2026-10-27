@@ -3149,7 +3149,18 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::DockEvent::GetEventSource };
 				return func();
 			}
+
+			// Borrowed for dispatch. Retain explicitly before queuing later work.
+			TESObjectREFR* child;
+			TESObjectREFR* parent;
+			std::uint32_t completed;  // 0: start, 1: complete
+			std::uint32_t undocking;  // 0: dock, 1: undock
 		};
+		static_assert(sizeof(DockEvent) == 0x18);
+		static_assert(offsetof(DockEvent, child) == 0x00);
+		static_assert(offsetof(DockEvent, parent) == 0x08);
+		static_assert(offsetof(DockEvent, completed) == 0x10);
+		static_assert(offsetof(DockEvent, undocking) == 0x14);
 
 		struct DynamicNavmeshCompleted
 		{
@@ -3179,7 +3190,14 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::LandingEvent::GetEventSource };
 				return func();
 			}
+
+			// Borrowed for dispatch. Retain explicitly before queuing later work.
+			TESObjectREFR* ship;
+			std::uint32_t state;  // 0: start, 1: complete
 		};
+		static_assert(sizeof(LandingEvent) == 0x10);
+		static_assert(offsetof(LandingEvent, ship) == 0x00);
+		static_assert(offsetof(LandingEvent, state) == 0x08);
 
 		struct PlanetScanEvent
 		{

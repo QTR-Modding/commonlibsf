@@ -2,6 +2,7 @@
 
 namespace RE::Scaleform::GFx
 {
+	class Movie;
 	class MovieImpl;
 
 	class Value

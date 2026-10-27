@@ -2,6 +2,29 @@
 
 namespace RE::Spaceship::Travel
 {
+	std::uint32_t GetCurrentBodyID()
+	{
+		std::uint32_t bodyID;
+		using func_t = std::uint32_t* (*)(std::uint32_t*);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::GetCurrentBodyID };
+		func(std::addressof(bodyID));
+		return bodyID;
+	}
+
+	void RequestTakeOff(TESObjectREFR* a_ship)
+	{
+		using func_t = decltype(&RequestTakeOff);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::RequestTakeOff };
+		func(a_ship);
+	}
+
+	bool RequestUndock(TESObjectREFR* a_ship)
+	{
+		using func_t = decltype(&RequestUndock);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::RequestUndock };
+		return func(a_ship);
+	}
+
 	void ExecuteRoute(TESObjectREFR* a_ship, const BSTArray<RoutePoint>& a_route)
 	{
 		using func_t = decltype(&ExecuteRoute);
