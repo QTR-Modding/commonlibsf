@@ -19,6 +19,8 @@ namespace RE::ID
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
 		inline constexpr REL::ID GetEquippedSpell{ 116694 };
 		inline constexpr REL::ID GetFactionReaction{ 116698 };
+		inline constexpr REL::ID GetFurnitureUsing{ 116699 };
+		inline constexpr REL::ID GetSitState{ 116731 };
 		inline constexpr REL::ID IsHostileToActor{ 0 };   // 150777
 		inline constexpr REL::ID IsJumping{ 0 };          // 150985
 		inline constexpr REL::ID IsOverEncumbered{ 0 };   // 150999
