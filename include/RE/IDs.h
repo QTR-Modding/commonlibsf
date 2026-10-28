@@ -1625,6 +1625,11 @@ namespace RE::ID
 		inline constexpr REL::ID SetControlsDriven{ 102880 };
 	}
 
+	namespace PlayerControlsManager
+	{
+		inline constexpr REL::ID Singleton{ 938464 };
+	}
+
 	namespace PlayerControls::PlayerIronSightsEndEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 129341
