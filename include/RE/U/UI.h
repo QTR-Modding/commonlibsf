@@ -167,13 +167,14 @@ namespace RE
 		float                           unk4F0;          // 4F0
 		float                           advanceDelta;    // 4F4
 		uint16_t                        unk4F8;          // 4F8
-		bool                            menusVisible;    // 4FA
-		std::uint8_t                    pad4FB[5];       // 4FB
+		std::uint8_t                    pad4FA[6];       // 4FA
 		std::uint64_t                   unk500;          // 500
 		std::uint64_t                   unk508;          // 508
 		std::uint8_t                    pad510[0x28];    // 510
 		std::uint8_t                    unk538;          // 538
-		std::uint8_t                    pad539[7];       // 539
+		std::uint8_t                    unk539;          // 539
+		bool                            menusVisible;    // 53A
+		std::uint8_t                    pad53B[5];       // 53B
 	};
 	static_assert(offsetof(UI, menuStack) == 0x3F0);
 	static_assert(offsetof(UI, menuArray) == 0x430);
@@ -184,6 +185,6 @@ namespace RE
 	static_assert(offsetof(UI, unk500) == 0x500);
 	static_assert(offsetof(UI, unk538) == 0x538);
 	static_assert(sizeof(BSTScatterTableEntry<BSFixedString, UI::UIMenuEntry>) == 0x38);
-	static_assert(offsetof(UI, menusVisible) == 0x4FA);
+	static_assert(offsetof(UI, menusVisible) == 0x53A);
 	static_assert(sizeof(UI) == 0x540);
 }
