@@ -2712,6 +2712,7 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID GetAliasReferenceHandle{ 68501 };
 		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
 		inline constexpr REL::ID ToggleTracking{ 91440 };
 	}

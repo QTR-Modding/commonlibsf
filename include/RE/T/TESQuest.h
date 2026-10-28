@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RE/B/BGSStoryManagerTreeForm.h"
+#include "RE/B/BSPointerHandle.h"
 
 #include <memory>
 #include <type_traits>
@@ -50,6 +51,15 @@ namespace RE
 			using func_t = decltype(&TESQuest::IsStageDone);
 			static REL::Relocation<func_t> func{ ID::TESQuest::IsStageDone };
 			return func(this, a_stage);
+		}
+
+		[[nodiscard]] BSPointerHandle<TESObjectREFR> GetAliasReferenceHandle(std::int32_t a_aliasID)
+		{
+			using func_t = BSPointerHandle<TESObjectREFR>* (*)(TESQuest*, BSPointerHandle<TESObjectREFR>*, std::int32_t);
+			static REL::Relocation<func_t> func{ ID::TESQuest::GetAliasReferenceHandle };
+			BSPointerHandle<TESObjectREFR> result;
+			func(this, std::addressof(result), a_aliasID);
+			return result;
 		}
 
 		[[nodiscard]] constexpr std::uint32_t GetInstanceID() const noexcept { return instanceID; }
