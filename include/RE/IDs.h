@@ -990,6 +990,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 166599
 	}
 
+	namespace DialogueUIDataModel
+	{
+		inline constexpr REL::ID Singleton{ 938423 };
+		inline constexpr REL::ID RefreshChoices{ 90375 };
+	}
+
 	namespace EnteredUnity::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153656
