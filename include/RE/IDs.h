@@ -2698,6 +2698,7 @@ namespace RE::ID
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
 		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
 		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
+		inline constexpr REL::ID GetAvailableFurnitureMarker{ 64248 };
 		inline constexpr REL::ID GetActorRefOwner{ 44765 };
 		inline constexpr REL::ID GetFactionOwner{ 44763 };
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
