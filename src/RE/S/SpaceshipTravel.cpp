@@ -60,6 +60,13 @@ namespace RE::Spaceship::Travel
 		func(a_ship, a_showNotification);
 	}
 
+	void CancelGravJumpInitiation(TESObjectREFR* a_ship, bool a_showNotification)
+	{
+		AbortGravJump(a_ship, a_showNotification);
+		static REL::Relocation<bool*> pending{ ID::Spaceship::Travel::PendingGravInitiation };
+		*pending = false;
+	}
+
 	bool ShouldPlayLandingAnimation(BSPointerHandle<TESObjectREFR> a_marker, std::uint32_t a_bodyID)
 	{
 		const auto marker = a_marker.get_handle();

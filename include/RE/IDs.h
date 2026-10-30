@@ -2151,6 +2151,7 @@ namespace RE::ID
 		inline constexpr REL::ID ExecuteRoute{ 119842 };
 		inline constexpr REL::ID ResumeGravJump{ 119843 };
 		inline constexpr REL::ID GetStoredRoute{ 120359 };
+		inline constexpr REL::ID PendingGravInitiation{ 883572 };
 		inline constexpr REL::ID AbortGravJump{ 119863 };
 		inline constexpr REL::ID ShouldPlayLandingAnimation{ 94931 };
 		inline constexpr REL::ID RequestLanding{ 97897 };

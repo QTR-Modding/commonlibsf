@@ -154,6 +154,10 @@ namespace RE
 		// Call on the game thread with the valid ship whose active jump is owned.
 		void AbortGravJump(TESObjectREFR* a_ship, bool a_showNotification);
 
+		// Cancel only a caller-owned, accepted NPC initiation still awaiting its animation cue.
+		// Unlike AbortGravJump, this also releases the native deferred-initiation flag.
+		void CancelGravJumpInitiation(TESObjectREFR* a_ship, bool a_showNotification);
+
 		// Stock HUD choice for the landing-animation flag. The handle identifies
 		// the selected surface marker; bodyID is its native celestial body ID.
 		[[nodiscard]] bool ShouldPlayLandingAnimation(BSPointerHandle<TESObjectREFR> a_marker, std::uint32_t a_bodyID);
