@@ -40,6 +40,13 @@ namespace RE
 		virtual void          PostUpdateAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) const { return; }  // 16
 		virtual void          PreLoadAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) { return; }           // 17
 		virtual void          PostLoadAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) { return; }          // 18
+
+		bool SetGraphVariableBool(const BSFixedString& a_variable, bool a_value)
+		{
+			using func_t = bool (*)(IAnimationGraphManagerHolder*, const BSFixedString&, bool);
+			static REL::Relocation<func_t> func{ ID::IAnimationGraphManagerHolder::SetGraphVariableBool };
+			return func(this, a_variable, a_value);
+		}
 	};
 	static_assert(sizeof(IAnimationGraphManagerHolder) == 0x8);
 }

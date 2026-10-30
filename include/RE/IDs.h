@@ -1158,6 +1158,11 @@ namespace RE::ID
 		inline constexpr REL::ID Write{ 0 };   // 211266
 	}
 
+	namespace IAnimationGraphManagerHolder
+	{
+		inline constexpr REL::ID SetGraphVariableBool{ 73223 };
+	}
+
 	namespace IMenu
 	{
 		inline constexpr REL::ID dtor{ 0 };               // 187216
