@@ -144,6 +144,10 @@ namespace RE
 		// A return does not report acceptance or asynchronous completion.
 		void ExecuteRoute(TESObjectREFR* a_ship, const BSTArray<RoutePoint>& a_route);
 
+		// Continue an animated request using the ship's stored route.
+		// Returns false when no route is stored; jump events report initiation.
+		bool ResumeGravJump(TESObjectREFR* a_ship);
+
 		// Aborts an active native grav jump through its normal action, AV cleanup
 		// and state-3 event. It does not clear the global accepted route or cancel
 		// a separately owned AI path. The notification retains native player gating.

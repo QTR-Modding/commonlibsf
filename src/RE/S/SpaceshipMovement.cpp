@@ -1,4 +1,5 @@
 #include "RE/S/SpaceshipMovement.h"
+#include "SpaceshipComponentLease.h"
 
 #include "RE/A/Actor.h"
 #include "RE/B/BSLock.h"
@@ -77,29 +78,7 @@ namespace RE
 		};
 		static_assert(offsetof(ControllerView, interfaces) == 0x48);
 
-		// Physical component leases have a paired reference/weak count at owner-20h.
-		// Actor controller views have a null owner. The native getter transfers this lease.
-		struct ControllerLease
-		{
-			ControllerView* controller{};
-			std::byte*      owner{};
-
-			ControllerLease() = default;
-			ControllerLease(const ControllerLease&) = delete;
-			ControllerLease& operator=(const ControllerLease&) = delete;
-			~ControllerLease()
-			{
-				if (owner) {
-					std::atomic_ref counts{ *reinterpret_cast<std::uint64_t*>(owner - 0x20) };
-					if (counts.fetch_sub(0x100000001ULL) == 0x100000001ULL) {
-						using func_t = void (*)(void*);
-						static REL::Relocation<func_t> func{ ID::Spaceship::Movement::ReleaseControllerLease };
-						func(owner - 0x20);
-					}
-				}
-			}
-		};
-		static_assert(sizeof(ControllerLease) == 0x10);
+		using ControllerLease = Spaceship::detail::ComponentLease<ControllerView>;
 
 		struct RotationTarget
 		{
@@ -149,13 +128,13 @@ namespace RE
 			using getter_t = ControllerLease* (*)(ControllerLease*, TESObjectREFR*);
 			static REL::Relocation<getter_t> getter{ ID::Spaceship::Movement::GetController };
 			getter(std::addressof(a_lease), a_ship);
-			if (!a_lease.controller || !a_lease.controller->interfaces) {
+			if (!a_lease.value || !a_lease.value->interfaces) {
 				return nullptr;
 			}
 			using lookup_t = SetStateInterface* (*)(void*, const void*);
 			static REL::Relocation<lookup_t>    lookup{ ID::Spaceship::Movement::LookupInterface };
 			static REL::Relocation<const void*> key{ ID::Spaceship::Movement::StateInterfaceKey };
-			auto*                               state = lookup(a_lease.controller->interfaces, key.get());
+			auto*                               state = lookup(a_lease.value->interfaces, key.get());
 			if (!state) {
 				return nullptr;
 			}

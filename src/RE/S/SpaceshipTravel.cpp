@@ -1,4 +1,6 @@
 #include "RE/S/SpaceshipTravel.h"
+#include "RE/T/TESObjectREFR.h"
+#include "SpaceshipComponentLease.h"
 
 namespace RE::Spaceship::Travel
 {
@@ -30,6 +32,25 @@ namespace RE::Spaceship::Travel
 		using func_t = decltype(&ExecuteRoute);
 		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::ExecuteRoute };
 		func(a_ship, a_route);
+	}
+
+	bool ResumeGravJump(TESObjectREFR* a_ship)
+	{
+		using manager_t = std::byte* (*)();
+		static REL::Relocation<manager_t> manager{ ID::BSGalaxy::GetKnowledgeManager };
+		using RouteLease = detail::ComponentLease<void>;
+		using getter_t = RouteLease* (*)(void*, RouteLease*, void*, const TESFormID*);
+		static REL::Relocation<getter_t> getter{ ID::Spaceship::Travel::GetStoredRoute };
+		using resume_t = void (*)(TESObjectREFR*, void*);
+		static REL::Relocation<resume_t> resume{ ID::Spaceship::Travel::ResumeGravJump };
+		RouteLease route;
+		const auto identity = a_ship->GetFormID();
+		getter(*reinterpret_cast<void**>(manager() + 0x8B0), &route, nullptr, &identity);
+		if (!route.value) {
+			return false;
+		}
+		resume(a_ship, route.value);
+		return true;
 	}
 
 	void AbortGravJump(TESObjectREFR* a_ship, bool a_showNotification)
