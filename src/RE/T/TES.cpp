@@ -64,8 +64,8 @@ namespace RE
 
 	void TESObjectCELL::ForEachReference(ReferenceCallback a_callback) const
 	{
-		ReferenceVisitor references{ std::addressof(referenceVTable), std::addressof(a_callback) };
-		(void)VisitCell(this, std::addressof(references));
+		ReferenceVisitor visitor{ std::addressof(referenceVTable), std::addressof(a_callback) };
+		(void)VisitCell(this, std::addressof(visitor));
 	}
 
 	BSContainer::ForEachResult TES::ForEachReference(ReferenceCallback a_callback)
