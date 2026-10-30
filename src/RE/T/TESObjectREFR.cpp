@@ -196,6 +196,13 @@ namespace RE
 		return func(this);
 	}
 
+	std::uint32_t TESObjectREFR::GetAvailableFurnitureMarker(Actor* a_actor, bool a_ignoreReservations)
+	{
+		using func_t = decltype(&TESObjectREFR::GetAvailableFurnitureMarker);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetAvailableFurnitureMarker };
+		return IsFurniture() ? func(this, a_actor, a_ignoreReservations) : static_cast<std::uint32_t>(-1);
+	}
+
 	bool TESObjectREFR::IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations)
 	{
 		using func_t = decltype(&TESObjectREFR::IsFurnitureMarkerInUse);

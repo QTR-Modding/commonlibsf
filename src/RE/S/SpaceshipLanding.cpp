@@ -175,6 +175,58 @@ namespace RE::Spaceship::Travel
 				set(a_bodyID, scanner(), false);
 			}
 		}
+
+		LandingRequestResult ValidateAndRequest(std::uint32_t a_bodyID, LandingSelection a_selection, bool a_requireMarker)
+		{
+			if (GetCurrentBodyID() != a_bodyID) {
+				return { LandingRequestStatus::kNotAtBody, {} };
+			}
+			if (a_requireMarker && !a_selection.marker) {
+				return { LandingRequestStatus::kMarkerUnavailable, {} };
+			}
+			if (a_selection.marker) {
+				const auto site = FindLandingSite(a_bodyID, a_selection.marker.get_handle());
+				if (!site) {
+					return { LandingRequestStatus::kMarkerUnavailable, {} };
+				}
+				a_selection.coordinates = site->coordinates;
+				a_selection.cleared = site->cleared;
+				a_selection.validPoint = site->validPoint;
+			}
+			NativeSmallError error;
+			using admission_t = bool (*)(std::uint32_t, bool, bool, NativeSmallError*);
+			static REL::Relocation<admission_t> admission{ ID::Spaceship::Travel::SharedLandingAdmission };
+			if (!admission(a_bodyID, a_selection.cleared, true, std::addressof(error))) {
+				return { LandingRequestStatus::kDenied, BSFixedString{ error.c_str() } };
+			}
+
+			using ship_t = NiPointer<TESObjectREFR>* (*)(NiPointer<TESObjectREFR>*);
+			static REL::Relocation<ship_t> sourceShip{ ID::Spaceship::Travel::GetLandingSourceShip };
+			NiPointer<TESObjectREFR> ship;
+			sourceShip(std::addressof(ship));
+			using fits_t = bool (*)(TESObjectREFR*);
+			static REL::Relocation<fits_t> fits{ ID::Spaceship::Travel::ShipFits };
+			using location_t = bool (*)(std::uint32_t, bool);
+			static REL::Relocation<location_t> location{ ID::Spaceship::Travel::LocationAdmission };
+			LandingAvailabilityModelPrefix model{
+				{}, {}, {}, !ship || fits(ship.get()), a_selection.cleared,
+				location(a_bodyID, true), a_selection.validPoint
+			};
+			BSFixedString denial;
+			if (!location(a_bodyID, false)) {
+				return { LandingRequestStatus::kDenied, BSFixedString{ "$Unable to Jump" } };
+			}
+			using available_t = bool (*)(const LandingAvailabilityModelPrefix*, BSFixedString*);
+			static REL::Relocation<available_t> available{ ID::Spaceship::Travel::CheckLandingAvailability };
+			if (!available(std::addressof(model), std::addressof(denial))) {
+				return { LandingRequestStatus::kDenied, std::move(denial) };
+			}
+
+			RequestLanding(a_bodyID, a_selection.coordinates, a_selection.marker,
+				ShouldPlayLandingAnimation(a_selection.marker, a_bodyID), a_selection.mode);
+			InitializeBodyKnowledge(a_bodyID);
+			return { LandingRequestStatus::kRequested, {} };
+		}
 	}
 
 	BSTArray<LandingSiteInfo> GetCurrentLandingSites()
@@ -202,48 +254,13 @@ namespace RE::Spaceship::Travel
 
 	LandingRequestResult RequestLandingAtMarker(std::uint32_t a_bodyID, BSPointerHandle<TESObjectREFR> a_marker)
 	{
-		if (GetCurrentBodyID() != a_bodyID) {
-			return { LandingRequestStatus::kNotAtBody, {} };
-		}
-		if (!a_marker) {
-			return { LandingRequestStatus::kMarkerUnavailable, {} };
-		}
-		const auto site = FindLandingSite(a_bodyID, a_marker.get_handle());
-		if (!site) {
-			return { LandingRequestStatus::kMarkerUnavailable, {} };
-		}
+		LandingSelection selection;
+		selection.marker = a_marker;
+		return ValidateAndRequest(a_bodyID, selection, true);
+	}
 
-		NativeSmallError error;
-		using admission_t = bool (*)(std::uint32_t, bool, bool, NativeSmallError*);
-		static REL::Relocation<admission_t> admission{ ID::Spaceship::Travel::SharedLandingAdmission };
-		if (!admission(a_bodyID, site->cleared, true, std::addressof(error))) {
-			return { LandingRequestStatus::kDenied, BSFixedString{ error.c_str() } };
-		}
-
-		using ship_t = NiPointer<TESObjectREFR>* (*)(NiPointer<TESObjectREFR>*);
-		static REL::Relocation<ship_t> sourceShip{ ID::Spaceship::Travel::GetLandingSourceShip };
-		NiPointer<TESObjectREFR> ship;
-		sourceShip(std::addressof(ship));
-		using fits_t = bool (*)(TESObjectREFR*);
-		static REL::Relocation<fits_t> fits{ ID::Spaceship::Travel::ShipFits };
-		using location_t = bool (*)(std::uint32_t, bool);
-		static REL::Relocation<location_t> location{ ID::Spaceship::Travel::LocationAdmission };
-		LandingAvailabilityModelPrefix model{
-			{}, {}, {}, !ship || fits(ship.get()), site->cleared,
-			location(a_bodyID, true), site->validPoint
-		};
-		BSFixedString denial;
-		if (!location(a_bodyID, false)) {
-			return { LandingRequestStatus::kDenied, BSFixedString{ "$Unable to Jump" } };
-		}
-		using available_t = bool (*)(const LandingAvailabilityModelPrefix*, BSFixedString*);
-		static REL::Relocation<available_t> available{ ID::Spaceship::Travel::CheckLandingAvailability };
-		if (!available(std::addressof(model), std::addressof(denial))) {
-			return { LandingRequestStatus::kDenied, std::move(denial) };
-		}
-
-		RequestLanding(a_bodyID, site->coordinates, a_marker, ShouldPlayLandingAnimation(a_marker, a_bodyID));
-		InitializeBodyKnowledge(a_bodyID);
-		return { LandingRequestStatus::kRequested, {} };
+	LandingRequestResult RequestLandingAtSelection(std::uint32_t a_bodyID, const LandingSelection& a_selection)
+	{
+		return ValidateAndRequest(a_bodyID, a_selection, false);
 	}
 }

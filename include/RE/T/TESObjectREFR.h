@@ -185,7 +185,7 @@ namespace RE
 		virtual bool         IsInZeroGravity();                                                                                                                                                                                                                                                       // 078
 		virtual void         Unk_79();                                                                                                                                                                                                                                                                // 079
 		virtual BGSScene*    GetCurrentScene() const;                                                                                                                                                                                                                                                 // 07A
-		virtual void         Unk_7B();                                                                                                                                                                                                                                                                // 07B
+		virtual void         SetCurrentScene(BGSScene* a_scene);                                                                                                                                                                                                                                      // 07B
 		virtual void         Unk_7C();                                                                                                                                                                                                                                                                // 07C
 		virtual void         Unk_7D();                                                                                                                                                                                                                                                                // 07D
 		virtual void         Unk_7E();                                                                                                                                                                                                                                                                // 07E
@@ -407,6 +407,8 @@ namespace RE
 		[[nodiscard]] std::int32_t                    GetValue();
 		[[nodiscard]] bool                            HasKeyword(BGSKeyword* a_keyword);
 		[[nodiscard]] bool                            IsCrimeToActivate();
+		// Returns UINT32_MAX when no marker is usable by this actor. Does not reserve it. Game thread only.
+		[[nodiscard]] std::uint32_t GetAvailableFurnitureMarker(Actor* a_actor, bool a_ignoreReservations = false);
 		// Includes marker reservations unless a_ignoreReservations is true. Game thread only.
 		[[nodiscard]] bool IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations = false);
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);

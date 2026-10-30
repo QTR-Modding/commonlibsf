@@ -303,6 +303,22 @@ namespace RE
 			func(this, a_immediate, a_resetAI);
 		}
 
+		// Call on the game thread. State 3 means fully seated.
+		[[nodiscard]] std::uint32_t GetSitState()
+		{
+			using func_t = std::uint32_t (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetSitState };
+			return func(nullptr, 0, this);
+		}
+
+		// Borrowed furniture reference; retain it if it must outlive this game-thread call.
+		[[nodiscard]] TESObjectREFR* GetFurnitureUsing()
+		{
+			using func_t = TESObjectREFR* (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetFurnitureUsing };
+			return func(nullptr, 0, this);
+		}
+
 		[[nodiscard]] SpellItem* GetEquippedSpell(MagicSystem::CastingSource a_source)
 		{
 			if (a_source < MagicSystem::CastingSource::kLeftHand ||
@@ -411,6 +427,13 @@ namespace RE
 			using func_t = decltype(&Actor::IsSneaking);
 			static REL::Relocation<func_t> func{ ID::Actor::IsSneaking };
 			return func(this);
+		}
+
+		void SetHeadTracking(bool a_enable)
+		{
+			using func_t = void (*)(void*, std::uint32_t, Actor*, bool);
+			static REL::Relocation<func_t> func{ ID::Actor::SetHeadTracking };
+			func(nullptr, 0, this, a_enable);
 		}
 
 		void SetSkinTone(std::uint32_t a_index)

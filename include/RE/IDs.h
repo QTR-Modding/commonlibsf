@@ -19,15 +19,23 @@ namespace RE::ID
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
 		inline constexpr REL::ID GetEquippedSpell{ 116694 };
 		inline constexpr REL::ID GetFactionReaction{ 116698 };
+		inline constexpr REL::ID GetFurnitureUsing{ 116699 };
+		inline constexpr REL::ID GetSitState{ 116731 };
 		inline constexpr REL::ID IsHostileToActor{ 0 };   // 150777
 		inline constexpr REL::ID IsJumping{ 0 };          // 150985
 		inline constexpr REL::ID IsOverEncumbered{ 0 };   // 150999
 		inline constexpr REL::ID IsSneaking{ 0 };         // 151014
+		inline constexpr REL::ID SetHeadTracking{ 116762 };
 		inline constexpr REL::ID SetSkinTone{ 97400 };
 		inline constexpr REL::ID UnequipSpell{ 116682 };
 		inline constexpr REL::ID UpdateAppearance{ 101306 };
 		inline constexpr REL::ID UpdateChargenAppearance{ 97399 };
 		inline constexpr REL::ID UseSpell{ 101916 };
+	}
+
+	namespace AIProcess
+	{
+		inline constexpr REL::ID ClearHeadTrackingTarget{ 102225 };
 	}
 
 	namespace ActorUtils
@@ -234,6 +242,11 @@ namespace RE::ID
 	namespace BGSScannerGuideEffectStatusUpdateEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 138080
+	}
+
+	namespace BGSScene
+	{
+		inline constexpr REL::ID ForceStart{ 67742 };
 	}
 
 	namespace BGSSceneActionPlayerDialogue::ActionEndEvent
@@ -977,6 +990,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 166599
 	}
 
+	namespace DialogueUIDataModel
+	{
+		inline constexpr REL::ID Singleton{ 938423 };
+		inline constexpr REL::ID RefreshChoices{ 90375 };
+	}
+
 	namespace EnteredUnity::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153656
@@ -1137,6 +1156,11 @@ namespace RE::ID
 		inline constexpr REL::ID Listen{ 0 };  // 211259
 		inline constexpr REL::ID Read{ 0 };    // 211264
 		inline constexpr REL::ID Write{ 0 };   // 211266
+	}
+
+	namespace IAnimationGraphManagerHolder
+	{
+		inline constexpr REL::ID SetGraphVariableBool{ 73223 };
 	}
 
 	namespace IMenu
@@ -2130,6 +2154,9 @@ namespace RE::ID
 	namespace Spaceship::Travel
 	{
 		inline constexpr REL::ID ExecuteRoute{ 119842 };
+		inline constexpr REL::ID ResumeGravJump{ 119843 };
+		inline constexpr REL::ID GetStoredRoute{ 120359 };
+		inline constexpr REL::ID PendingGravInitiation{ 883572 };
 		inline constexpr REL::ID AbortGravJump{ 119863 };
 		inline constexpr REL::ID ShouldPlayLandingAnimation{ 94931 };
 		inline constexpr REL::ID RequestLanding{ 97897 };
@@ -2671,6 +2698,7 @@ namespace RE::ID
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
 		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
 		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
+		inline constexpr REL::ID GetAvailableFurnitureMarker{ 64248 };
 		inline constexpr REL::ID GetActorRefOwner{ 44765 };
 		inline constexpr REL::ID GetFactionOwner{ 44763 };
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
@@ -2710,6 +2738,8 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID FillAliasReference{ 68460 };
+		inline constexpr REL::ID GetAliasReferenceHandle{ 68501 };
 		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
 		inline constexpr REL::ID ToggleTracking{ 91440 };
 	}

@@ -47,6 +47,21 @@ namespace RE
 		};
 		static_assert(sizeof(SurfaceCoordinates) == 0x10);
 
+		enum class LandingRequestMode : std::uint8_t
+		{
+			kHud = 0,
+			kMap = 2
+		};
+
+		struct LandingSelection
+		{
+			SurfaceCoordinates coordinates{};
+			BSPointerHandle<TESObjectREFR> marker;
+			bool cleared{};
+			bool validPoint{};
+			LandingRequestMode mode{ LandingRequestMode::kHud };
+		};
+
 		struct LandingSiteInfo
 		{
 			BSPointerHandle<TESObjectREFR> marker;
@@ -129,11 +144,19 @@ namespace RE
 		// A return does not report acceptance or asynchronous completion.
 		void ExecuteRoute(TESObjectREFR* a_ship, const BSTArray<RoutePoint>& a_route);
 
+		// Continue an animated request using the ship's stored route.
+		// Returns false when no route is stored; jump events report initiation.
+		bool ResumeGravJump(TESObjectREFR* a_ship);
+
 		// Aborts an active native grav jump through its normal action, AV cleanup
 		// and state-3 event. It does not clear the global accepted route or cancel
 		// a separately owned AI path. The notification retains native player gating.
 		// Call on the game thread with the valid ship whose active jump is owned.
 		void AbortGravJump(TESObjectREFR* a_ship, bool a_showNotification);
+
+		// Cancel only a caller-owned, accepted NPC initiation still awaiting its animation cue.
+		// Unlike AbortGravJump, this also releases the native deferred-initiation flag.
+		void CancelGravJumpInitiation(TESObjectREFR* a_ship, bool a_showNotification);
 
 		// Stock HUD choice for the landing-animation flag. The handle identifies
 		// the selected surface marker; bodyID is its native celestial body ID.
@@ -147,6 +170,8 @@ namespace RE
 		// handle are copied synchronously; no HUD or map owner must remain alive.
 		// The return does not report acceptance or asynchronous completion.
 		void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates, BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation);
+		void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates,
+			BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation, LandingRequestMode a_mode);
 
 		// Recollects a surface marker on the current body and refreshes the stock
 		// shared travel, location, ship-fit and selected-site landing checks before
@@ -154,5 +179,13 @@ namespace RE
 		// kRequested means the request was made, not asynchronous completion.
 		// Call on the game thread after gameplay initialization.
 		[[nodiscard]] LandingRequestResult RequestLandingAtMarker(std::uint32_t a_bodyID, BSPointerHandle<TESObjectREFR> a_marker);
+
+		// Refreshes the shared travel, location and ship landing gates before
+		// requesting a copied selection. Markers are recollected. Markerless points
+		// retain the geometry flags from an accepted native map selection.
+		// No map owner is retained. Call on the game thread after gameplay initialization.
+		[[nodiscard]] LandingRequestResult RequestLandingAtSelection(std::uint32_t a_bodyID,
+			const LandingSelection& a_selection);
+
 	}
 }

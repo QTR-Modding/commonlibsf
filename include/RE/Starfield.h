@@ -250,6 +250,7 @@
 #include "RE/D/DecalData.h"
 #include "RE/D/DetectionState.h"
 #include "RE/D/DialogueCameraState.h"
+#include "RE/D/DialogueUIDataModel.h"
 #include "RE/E/EffectArchetypes.h"
 #include "RE/E/EffectItem.h"
 #include "RE/E/EffectSetting.h"
