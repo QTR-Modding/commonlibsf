@@ -47,6 +47,21 @@ namespace RE
 		};
 		static_assert(sizeof(SurfaceCoordinates) == 0x10);
 
+		enum class LandingRequestMode : std::uint8_t
+		{
+			kHud = 0,
+			kMap = 2
+		};
+
+		struct LandingSelection
+		{
+			SurfaceCoordinates coordinates{};
+			BSPointerHandle<TESObjectREFR> marker;
+			bool cleared{};
+			bool validPoint{};
+			LandingRequestMode mode{ LandingRequestMode::kHud };
+		};
+
 		struct LandingSiteInfo
 		{
 			BSPointerHandle<TESObjectREFR> marker;
@@ -147,6 +162,8 @@ namespace RE
 		// handle are copied synchronously; no HUD or map owner must remain alive.
 		// The return does not report acceptance or asynchronous completion.
 		void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates, BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation);
+		void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates,
+			BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation, LandingRequestMode a_mode);
 
 		// Recollects a surface marker on the current body and refreshes the stock
 		// shared travel, location, ship-fit and selected-site landing checks before
@@ -154,5 +171,13 @@ namespace RE
 		// kRequested means the request was made, not asynchronous completion.
 		// Call on the game thread after gameplay initialization.
 		[[nodiscard]] LandingRequestResult RequestLandingAtMarker(std::uint32_t a_bodyID, BSPointerHandle<TESObjectREFR> a_marker);
+
+		// Refreshes the shared travel, location and ship landing gates before
+		// requesting a copied selection. Markers are recollected. Markerless points
+		// retain the geometry flags from an accepted native map selection.
+		// No map owner is retained. Call on the game thread after gameplay initialization.
+		[[nodiscard]] LandingRequestResult RequestLandingAtSelection(std::uint32_t a_bodyID,
+			const LandingSelection& a_selection);
+
 	}
 }

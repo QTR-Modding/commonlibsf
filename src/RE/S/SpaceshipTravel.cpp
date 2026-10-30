@@ -49,11 +49,17 @@ namespace RE::Spaceship::Travel
 
 	void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates, BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation)
 	{
+		RequestLanding(a_bodyID, a_coordinates, a_marker, a_playAnimation, LandingRequestMode::kHud);
+	}
+
+	void RequestLanding(std::uint32_t a_bodyID, const SurfaceCoordinates& a_coordinates,
+		BSPointerHandle<TESObjectREFR> a_marker, bool a_playAnimation, LandingRequestMode a_mode)
+	{
 		// Native result is a non-owning cell/pad/transform description. The engine
 		// copies a 0x28-byte description; no result member or cleanup is needed here.
 		alignas(std::uint64_t) std::byte result[0x28];
 		using func_t = void* (*)(void*, std::uint32_t, const SurfaceCoordinates*, std::uint32_t, bool, std::int32_t);
 		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::RequestLanding };
-		func(result, a_bodyID, std::addressof(a_coordinates), a_marker.get_handle(), a_playAnimation, 0);
+		func(result, a_bodyID, std::addressof(a_coordinates), a_marker.get_handle(), a_playAnimation, static_cast<std::int32_t>(a_mode));
 	}
 }
