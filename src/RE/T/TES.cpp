@@ -1,4 +1,5 @@
 #include "RE/T/TES.h"
+#include "RE/T/TESObjectCELL.h"
 
 namespace RE
 {
@@ -29,6 +30,13 @@ namespace RE
 		static_assert(offsetof(ReferenceVisitor, vtable) == 0x00);
 		static_assert(offsetof(ReferenceVisitor::VTable, invoke) == 0x10);
 
+		BSContainer::ForEachResult VisitCell(const TESObjectCELL* a_cell, ReferenceVisitor* a_references)
+		{
+			using func_t = BSContainer::ForEachResult (*)(const TESObjectCELL*, ReferenceVisitor*, bool);
+			static REL::Relocation<func_t> func{ ID::TESObjectCELL::ForEachReference };
+			return func(a_cell, a_references, false);
+		}
+
 		struct CellVisitor
 		{
 			struct VTable
@@ -39,9 +47,7 @@ namespace RE
 
 			static BSContainer::ForEachResult Visit(CellVisitor* a_self, TESObjectCELL* a_cell)
 			{
-				using func_t = BSContainer::ForEachResult (*)(TESObjectCELL*, ReferenceVisitor*, bool);
-				static REL::Relocation<func_t> func{ ID::TESObjectCELL::ForEachReference };
-				return func(a_cell, a_self->references, false);
+				return VisitCell(a_cell, a_self->references);
 			}
 
 			const VTable*     vtable;
@@ -54,6 +60,12 @@ namespace RE
 
 		constexpr ReferenceVisitor::VTable referenceVTable{ 0, 0, ReferenceVisitor::Invoke };
 		constexpr CellVisitor::VTable      cellVTable{ 0, CellVisitor::Visit };
+	}
+
+	void TESObjectCELL::ForEachReference(ReferenceCallback a_callback) const
+	{
+		ReferenceVisitor references{ std::addressof(referenceVTable), std::addressof(a_callback) };
+		(void)VisitCell(this, std::addressof(references));
 	}
 
 	BSContainer::ForEachResult TES::ForEachReference(ReferenceCallback a_callback)

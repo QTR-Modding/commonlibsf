@@ -92,15 +92,7 @@ namespace RE
 		[[nodiscard]] bool IsInterior() const noexcept { return cellFlags.any(Flag::kInterior); }
 		[[nodiscard]] bool UsesPlanetGravity() const noexcept { return cellFlags.any(Flag::kUsePlanetGravity); }
 
-		void ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback) const
-		{
-			const BSAutoReadLock locker(lock);
-			for (const auto& ref : references) {
-				if (ref && a_callback(ref) == BSContainer::ForEachResult::kStop) {
-					break;
-				}
-			}
-		}
+		void ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback) const;
 
 		void ForEachReferenceInRange(const NiPoint3A& a_origin, float a_radius, std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback) const
 		{
