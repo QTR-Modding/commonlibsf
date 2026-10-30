@@ -8,9 +8,12 @@
 #include "RE/B/BSTList.h"
 #include "RE/N/NiPoint.h"
 #include "RE/N/NiSmartPointer.h"
+#include "REL/Relocation.h"
+#include "RE/IDs.h"
 
 namespace RE
 {
+	class Actor;
 	class ActorKnowledge;
 	class bhkCharacterController;
 	class DialogueItem;
@@ -181,6 +184,14 @@ namespace RE
 	class AIProcess
 	{
 	public:
+		// Type 0 selects normal focus.
+		void ClearHeadTrackingTarget(Actor* a_actor, std::int32_t a_targetType, bool a_restore)
+		{
+			using func_t = decltype(&AIProcess::ClearHeadTrackingTarget);
+			static REL::Relocation<func_t> func{ ID::AIProcess::ClearHeadTrackingTarget };
+			func(this, a_actor, a_targetType, a_restore);
+		}
+
 		float GetActorLightLevel() const
 		{
 			return high ? high->lightLevel : 0.0f;

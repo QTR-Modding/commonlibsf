@@ -33,6 +33,11 @@ namespace RE::ID
 		inline constexpr REL::ID UseSpell{ 101916 };
 	}
 
+	namespace AIProcess
+	{
+		inline constexpr REL::ID ClearHeadTrackingTarget{ 102225 };
+	}
+
 	namespace ActorUtils
 	{
 		inline constexpr REL::ID ChangeAnimArchetype{ 0 };  // 150497
