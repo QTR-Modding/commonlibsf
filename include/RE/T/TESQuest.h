@@ -53,6 +53,13 @@ namespace RE
 			return func(this, a_stage);
 		}
 
+		void FillAliasReference(std::int32_t a_aliasID, TESObjectREFR* a_reference, std::int32_t a_fillType)
+		{
+			using func_t = decltype(&TESQuest::FillAliasReference);
+			static REL::Relocation<func_t> func{ ID::TESQuest::FillAliasReference };
+			func(this, a_aliasID, a_reference, a_fillType);
+		}
+
 		[[nodiscard]] BSPointerHandle<TESObjectREFR> GetAliasReferenceHandle(std::int32_t a_aliasID)
 		{
 			using func_t = BSPointerHandle<TESObjectREFR>* (*)(TESQuest*, BSPointerHandle<TESObjectREFR>*, std::int32_t);

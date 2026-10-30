@@ -238,6 +238,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 138080
 	}
 
+	namespace BGSScene
+	{
+		inline constexpr REL::ID ForceStart{ 67742 };
+	}
+
 	namespace BGSSceneActionPlayerDialogue::ActionEndEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 100215
@@ -2712,6 +2717,7 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID FillAliasReference{ 68460 };
 		inline constexpr REL::ID GetAliasReferenceHandle{ 68501 };
 		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
 		inline constexpr REL::ID ToggleTracking{ 91440 };
