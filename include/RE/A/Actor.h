@@ -429,6 +429,13 @@ namespace RE
 			return func(this);
 		}
 
+		void SetHeadTracking(bool a_enable)
+		{
+			using func_t = void (*)(void*, std::uint32_t, Actor*, bool);
+			static REL::Relocation<func_t> func{ ID::Actor::SetHeadTracking };
+			func(nullptr, 0, this, a_enable);
+		}
+
 		void SetSkinTone(std::uint32_t a_index)
 		{
 			using func_t = decltype(&Actor::SetSkinTone);

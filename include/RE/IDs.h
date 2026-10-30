@@ -25,6 +25,7 @@ namespace RE::ID
 		inline constexpr REL::ID IsJumping{ 0 };          // 150985
 		inline constexpr REL::ID IsOverEncumbered{ 0 };   // 150999
 		inline constexpr REL::ID IsSneaking{ 0 };         // 151014
+		inline constexpr REL::ID SetHeadTracking{ 116762 };
 		inline constexpr REL::ID SetSkinTone{ 97400 };
 		inline constexpr REL::ID UnequipSpell{ 116682 };
 		inline constexpr REL::ID UpdateAppearance{ 101306 };
