@@ -131,6 +131,13 @@ namespace RE
 		return func(this);
 	}
 
+	bool TESObjectREFR::GetSpaceTransform(NiPoint3A& a_position, NiMatrix3& a_rotation) const
+	{
+		using func_t = bool (*)(const TESObjectREFR*, NiPoint3A*, NiMatrix3*);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetSpaceTransform };
+		return func(this, std::addressof(a_position), std::addressof(a_rotation));
+	}
+
 	float TESObjectREFR::GetScale() const
 	{
 		using func_t = decltype(&TESObjectREFR::GetScale);

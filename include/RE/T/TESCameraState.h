@@ -6,6 +6,8 @@
 namespace RE
 {
 	class PlayerCamera;
+	class NiPoint3;
+	class NiQuaternion;
 
 	class TESCameraState :
 		public BSInputEventUser,      // 00
@@ -18,8 +20,13 @@ namespace RE
 		~TESCameraState() override;  // 00
 
 		// add
-		virtual void Begin();  // 0A
-		virtual void End();    // 0B
+		virtual void Begin();                                      // 0A
+		virtual void End();                                        // 0B
+		virtual void Unk_0C();                                     // 0C
+		virtual void GetRotation(NiQuaternion& a_rotation);         // 0D
+		virtual void GetTranslation(NiPoint3& a_translation);       // 0E
+		virtual void SetRotation(const NiQuaternion& a_rotation);   // 0F
+		virtual void SetTranslation(const NiPoint3& a_translation);  // 10
 
 		// members
 		std::uint32_t pad44;       // 44

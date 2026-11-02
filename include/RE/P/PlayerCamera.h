@@ -165,6 +165,17 @@ namespace RE
 			return true;
 		}
 
+		[[nodiscard]] float GetWorldFOV() const noexcept { return worldFOV; }
+
+		// Sets the current world FOV in degrees and refreshes the native frusta.
+		// Call on the game thread; camera updates can replace this transient value.
+		void SetWorldFOV(float a_degrees)
+		{
+			using func_t = decltype(&PlayerCamera::SetWorldFOV);
+			static REL::Relocation<func_t> func{ ID::PlayerCamera::SetWorldFOV };
+			func(this, a_degrees);
+		}
+
 		void ToggleFreeCameraMode(std::uint32_t a_cameraStateIndex, bool a_flag)
 		{
 			using func_t = decltype(&PlayerCamera::ToggleFreeCameraMode);
@@ -187,10 +198,14 @@ namespace RE
 			std::byte cameraRestoreStateStorage[0xC0];   // 0C8
 		void* cameraStates[CameraState::kTotal];         // 188
 
+		std::byte unk248[0x280 - 0x248];                 // 248
+		float     worldFOV;                              // 280
+
 		// ...
 	};
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateCount) == 0xB8);
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateCapacityFlags) == 0xC0);
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateStorage) == 0xC8);
 	static_assert(offsetof(PlayerCamera, cameraStates) == 0x188);
+	static_assert(offsetof(PlayerCamera, worldFOV) == 0x280);
 }
