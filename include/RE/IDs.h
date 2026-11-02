@@ -1642,6 +1642,7 @@ namespace RE::ID
 		inline constexpr REL::ID ForceFirstPerson{ 113397 };
 		inline constexpr REL::ID ForceThirdPerson{ 113398 };
 		inline constexpr REL::ID SetCameraState{ 113375 };
+		inline constexpr REL::ID SetWorldFOV{ 113443 };
 		inline constexpr REL::ID ToggleFreeCameraMode{ 113409 };
 		inline constexpr REL::ID QCameraEquals{ 0 };  // 166081
 	}
@@ -2714,6 +2715,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetLock{ 0 };       // 107581
 		inline constexpr REL::ID GetParentWorldSpace{ 63417 };
 		inline constexpr REL::ID GetScale{ 0 };  // 106658
+		inline constexpr REL::ID GetSpaceTransform{ 116271 };
 		inline constexpr REL::ID GetSpaceship{ 119881 };
 		inline constexpr REL::ID GetSpaceshipParentDock{ 0 };  // 174134
 		inline constexpr REL::ID GetSpaceshipPilot{ 119876 };

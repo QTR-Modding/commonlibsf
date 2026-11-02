@@ -37,6 +37,7 @@ namespace RE
 	class BSAnimationGraphEvent;
 	class BSTransformDeltaEvent;
 	class NiAVObject;
+	class NiMatrix3;
 	class TESModel;
 	class TESObjectCELL;
 	class TESRace;
@@ -397,6 +398,11 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetPositionY() const noexcept { return data.location.y; }
 		[[nodiscard]] constexpr float                 GetPositionZ() const noexcept { return data.location.z; }
 		[[nodiscard]] float                           GetScale() const;
+		// Copies the native space-frame position and rotation, matching Papyrus
+		// GetSpaceTransform. This does not convert to an interior/render frame.
+		// The position needs 16-byte storage; false means the space pose is absent.
+		// Call on the game thread with a valid reference.
+		[[nodiscard]] bool GetSpaceTransform(NiPoint3A& a_position, NiMatrix3& a_rotation) const;
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
