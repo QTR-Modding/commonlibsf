@@ -965,6 +965,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 148411
 	}
 
+	namespace DialogueCameraState
+	{
+		inline constexpr REL::ID SetCameraShot{ 74568 };
+		inline constexpr REL::ID EndCameraShot{ 74569 };
+	}
+
 	namespace DialogueMenu_OnDialogueSelect
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 166594
