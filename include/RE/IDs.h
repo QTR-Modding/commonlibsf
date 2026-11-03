@@ -280,6 +280,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153651
 	}
 
+	namespace BSAnimationGraphManager
+	{
+		inline constexpr REL::ID CollectAnimationEventSources{ 63835 };
+	}
+
 	namespace BSChargenAPI::BIDataUtils::PresetNPCChangedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 141184
@@ -921,6 +926,16 @@ namespace RE::ID
 		inline constexpr REL::ID ExecuteRenderPass{ 145956 };
 	}
 
+	namespace CrewAssignedEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64119 };
+	}
+
+	namespace CrewDismissedEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64120 };
+	}
+
 	namespace CriticalHitEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153653
@@ -1101,6 +1116,7 @@ namespace RE::ID
 
 	namespace GameVM
 	{
+		inline constexpr REL::ID GetCurrentTime{ 116524 };
 		inline constexpr REL::ID Singleton{ 937585 };
 		inline constexpr REL::ID BindEverythingToScript{ 117899 };
 	}
@@ -1108,6 +1124,11 @@ namespace RE::ID
 	namespace HideSubtitleEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 86875 };
+	}
+
+	namespace HomeShipSetEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64142 };
 	}
 
 	namespace HourPassed::Event
@@ -2612,6 +2633,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 64135 };
 	}
 
+	namespace TESExitFurnitureEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64101 };
+	}
+
 	namespace TESFaction
 	{
 		inline constexpr REL::ID GetFactionReaction{ 100956 };
@@ -2638,7 +2664,7 @@ namespace RE::ID
 
 	namespace TESFurnitureEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 107168
+		inline constexpr REL::ID GetEventSource{ 64139 };
 	}
 
 	namespace TESGrabReleaseEvent
@@ -2703,6 +2729,8 @@ namespace RE::ID
 
 	namespace TESObjectREFR
 	{
+		inline constexpr REL::ID PushActorAway{ 118412 };
+		inline constexpr REL::ID DamageValue{ 118265 };
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
 		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
 		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
@@ -2748,6 +2776,9 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID IsRunning{ 119068 };
+		inline constexpr REL::ID IsStarting{ 119069 };
+		inline constexpr REL::ID StartNoWait{ 119056 };
 		inline constexpr REL::ID AddAliasReference{ 68454 };
 		inline constexpr REL::ID ClearAlias{ 68458 };
 		inline constexpr REL::ID CollectAliasActors{ 117237 };
@@ -2762,6 +2793,11 @@ namespace RE::ID
 	namespace TESQuestRewardEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 95698
+	}
+
+	namespace TESQuestStartStopEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64162 };
 	}
 
 	namespace TESResetEvent

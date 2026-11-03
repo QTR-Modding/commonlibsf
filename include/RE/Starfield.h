@@ -187,6 +187,7 @@
 #include "RE/B/BGSWwiseEventForm.h"
 #include "RE/B/BGSWwiseKeywordMapping.h"
 #include "RE/B/BSAnimationGraph.h"
+#include "RE/B/BSAnimationGraphEvent.h"
 #include "RE/B/BSAnimationUpdateData.h"
 #include "RE/B/BSBlendable.h"
 #include "RE/B/BSCRC32.h"

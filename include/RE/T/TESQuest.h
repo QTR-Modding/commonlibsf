@@ -73,6 +73,11 @@ namespace RE
 			return result;
 		}
 
+		// Requests startup without waiting for quest initialization. A true result
+		// means the request was accepted, not that aliases or scripts are ready.
+		// Call on the game thread and observe native quest initialization events.
+		[[nodiscard]] bool StartNoWait();
+
 		// Game-thread access to authored aliases. Missing IDs return nullptr.
 		[[nodiscard]] BGSBaseAlias* GetAlias(std::int32_t a_aliasID) const;
 		// The quest must be running; use an owned, optional alias. Native clear
@@ -94,7 +99,20 @@ namespace RE
 			return { GetFormID(), GetInstanceID() };
 		}
 
-		[[nodiscard]] constexpr bool IsRunning() const noexcept { return runtimeFlags.all(RuntimeFlag::kRunning); }
+		// Matches the native quest predicates, including pending initialization.
+		[[nodiscard]] bool IsRunning() const
+		{
+			using func_t = bool (*)(void*, std::uint32_t, const TESQuest*);
+			static REL::Relocation<func_t> func{ ID::TESQuest::IsRunning };
+			return func(nullptr, 0, this);
+		}
+
+		[[nodiscard]] bool IsStarting() const
+		{
+			using func_t = bool (*)(void*, std::uint32_t, const TESQuest*);
+			static REL::Relocation<func_t> func{ ID::TESQuest::IsStarting };
+			return func(nullptr, 0, this);
+		}
 		[[nodiscard]] constexpr bool IsStopped() const noexcept { return runtimeFlags.all(RuntimeFlag::kStopped); }
 		[[nodiscard]] constexpr bool IsTracked() const noexcept { return runtimeFlags.all(RuntimeFlag::kTracked); }
 

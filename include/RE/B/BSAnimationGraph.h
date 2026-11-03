@@ -6,6 +6,8 @@
 #include "RE/B/BSTEvent.h"
 #include "RE/B/BSTSmartPointer.h"
 
+#include <vector>
+
 namespace RE
 {
 	class BSAnimationGraphEvent;
@@ -142,6 +144,11 @@ namespace RE
 		};
 
 		virtual ~BSAnimationGraphManager();
+
+		// Borrows current graph sources under the native graph lock. Individual
+		// graph replacement invalidates these pointers even if the manager lives.
+		// Register/unregister on the game thread; re-enumerate after graph changes.
+		[[nodiscard]] std::vector<BSTEventSource<BSAnimationGraphEvent>*> GetAnimationEventSources();
 
 		std::uint32_t                                    unk0C;                 // 0C
 		std::uint32_t                                    unk10;                 // 10
