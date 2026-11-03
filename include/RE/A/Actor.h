@@ -296,11 +296,20 @@ namespace RE
 			func(this, a_object, a_preventRemoval, a_silent);
 		}
 
+		// Papyrus EvaluatePackage(resetAI) defers evaluation: use (false, resetAI).
 		void EvaluatePackage(bool a_immediate = false, bool a_resetAI = false)
 		{
 			using func_t = decltype(&Actor::EvaluatePackage);
 			static REL::Relocation<func_t> func{ ID::Actor::EvaluatePackage };
 			func(this, a_immediate, a_resetAI);
+		}
+
+		// Borrowed crew-assignment reference; call on the game thread.
+		[[nodiscard]] TESObjectREFR* GetCrewAssignment()
+		{
+			using func_t = TESObjectREFR* (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetCrewAssignment };
+			return func(nullptr, 0, this);
 		}
 
 		// Call on the game thread. State 3 means fully seated.

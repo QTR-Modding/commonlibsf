@@ -382,6 +382,9 @@ namespace RE
 		[[nodiscard]] Actor*                          GetActorRefOwner() const;
 		[[nodiscard]] TESFaction*                     GetFactionOwner() const;
 		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
+		// Copies assigned crew in native order with owned lifetimes. Clears stale
+		// handles as GetAllCrewMembers does; call on the game thread.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetCrewMembers();
 		// Copies keyword-matching exterior references with owned lifetimes.
 		// Requires a valid ship and non-null keyword; call on the game thread.
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
