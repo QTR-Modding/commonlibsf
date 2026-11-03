@@ -2,12 +2,16 @@
 
 #include "RE/B/BGSStoryManagerTreeForm.h"
 #include "RE/B/BSPointerHandle.h"
+#include "RE/B/BSTArray.h"
 
 #include <memory>
 #include <type_traits>
+#include <vector>
 
 namespace RE
 {
+	class Actor;
+	class BGSBaseAlias;
 	class BGSStoryEvent;
 
 	struct QUEST_DATA
@@ -69,6 +73,20 @@ namespace RE
 			return result;
 		}
 
+		// Game-thread access to authored aliases. Missing IDs return nullptr.
+		[[nodiscard]] BGSBaseAlias* GetAlias(std::int32_t a_aliasID) const;
+		// The quest must be running; use an owned, optional alias. Native clear
+		// reasons match ReferenceAlias.Clear (12) and RefCollectionAlias.RemoveAll (16).
+		void ClearAlias(std::int32_t a_aliasID, std::int32_t a_clearType);
+		// The ID must name a reference collection alias on this running quest.
+		// Reference pointers must be non-null. These update native alias packages.
+		void AddAliasReference(std::int32_t a_aliasID, TESObjectREFR* a_reference);
+		void RemoveAliasReference(std::int32_t a_aliasID, TESObjectREFR* a_reference);
+		// The ID must name a reference collection alias on this running quest.
+		// Copies its resolved actors in native order.
+		// Call on the game thread; returned references own their lifetimes.
+		[[nodiscard]] std::vector<NiPointer<Actor>> GetAliasActors(std::int32_t a_aliasID);
+
 		[[nodiscard]] constexpr std::uint32_t GetInstanceID() const noexcept { return instanceID; }
 
 		[[nodiscard]] QuestInstanceKey GetInstanceKey() const noexcept
@@ -93,7 +111,11 @@ namespace RE
 		// members
 		std::byte                                 pad038[0x38];    // 038
 		std::uint32_t                             instanceID;      // 070
-		std::byte                                 pad074[0x94];    // 074
+		std::byte                                 pad074[0x14];    // 074
+		BSTArray<BGSBaseAlias*>                   aliases;         // 088
+		std::byte                                 pad098[0x40];    // 098
+		std::byte*                                aliasInstances;  // 0D8
+		std::byte                                 pad0E0[0x28];    // 0E0
 		QUEST_DATA                                data;            // 108
 		std::byte                                 pad110[0x4];     // 110
 		REX::TEnumSet<RuntimeFlag, std::uint32_t> runtimeFlags;    // 114
@@ -101,6 +123,8 @@ namespace RE
 		BGSStoryEvent*                            startEventData;  // 330
 	};
 	static_assert(offsetof(TESQuest, instanceID) == 0x70);
+	static_assert(offsetof(TESQuest, aliases) == 0x88);
+	static_assert(offsetof(TESQuest, aliasInstances) == 0xD8);
 	static_assert(offsetof(TESQuest, runtimeFlags) == 0x114);
 	static_assert(offsetof(TESQuest, startEventData) == 0x330);
 }

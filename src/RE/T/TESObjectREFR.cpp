@@ -2,6 +2,7 @@
 
 #include "RE/A/Actor.h"
 #include "RE/B/BGSInventoryItem.h"
+#include "RE/C/CrewExtraData.h"
 #include "RE/E/ExtraLock.h"
 
 namespace RE
@@ -71,6 +72,24 @@ namespace RE
 		using func_t = decltype(&TESObjectREFR::GetCurrentLocation);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetCurrentLocation };
 		return func(this);
+	}
+
+	std::vector<NiPointer<TESObjectREFR>> TESObjectREFR::GetCrewMembers()
+	{
+		using func_t = CrewExtraData* (*)(TESObjectREFR*, bool);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetCrewData };
+		std::vector<NiPointer<TESObjectREFR>> result;
+		if (auto* crew = func(this, false)) {
+			result.reserve(crew->members.size());
+			for (auto& handle : crew->members) {
+				if (auto member = handle.get()) {
+					result.push_back(std::move(member));
+				} else {
+					handle.reset();
+				}
+			}
+		}
+		return result;
 	}
 
 	std::vector<NiPointer<TESObjectREFR>> TESObjectREFR::GetExteriorRefs(BGSKeyword* a_keyword)

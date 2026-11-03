@@ -15,8 +15,9 @@ namespace RE::ID
 	namespace Actor
 	{
 		inline constexpr REL::ID EquipItem{ 101349 };
-		inline constexpr REL::ID EvaluatePackage{ 0 };    // 150640
+		inline constexpr REL::ID EvaluatePackage{ 100836 };
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
+		inline constexpr REL::ID GetCrewAssignment{ 116687 };
 		inline constexpr REL::ID GetEquippedSpell{ 116694 };
 		inline constexpr REL::ID GetFactionReaction{ 116698 };
 		inline constexpr REL::ID GetFurnitureUsing{ 116699 };
@@ -2709,6 +2710,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetActorRefOwner{ 44765 };
 		inline constexpr REL::ID GetFactionOwner{ 44763 };
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
+		inline constexpr REL::ID GetCrewData{ 40770 };
 		inline constexpr REL::ID GetExteriorRefs{ 114920 };
 		inline constexpr REL::ID GetDistance{ 0 };   // 106562
 		inline constexpr REL::ID GetLinkedRef{ 44922 };
@@ -2746,6 +2748,11 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID AddAliasReference{ 68454 };
+		inline constexpr REL::ID ClearAlias{ 68458 };
+		inline constexpr REL::ID CollectAliasActors{ 117237 };
+		inline constexpr REL::ID GetAliasIndex{ 68420 };
+		inline constexpr REL::ID RemoveAliasReference{ 68455 };
 		inline constexpr REL::ID FillAliasReference{ 68460 };
 		inline constexpr REL::ID GetAliasReferenceHandle{ 68501 };
 		inline constexpr REL::ID IsStageDone{ 0 };       // 112585

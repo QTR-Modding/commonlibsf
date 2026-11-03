@@ -246,6 +246,7 @@
 #include "RE/C/Console.h"
 #include "RE/C/ConsoleLog.h"
 #include "RE/C/CreationRenderer.h"
+#include "RE/C/CrewExtraData.h"
 #include "RE/D/DebuggerMessages.h"
 #include "RE/D/DecalData.h"
 #include "RE/D/DetectionState.h"
