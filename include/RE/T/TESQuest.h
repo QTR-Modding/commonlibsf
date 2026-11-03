@@ -99,7 +99,20 @@ namespace RE
 			return { GetFormID(), GetInstanceID() };
 		}
 
-		[[nodiscard]] constexpr bool IsRunning() const noexcept { return runtimeFlags.all(RuntimeFlag::kRunning); }
+		// Matches the native quest predicates, including pending initialization.
+		[[nodiscard]] bool IsRunning() const
+		{
+			using func_t = bool (*)(void*, std::uint32_t, const TESQuest*);
+			static REL::Relocation<func_t> func{ ID::TESQuest::IsRunning };
+			return func(nullptr, 0, this);
+		}
+
+		[[nodiscard]] bool IsStarting() const
+		{
+			using func_t = bool (*)(void*, std::uint32_t, const TESQuest*);
+			static REL::Relocation<func_t> func{ ID::TESQuest::IsStarting };
+			return func(nullptr, 0, this);
+		}
 		[[nodiscard]] constexpr bool IsStopped() const noexcept { return runtimeFlags.all(RuntimeFlag::kStopped); }
 		[[nodiscard]] constexpr bool IsTracked() const noexcept { return runtimeFlags.all(RuntimeFlag::kTracked); }
 

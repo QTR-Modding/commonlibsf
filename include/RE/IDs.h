@@ -2776,6 +2776,8 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID IsRunning{ 119068 };
+		inline constexpr REL::ID IsStarting{ 119069 };
 		inline constexpr REL::ID StartNoWait{ 119056 };
 		inline constexpr REL::ID AddAliasReference{ 68454 };
 		inline constexpr REL::ID ClearAlias{ 68458 };
