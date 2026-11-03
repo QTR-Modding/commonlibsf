@@ -9,6 +9,16 @@ namespace RE
 {
 	namespace
 	{
+		// Reference branch of GameScript::RefrOrInventoryObj. The inventory
+		// branch remains empty; the native wrapper resolves the reference's source.
+		struct ReferenceSource
+		{
+			NiPointer<TESObjectREFR> reference;
+			std::byte                inventory[0x10]{};
+		};
+		static_assert(offsetof(ReferenceSource, reference) == 0);
+		static_assert(sizeof(ReferenceSource) == 0x18);
+
 		using LinkedParentCallback = std::function<void(BGSKeyword*, TESObjectREFR*)>;
 
 		struct LinkedParentVisitor
@@ -281,6 +291,31 @@ namespace RE
 		using func_t = decltype(&TESObjectREFR::WornHasKeyword);
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::WornHasKeyword };
 		return func(this, a_keyword);
+	}
+
+	bool TESObjectREFR::PlayAnimation(const BSFixedString& a_eventName)
+	{
+		return !IsActor() && NotifyAnimationGraphImpl(a_eventName, false);
+	}
+
+	void TESObjectREFR::DamageValue(const ActorValueInfo& a_value, float a_amount)
+	{
+		using func_t = void (*)(void*, std::uint32_t, TESObjectREFR*, const ActorValueInfo*, float);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::DamageValue };
+		func(nullptr, 0, this, std::addressof(a_value), a_amount);
+	}
+
+	bool TESObjectREFR::PushActorAway(Actor& a_actor, float a_force)
+	{
+		const auto* process = a_actor.currentProcess;
+		if (!process || process->unkE7 != 0 || !process->middleHigh) {
+			return false;
+		}
+		const ReferenceSource source{ NiPointer<TESObjectREFR>{ this } };
+		using func_t = void (*)(void*, std::uint32_t, const ReferenceSource*, Actor*, float);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::PushActorAway };
+		func(nullptr, 0, std::addressof(source), std::addressof(a_actor), a_force);
+		return true;
 	}
 
 	void TESObjectREFR::Lock()

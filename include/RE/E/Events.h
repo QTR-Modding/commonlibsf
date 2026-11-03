@@ -98,6 +98,53 @@ namespace RE
 		static_assert(sizeof(ActorCellChangeEvent::Event) == 0x18);
 	};
 
+	struct CrewAssignedEvent
+	{
+		[[nodiscard]] static BSTEventSource<CrewAssignedEvent>* GetEventSource()
+		{
+			using func_t = decltype(&CrewAssignedEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::CrewAssignedEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		TESObjectREFR* assignment;          // 00
+		TESObjectREFR* previousAssignment;  // 08
+		Actor*        crew;                // 10
+	};
+	static_assert(sizeof(CrewAssignedEvent) == 0x18);
+
+	struct CrewDismissedEvent
+	{
+		[[nodiscard]] static BSTEventSource<CrewDismissedEvent>* GetEventSource()
+		{
+			using func_t = decltype(&CrewDismissedEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::CrewDismissedEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		TESObjectREFR* previousAssignment;  // 00
+		Actor*        crew;                // 08
+	};
+	static_assert(sizeof(CrewDismissedEvent) == 0x10);
+
+	struct HomeShipSetEvent
+	{
+		[[nodiscard]] static BSTEventSource<HomeShipSetEvent>* GetEventSource()
+		{
+			using func_t = decltype(&HomeShipSetEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::HomeShipSetEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		Actor*        actor;         // 00
+		TESObjectREFR* ship;          // 08
+		TESObjectREFR* previousShip;  // 10
+	};
+	static_assert(sizeof(HomeShipSetEvent) == 0x18);
+
 	struct ActorItemEquipped
 	{
 		struct Event
@@ -3898,6 +3945,20 @@ namespace RE
 	};
 	static_assert(sizeof(TESFormIDRemapEvent) == 0x8);
 
+	struct TESExitFurnitureEvent
+	{
+		[[nodiscard]] static BSTEventSource<TESExitFurnitureEvent>* GetEventSource()
+		{
+			using func_t = decltype(&TESExitFurnitureEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::TESExitFurnitureEvent::GetEventSource };
+			return func();
+		}
+
+		NiPointer<TESObjectREFR> furniture;  // 00
+		NiPointer<TESObjectREFR> actionRef;  // 08
+	};
+	static_assert(sizeof(TESExitFurnitureEvent) == 0x10);
+
 	struct TESFurnitureEvent
 	{
 		enum class Type : std::int32_t
@@ -3917,9 +3978,10 @@ namespace RE
 		[[nodiscard]] constexpr bool IsExit() const noexcept { return type == Type::kExit; }
 
 		// members
-		std::byte                pad00[0x8];  // 00 - wtf is this now? it used to be an NiPointer<Actor> in previous games
-		NiPointer<TESObjectREFR> furniture;   // 08
-		Type                     type;        // 10
+		BSPointerHandle<Actor>   actor;      // 00
+		std::uint32_t           pad04;      // 04
+		NiPointer<TESObjectREFR> furniture;  // 08
+		Type                    type;       // 10
 	};
 	static_assert(sizeof(TESFurnitureEvent) == 0x18);
 
@@ -4081,6 +4143,23 @@ namespace RE
 			return func();
 		}
 	};
+
+	struct TESQuestStartStopEvent
+	{
+		[[nodiscard]] static BSTEventSource<TESQuestStartStopEvent>* GetEventSource()
+		{
+			using func_t = decltype(&TESQuestStartStopEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::TESQuestStartStopEvent::GetEventSource };
+			return func();
+		}
+
+		TESFormID questID;  // 00
+		bool started;      // 04
+		std::uint8_t opaque05;  // 05
+		std::uint16_t pad06;  // 06
+	};
+	static_assert(offsetof(TESQuestStartStopEvent, started) == 0x4);
+	static_assert(sizeof(TESQuestStartStopEvent) == 0x8);
 
 	struct TESQuestRewardEvent
 	{

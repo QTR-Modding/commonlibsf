@@ -73,6 +73,11 @@ namespace RE
 			return result;
 		}
 
+		// Requests startup without waiting for quest initialization. A true result
+		// means the request was accepted, not that aliases or scripts are ready.
+		// Call on the game thread and observe native quest initialization events.
+		[[nodiscard]] bool StartNoWait();
+
 		// Game-thread access to authored aliases. Missing IDs return nullptr.
 		[[nodiscard]] BGSBaseAlias* GetAlias(std::int32_t a_aliasID) const;
 		// The quest must be running; use an owned, optional alias. Native clear

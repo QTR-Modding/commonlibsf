@@ -1,6 +1,7 @@
 #include "RE/T/TESQuest.h"
 
 #include "RE/A/Actor.h"
+#include "RE/G/GameVM.h"
 
 #include <limits>
 
@@ -14,6 +15,18 @@ namespace RE
 			static REL::Relocation<func_t> func{ ID::TESQuest::GetAliasIndex };
 			return func(a_quest, a_aliasID);
 		}
+	}
+
+	bool TESQuest::StartNoWait()
+	{
+		auto* game = GameVM::GetSingleton();
+		auto* vm = game ? game->GetVM() : nullptr;
+		if (!vm) {
+			return false;
+		}
+		using func_t = bool (*)(BSScript::IVirtualMachine*, std::uint32_t, TESQuest*);
+		static REL::Relocation<func_t> func{ ID::TESQuest::StartNoWait };
+		return func(vm, 0, this);
 	}
 
 	BGSBaseAlias* TESQuest::GetAlias(std::int32_t a_aliasID) const

@@ -16,7 +16,8 @@ namespace RE
 		virtual ~IAnimationGraphManagerHolder();  // 00
 
 		// add
-		virtual bool          NotifyAnimationGraphImpl(const BSFixedString& a_eventName);                                                                         // 01
+		// Papyrus PlayAnimation passes false for the native trailing flag.
+		virtual bool          NotifyAnimationGraphImpl(const BSFixedString& a_eventName, bool a_unk3 = false);                                                    // 01
 		virtual void          Unk_02();                                                                                                                           // 02
 		virtual bool          GetAnimationGraphManagerImpl(BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr);                                             // 03
 		virtual void          Unk_04();                                                                                                                           // 04

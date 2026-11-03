@@ -171,6 +171,15 @@ namespace RE
 			return impl.get();
 		}
 
+		// Millisecond clock used by native real-time script timers. The engine
+		// synchronizes this read. Timer delivery must still respect IsVMFrozen().
+		[[nodiscard]] std::uint32_t GetCurrentTime() const
+		{
+			using func_t = std::uint32_t (*)(const GameVM*);
+			static REL::Relocation<func_t> func{ ID::GameVM::GetCurrentTime };
+			return func(this);
+		}
+
 		static void BindEverythingToScript(BSScript::IVirtualMachine** a_vm)
 		{
 			using func_t = decltype(&BindEverythingToScript);

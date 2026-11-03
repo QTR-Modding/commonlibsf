@@ -428,6 +428,14 @@ namespace RE
 		[[nodiscard]] bool                            IsObjectEquipped(TESBoundObject* a_object);
 		[[nodiscard]] bool                            IsSpaceshipDocked();
 		[[nodiscard]] bool                            IsSpaceshipLanded();
+		// Game thread only. Matches Papyrus PlayAnimation's non-actor graph dispatch.
+		[[nodiscard]] bool PlayAnimation(const BSFixedString& a_eventName);
+		// Game thread only; a_value must be script-modifiable. Preserves native
+		// health handling and actor-value depletion behavior without an attacker.
+		void DamageValue(const ActorValueInfo& a_value, float a_amount);
+		// Game thread only. Uses this reference as the push source, including
+		// native source-handle resolution. False means the actor is not in high process.
+		[[nodiscard]] bool PushActorAway(Actor& a_actor, float a_force);
 		void                                          Lock();
 		void                                          Unlock();
 		[[nodiscard]] bool                            WornHasKeyword(BGSKeyword* a_keyword);
