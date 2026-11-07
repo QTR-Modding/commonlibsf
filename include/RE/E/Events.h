@@ -2457,6 +2457,20 @@ namespace RE
 	};
 	static_assert(sizeof(PlayerJailEvent) == 0x20);
 
+	struct PlayerModifiedShipEvent
+	{
+		[[nodiscard]] static BSTEventSource<PlayerModifiedShipEvent>* GetEventSource()
+		{
+			using func_t = decltype(&PlayerModifiedShipEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::PlayerModifiedShipEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain the ship before queuing work.
+		TESObjectREFR* ship;  // 00
+	};
+	static_assert(sizeof(PlayerModifiedShipEvent) == 0x8);
+
 	struct PlayerMurderActorEvent
 	{
 		[[nodiscard]] static BSTEventSource<PlayerMurderActorEvent>* GetEventSource()
@@ -3392,7 +3406,16 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::SystemPowerAllocationEvent::GetEventSource };
 				return func();
 			}
+
+			// Borrowed during dispatch; retain the ship before queuing work.
+			TESObjectREFR*  ship;        // 00
+			ActorValueInfo* allocation;  // 08
+			std::uint8_t    reason;      // 10
+			std::byte       pad11[3];    // 11
+			std::int32_t    delta;       // 14
 		};
+		static_assert(offsetof(SystemPowerAllocationEvent, delta) == 0x14);
+		static_assert(sizeof(SystemPowerAllocationEvent) == 0x18);
 
 		struct SystemPowerChangeEvent
 		{

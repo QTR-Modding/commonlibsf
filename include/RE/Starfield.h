@@ -399,6 +399,7 @@
 #include "RE/S/SpaceshipCruise.h"
 #include "RE/S/SpaceshipDocking.h"
 #include "RE/S/SpaceshipMovement.h"
+#include "RE/S/SpaceshipPower.h"
 #include "RE/S/SpaceshipTravel.h"
 #include "RE/S/Setting.h"
 #include "RE/S/SettingCollection.h"

@@ -80,6 +80,12 @@ namespace RE
 			kDenied
 		};
 
+		enum class ShipLandingResult : std::uint8_t
+		{
+			kPositioned,
+			kLandingQueued
+		};
+
 		struct LandingRequestResult
 		{
 			LandingRequestStatus status;
@@ -129,6 +135,17 @@ namespace RE
 		// normal fallback. The return does not report acceptance or completion.
 		// Call on the game thread with a valid undocked ship and caller admission.
 		void RequestTakeOff(TESObjectREFR* a_ship);
+
+		// Tests ship dimensions against the landing marker's size keywords.
+		// Requires a valid ship and an actual landing marker; does not reserve it.
+		[[nodiscard]] bool CanLandAtMarker(TESObjectREFR* a_ship, TESObjectREFR* a_marker);
+
+		// Native landing path for a ship the player is not occupying. Transfers
+		// only that ship to the marker, retaining native attachment/animation work.
+		// kPositioned reports placement without queued landing, not rejection.
+		// Queued landing reports progress through LandingEvent. Call on the game thread
+		// after validating the marker, size, occupancy and gameplay admission.
+		[[nodiscard]] ShipLandingResult RequestShipLanding(TESObjectREFR* a_ship, TESObjectREFR* a_marker);
 
 		// Requests animated undocking for the ship's connected child/parent pairs.
 		// True means at least one pair accepted the action, not completion. Listen

@@ -2,6 +2,7 @@
 
 #include "RE/A/Actor.h"
 #include "RE/B/BGSInventoryItem.h"
+#include "RE/B/BGSKeyword.h"
 #include "RE/C/CrewExtraData.h"
 #include "RE/E/ExtraLock.h"
 
@@ -114,6 +115,16 @@ namespace RE
 			result.emplace_back(reference);
 		}
 		return result;
+	}
+
+	std::vector<NiPointer<TESObjectREFR>> TESObjectREFR::GetLandingRamps()
+	{
+		static REL::Relocation<BGSKeyword**> keyword{ ID::TESObjectREFR::SpaceshipRampKeyword };
+		BGSKeyword*                          rampKeyword = *keyword;
+		if (!rampKeyword || !rampKeyword->Is(FormType::kKYWD)) {
+			return {};
+		}
+		return GetExteriorRefs(rampKeyword);
 	}
 
 	float TESObjectREFR::GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs, bool a_ignoreWorldspace) const
@@ -232,11 +243,23 @@ namespace RE
 		return func(this);
 	}
 
+	std::uint32_t TESObjectREFR::GetAvailableMarker(TESObjectREFR* a_user, bool a_ignoreReservations)
+	{
+		using func_t = decltype(&TESObjectREFR::GetAvailableMarker);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetAvailableFurnitureMarker };
+		return func(this, a_user, a_ignoreReservations);
+	}
+
+	bool TESObjectREFR::SetMarkerReserved(std::uint32_t a_marker, TESObjectREFR* a_user, bool a_reserved, bool a_force)
+	{
+		using func_t = decltype(&TESObjectREFR::SetMarkerReserved);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::SetMarkerReserved };
+		return func(this, a_marker, a_user, a_reserved, a_force);
+	}
+
 	std::uint32_t TESObjectREFR::GetAvailableFurnitureMarker(Actor* a_actor, bool a_ignoreReservations)
 	{
-		using func_t = decltype(&TESObjectREFR::GetAvailableFurnitureMarker);
-		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetAvailableFurnitureMarker };
-		return IsFurniture() ? func(this, a_actor, a_ignoreReservations) : static_cast<std::uint32_t>(-1);
+		return IsFurniture() ? GetAvailableMarker(a_actor, a_ignoreReservations) : static_cast<std::uint32_t>(-1);
 	}
 
 	bool TESObjectREFR::IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations)
@@ -316,6 +339,20 @@ namespace RE
 		static REL::Relocation<func_t> func{ ID::TESObjectREFR::PushActorAway };
 		func(nullptr, 0, std::addressof(source), std::addressof(a_actor), a_force);
 		return true;
+	}
+
+	TESObjectREFR::OpenState TESObjectREFR::GetOpenState() const
+	{
+		using func_t = decltype(&TESObjectREFR::GetOpenState);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetOpenState };
+		return func(this);
+	}
+
+	void TESObjectREFR::SetOpen(bool a_open)
+	{
+		using func_t = void (*)(void*, std::uint32_t, TESObjectREFR*, bool);
+		static REL::Relocation<func_t> func{ ID::TESObjectREFR::SetOpen };
+		func(nullptr, 0, this, a_open);
 	}
 
 	void TESObjectREFR::Lock()

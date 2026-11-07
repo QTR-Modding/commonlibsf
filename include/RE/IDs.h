@@ -1749,6 +1749,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107124
 	}
 
+	namespace PlayerModifiedShipEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64144 };
+	}
+
 	namespace PlayerMurderActorEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107126
@@ -2180,8 +2185,21 @@ namespace RE::ID
 		inline constexpr REL::ID RequestStop{ 100926 };
 	}
 
+	namespace Spaceship::Power
+	{
+		inline constexpr REL::ID GetEquipment{ 120481 };
+		inline constexpr REL::ID SetAllocation{ 120468 };
+		inline constexpr REL::ID GetWeaponGroup{ 97884 };
+		inline constexpr REL::ID MaxAvailablePower{ 892971 };
+		inline constexpr REL::ID EnginePower{ 893077 };
+		inline constexpr REL::ID ShieldPower{ 893103 };
+		inline constexpr REL::ID GravDrivePower{ 893109 };
+	}
+
 	namespace Spaceship::Travel
 	{
+		inline constexpr REL::ID CanLandAtMarker{ 119891 };
+		inline constexpr REL::ID RequestShipLanding{ 119960 };
 		inline constexpr REL::ID ExecuteRoute{ 119842 };
 		inline constexpr REL::ID ResumeGravJump{ 119843 };
 		inline constexpr REL::ID GetStoredRoute{ 120359 };
@@ -2311,7 +2329,7 @@ namespace RE::ID
 
 	namespace Spaceship::SystemPowerAllocationEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 174591
+		inline constexpr REL::ID GetEventSource{ 120548 };
 	}
 
 	namespace Spaceship::SystemPowerChangeEvent
@@ -2729,6 +2747,10 @@ namespace RE::ID
 
 	namespace TESObjectREFR
 	{
+		inline constexpr REL::ID SpaceshipRampKeyword{ 892876 };
+		inline constexpr REL::ID SetMarkerReserved{ 64244 };
+		inline constexpr REL::ID GetOpenState{ 47134 };
+		inline constexpr REL::ID SetOpen{ 118464 };
 		inline constexpr REL::ID PushActorAway{ 118412 };
 		inline constexpr REL::ID DamageValue{ 118265 };
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
