@@ -134,36 +134,23 @@ namespace RE
 			return func(this, a_cameraState);
 		}
 
-		// Changes only the saved destination used when the current camera state restores its predecessor.
-		[[nodiscard]] bool SetCameraRestoreState(CameraState a_cameraState)
+		enum class FreeCameraExit
 		{
-			if (a_cameraState >= CameraState::kTotal) {
-				return false;
-			}
-			auto* state = static_cast<TESCameraState*>(cameraStates[a_cameraState]);
-			if (!state) {
-				return false;
-			}
-			const auto capacity = cameraRestoreStateCapacityFlags & 0x7FFFFFFF;
-			const bool local = (cameraRestoreStateCapacityFlags & 0x80000000) != 0;
-			if (cameraRestoreStateCount > capacity ||
-				(local && capacity > sizeof(cameraRestoreStateStorage) / sizeof(BSTSmartPointer<TESCameraState>))) {
-				return false;
-			}
-			if (cameraRestoreStateCount == 0) {
-				return state == cameraStates[CameraState::kFirstPerson];
-			}
-			auto* states = local ? reinterpret_cast<BSTSmartPointer<TESCameraState>*>(cameraRestoreStateStorage) :
-				*reinterpret_cast<BSTSmartPointer<TESCameraState>**>(cameraRestoreStateStorage);
-			if (!states) {
-				return false;
-			}
-			auto& restoreState = states[cameraRestoreStateCount - 1];
-			if (restoreState.get() != state) {
-				restoreState = BSTSmartPointer<TESCameraState>{ state };
-			}
-			return true;
-		}
+			kInvalid,
+			kRestored,
+			kReleased
+		};
+
+		// Changes only the saved destination used when the current camera state restores its predecessor.
+		[[nodiscard]] bool SetCameraRestoreState(CameraState a_cameraState);
+
+		// Ends a non-freezing mode entered through ToggleFreeCameraMode. Pass the
+		// predecessor captured before entry and the restore count immediately after it.
+		// A takeover keeps its current camera; only this mode's saved frames are retired.
+		// kRestored means the native predecessor was resumed, kReleased leaves the
+		// current camera unchanged, and kInvalid means the restore array was not usable.
+		[[nodiscard]] FreeCameraExit EndFreeCameraMode(CameraState a_cameraState,
+			std::uint32_t a_restoreStateCount, CameraState a_previousState);
 
 		[[nodiscard]] float GetWorldFOV() const noexcept { return worldFOV; }
 
@@ -200,12 +187,18 @@ namespace RE
 
 		std::byte unk248[0x280 - 0x248];                 // 248
 		float     worldFOV;                              // 280
+		std::byte unk284[0x2E5 - 0x284];                 // 284
+		bool      freeCameraMode;                        // 2E5
 
 		// ...
+
+	private:
+		[[nodiscard]] std::optional<std::span<BSTSmartPointer<TESCameraState>>> GetCameraRestoreStates();
 	};
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateCount) == 0xB8);
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateCapacityFlags) == 0xC0);
 	static_assert(offsetof(PlayerCamera, cameraRestoreStateStorage) == 0xC8);
 	static_assert(offsetof(PlayerCamera, cameraStates) == 0x188);
 	static_assert(offsetof(PlayerCamera, worldFOV) == 0x280);
+	static_assert(offsetof(PlayerCamera, freeCameraMode) == 0x2E5);
 }
