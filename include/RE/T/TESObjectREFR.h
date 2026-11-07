@@ -158,6 +158,15 @@ namespace RE
 		SF_RTTI_VTABLE(TESObjectREFR);
 		SF_FORMTYPE(REFR);
 
+		enum class OpenState : std::uint8_t
+		{
+			kNone = 0,
+			kOpen = 1,
+			kOpening = 2,
+			kClosed = 3,
+			kClosing = 4
+		};
+
 		~TESObjectREFR() override;  // 00
 
 		// override (TESForm)
@@ -388,6 +397,8 @@ namespace RE
 		// Copies keyword-matching exterior references with owned lifetimes.
 		// Requires a valid ship and non-null keyword; call on the game thread.
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
+		// Uses the engine's ramp keyword and exterior-reference collector.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetLandingRamps();
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
 		// Visits resolved incoming links, including alias links, on the game thread.
@@ -416,6 +427,14 @@ namespace RE
 		[[nodiscard]] std::int32_t                    GetValue();
 		[[nodiscard]] bool                            HasKeyword(BGSKeyword* a_keyword);
 		[[nodiscard]] bool                            IsCrimeToActivate();
+		// Includes native linked-user and reservation checks. Non-furniture markers
+		// accept any reference user, including a ship; furniture requires an Actor.
+		// Returns UINT32_MAX if unavailable.
+		[[nodiscard]] std::uint32_t GetAvailableMarker(TESObjectREFR* a_user, bool a_ignoreReservations = false);
+		// Reserves or releases one marker. Reserving without force refuses another
+		// current user or reservation. Release clears the slot; the caller must own
+		// that reservation. Game thread only.
+		[[nodiscard]] bool SetMarkerReserved(std::uint32_t a_marker, TESObjectREFR* a_user, bool a_reserved, bool a_force = false);
 		// Returns UINT32_MAX when no marker is usable by this actor. Does not reserve it. Game thread only.
 		[[nodiscard]] std::uint32_t GetAvailableFurnitureMarker(Actor* a_actor, bool a_ignoreReservations = false);
 		// Includes marker reservations unless a_ignoreReservations is true. Game thread only.
@@ -436,6 +455,9 @@ namespace RE
 		// Game thread only. Uses this reference as the push source, including
 		// native source-handle resolution. False means the actor is not in high process.
 		[[nodiscard]] bool PushActorAway(Actor& a_actor, float a_force);
+		[[nodiscard]] OpenState GetOpenState() const;
+		// Uses native interaction and animation dispatch. Game thread only.
+		void                                          SetOpen(bool a_open);
 		void                                          Lock();
 		void                                          Unlock();
 		[[nodiscard]] bool                            WornHasKeyword(BGSKeyword* a_keyword);

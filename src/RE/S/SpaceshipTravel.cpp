@@ -20,6 +20,23 @@ namespace RE::Spaceship::Travel
 		func(a_ship);
 	}
 
+	bool CanLandAtMarker(TESObjectREFR* a_ship, TESObjectREFR* a_marker)
+	{
+		using func_t = decltype(&CanLandAtMarker);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::CanLandAtMarker };
+		return func(a_ship, a_marker);
+	}
+
+	ShipLandingResult RequestShipLanding(TESObjectREFR* a_ship, TESObjectREFR* a_marker)
+	{
+		using func_t = bool (*)(TESObjectREFR*, TESObjectREFR*);
+		static REL::Relocation<func_t> func{ ID::Spaceship::Travel::RequestShipLanding };
+		if (func(a_ship, a_marker)) {
+			return ShipLandingResult::kLandingQueued;
+		}
+		return ShipLandingResult::kPositioned;
+	}
+
 	bool RequestUndock(TESObjectREFR* a_ship)
 	{
 		using func_t = decltype(&RequestUndock);
