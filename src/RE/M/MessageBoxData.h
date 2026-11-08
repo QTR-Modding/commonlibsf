@@ -19,7 +19,7 @@ namespace RE::MessageBoxImpl
 		~Button();
 
 		// Native text stores 12 inline bytes followed by capacity and length.
-		std::array<std::uint32_t, 9> storage{ 0, 0, 0, 1, 0, 0, 0, 1, UINT32_MAX };
+		std::array<std::uint32_t, 9> storage{ 0, 0, 0, 1, 0, 0, 0, 1, 0 };
 	};
 	static_assert(sizeof(Button) == 0x24);
 

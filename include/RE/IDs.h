@@ -177,6 +177,7 @@ namespace RE::ID
 
 	namespace BGSInventoryInterface
 	{
+		inline constexpr REL::ID InvalidHandle{ 944496 };
 		inline constexpr REL::ID Singleton{ 883301 };      // 825787
 		inline constexpr REL::ID GetInventoryObject{ 0 };  // 87520 - inlined
 		inline constexpr REL::ID GetInventoryObjectSub{ 63846 };

@@ -29,6 +29,9 @@ RE::MessageBoxImpl::Button::Button(const char* a_text)
 	static REL::Relocation<func_t> assign{ ID::MessageBox::AssignText };
 	assign(storage.data(), "", false);
 	assign(storage.data() + 4, a_text, false);
+	// Text-only buttons have no associated inventory item.
+	static REL::Relocation<const std::uint32_t*> invalidHandle{ ID::BGSInventoryInterface::InvalidHandle };
+	storage[8] = *invalidHandle;
 }
 
 RE::MessageBoxImpl::Button::Button(Button&& a_other) noexcept
