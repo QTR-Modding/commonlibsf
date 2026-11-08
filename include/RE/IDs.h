@@ -1384,6 +1384,18 @@ namespace RE::ID
 		inline constexpr REL::ID Singleton{ 938421 };
 	}
 
+	namespace MessageBox
+	{
+		inline constexpr REL::ID AssignText{ 36345 };
+		inline constexpr REL::ID ConstructData{ 83925 };
+		inline constexpr REL::ID ConstructInfo{ 83924 };
+		inline constexpr REL::ID DestroyButton{ 1015825 };
+		inline constexpr REL::ID DestroyButtons{ 83960 };
+		inline constexpr REL::ID DestroyInfo{ 43998 };
+		inline constexpr REL::ID Manager{ 938019 };
+		inline constexpr REL::ID MoveText{ 39033 };
+		inline constexpr REL::ID Queue{ 1016792 };
+	}
 	namespace MessageBoxMenu_OnBackOut
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 167116
