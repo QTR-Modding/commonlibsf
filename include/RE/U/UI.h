@@ -161,7 +161,9 @@ namespace RE
 		std::uint8_t                    pad4A8[0x0C];    // 4A8
 		// Layout adapted from ozooma10/commonlibsf commit 008b431c455537f17179d9a8fc435c18fb628301.
 		std::uint32_t                   pauseRequestCount;  // 4B4
-		std::uint8_t                    pad4B8[0x28];    // 4B8
+		std::uint8_t                    pad4B8[0x18];    // 4B8
+		std::uint32_t                   messageBoxRequestCount;  // 4D0
+		std::uint8_t                    pad4D4[0x0C];    // 4D4
 		std::uint64_t                   unk4E0;          // 4E0
 		std::uint64_t                   unk4E8;          // 4E8
 		float                           unk4F0;          // 4F0
@@ -181,6 +183,7 @@ namespace RE
 	static_assert(offsetof(UI, menusToAdvance) == 0x440);
 	static_assert(offsetof(UI, menuMap) == 0x470);
 	static_assert(offsetof(UI, pauseRequestCount) == 0x4B4);
+	static_assert(offsetof(UI, messageBoxRequestCount) == 0x4D0);
 	static_assert(offsetof(UI, advanceDelta) == 0x4F4);
 	static_assert(offsetof(UI, unk500) == 0x500);
 	static_assert(offsetof(UI, unk538) == 0x538);
