@@ -1,7 +1,27 @@
 #include "RE/M/MessageBox.h"
 #include "MessageBoxData.h"
+#include "RE/U/UI.h"
 
 RE::IMessageBoxCallback::~IMessageBoxCallback() = default;
+
+bool RE::MessageBoxImpl::HasCallback(const void* a_info)
+{
+	IMessageBoxCallback* callback{};
+	std::memcpy(std::addressof(callback), a_info, sizeof(callback));
+	return callback != nullptr;
+}
+
+void RE::MessageBoxImpl::DestroyInfo(void* a_info)
+{
+	// Native construction counts the request; a retained callback means ownership
+	// never reached the native queue, whose completion normally balances it.
+	if (HasCallback(a_info)) {
+		--UI::GetSingleton()->messageBoxRequestCount;
+	}
+	using func_t = void (*)(void*);
+	static REL::Relocation<func_t> destroy{ ID::MessageBox::DestroyInfo };
+	destroy(a_info);
+}
 
 RE::MessageBoxImpl::Button::Button(const char* a_text)
 {
@@ -46,9 +66,7 @@ RE::MessageBoxImpl::Info::Info(const char* a_title, const char* a_text,
 
 RE::MessageBoxImpl::Info::~Info()
 {
-	using func_t = void (*)(void*);
-	static REL::Relocation<func_t> destroy{ ID::MessageBox::DestroyInfo };
-	destroy(this);
+	DestroyInfo(this);
 }
 
 RE::MessageBoxImpl::Data::Data(Info& a_info, BSTArray<Button>& a_buttons, bool a_allowBackOut)
@@ -61,23 +79,26 @@ RE::MessageBoxImpl::Data::Data(Info& a_info, BSTArray<Button>& a_buttons, bool a
 RE::MessageBoxImpl::Data::~Data()
 {
 	using func_t = void (*)(void*);
-	static REL::Relocation<func_t> destroyInfo{ ID::MessageBox::DestroyInfo };
 	static REL::Relocation<func_t> destroyButtons{ ID::MessageBox::DestroyButtons };
 	destroyButtons(storage.data() + 0x40);
-	destroyInfo(this);
+	DestroyInfo(this);
 }
 
-void RE::MessageBoxImpl::Data::Queue()
+bool RE::MessageBoxImpl::Data::Queue()
 {
 	using func_t = void (*)(void*, Data*);
 	static REL::Relocation<void**> manager{ ID::MessageBox::Manager };
 	static REL::Relocation<func_t> queue{ ID::MessageBox::Queue };
 	queue(*manager, this);
+	return !HasCallback(this);
 }
 
-void RE::ShowMessageBox(const char* a_title, const char* a_text, std::span<const char* const> a_buttons,
+bool RE::ShowMessageBox(const char* a_title, const char* a_text, std::span<const char* const> a_buttons,
 	const BSTSmartPointer<IMessageBoxCallback>& a_callback, bool a_allowBackOut)
 {
+	if (!a_callback) {
+		return false;
+	}
 	MessageBoxImpl::Info info{ a_title, a_text, a_callback };
 	BSTArray<MessageBoxImpl::Button> buttons;
 	buttons.reserve(static_cast<std::uint32_t>(a_buttons.size()));
@@ -85,5 +106,5 @@ void RE::ShowMessageBox(const char* a_title, const char* a_text, std::span<const
 		buttons.emplace_back(text);
 	}
 	MessageBoxImpl::Data data{ info, buttons, a_allowBackOut };
-	data.Queue();
+	return data.Queue();
 }

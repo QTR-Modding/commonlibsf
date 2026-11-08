@@ -7,6 +7,9 @@
 
 namespace RE::MessageBoxImpl
 {
+	[[nodiscard]] bool HasCallback(const void* a_info);
+	void DestroyInfo(void* a_info);
+
 	struct Button
 	{
 		explicit Button(const char* a_text);
@@ -35,7 +38,7 @@ namespace RE::MessageBoxImpl
 		Data(Info& a_info, BSTArray<Button>& a_buttons, bool a_allowBackOut);
 		Data(const Data&) = delete;
 		~Data();
-		void Queue();
+		[[nodiscard]] bool Queue();
 
 		alignas(8) std::array<std::byte, 0x60> storage{};
 	};
