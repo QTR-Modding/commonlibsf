@@ -11,6 +11,7 @@ namespace RE
 		class StreamOpenedEvent;
 	}
 
+	class NiPoint3;
 	class Sky;
 	class TESActorBase;
 	class TESObjectCELL;
@@ -50,6 +51,18 @@ namespace RE
 		// Visits the native attached-cell snapshot synchronously. References are borrowed
 		// under the cell read lock; copy a NiPointer to retain one, and do not change cell membership.
 		BSContainer::ForEachResult ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback);
+
+		// Selects the shared primary world and invalidates its exterior grid.
+		void SetWorldSpace(TESWorldSpace* a_worldSpace);
+
+		// Native scene-loading operations. Call on the game thread within a coordinated
+		// world transition; they change shared world state and own their grid-mutation scope.
+		// The caller owns presentation, actor state, continuing focus and restoration.
+		static void LoadExterior(const NiPoint3& a_position);
+		static void LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position);
+
+		// Submits the ordinary deferred exterior focus update. This is not a load-completion receipt.
+		void SubmitExteriorFocus(const NiPoint3& a_position);
 
 		// members
 		std::byte      pad010[216];   // 010

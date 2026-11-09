@@ -77,3 +77,31 @@ namespace RE
 		return func(this, std::addressof(cells), nullptr);
 	}
 }
+
+void RE::TES::SetWorldSpace(TESWorldSpace* a_worldSpace)
+{
+	using func_t = decltype(&TES::SetWorldSpace);
+	static REL::Relocation<func_t> func{ ID::TES::SetWorldSpace };
+	func(this, a_worldSpace);
+}
+
+void RE::TES::LoadExterior(const NiPoint3& a_position)
+{
+	using func_t = void (*)(void*, const NiPoint3*);
+	static REL::Relocation<func_t> func{ ID::TES::LoadExterior };
+	func(nullptr, std::addressof(a_position));
+}
+
+void RE::TES::LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position)
+{
+	using func_t = void (*)(void*, TESObjectCELL*, const NiPoint3*, bool);
+	static REL::Relocation<func_t> func{ ID::TES::LoadInterior };
+	func(nullptr, a_cell, std::addressof(a_position), false);
+}
+
+void RE::TES::SubmitExteriorFocus(const NiPoint3& a_position)
+{
+	using func_t = void (*)(TES*, const NiPoint3*, bool, bool, TESObjectCELL*);
+	static REL::Relocation<func_t> func{ ID::TES::SubmitExteriorFocus };
+	func(this, std::addressof(a_position), true, false, nullptr);
+}
