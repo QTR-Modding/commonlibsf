@@ -1033,6 +1033,7 @@ namespace RE::ID
 	namespace ExtraDataList
 	{
 		inline constexpr REL::ID ForEachLinkedParent{ 45112 };
+		inline constexpr REL::ID GetEnableStateParent{ 44877 };
 		inline constexpr REL::ID HasQuestObjectAlias{ 45044 };
 	}
 
@@ -2219,6 +2220,10 @@ namespace RE::ID
 	namespace Spaceship::Travel
 	{
 		inline constexpr REL::ID CanLandAtMarker{ 119891 };
+		inline constexpr REL::ID GetLandingMarker{ 119963 };
+		inline constexpr REL::ID ActorServiceLock{ 923104 };
+		inline constexpr REL::ID CurrentInteractionLinkKeyword{ 888722 };
+		inline constexpr REL::ID EnableWithLanding{ 114876 };
 		inline constexpr REL::ID RequestShipLanding{ 119960 };
 		inline constexpr REL::ID ExecuteRoute{ 119842 };
 		inline constexpr REL::ID ResumeGravJump{ 119843 };
@@ -2775,6 +2780,9 @@ namespace RE::ID
 	namespace TESObjectREFR
 	{
 		inline constexpr REL::ID SpaceshipRampKeyword{ 892876 };
+		inline constexpr REL::ID Disable{ 63387 };
+		inline constexpr REL::ID Enable{ 63386 };
+		inline constexpr REL::ID SetLinkedRef{ 64299 };
 		inline constexpr REL::ID SetMarkerReserved{ 64244 };
 		inline constexpr REL::ID GetOpenState{ 47134 };
 		inline constexpr REL::ID SetOpen{ 118464 };
