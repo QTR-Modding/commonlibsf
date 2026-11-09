@@ -57,11 +57,16 @@ namespace RE::Spaceship::Power
 			}
 			a_group = 0;
 			if (a_part.weapon) {
-				using func_t = std::uint32_t (*)(void*);
-				static REL::Relocation<func_t> func{ ID::Spaceship::Power::GetWeaponGroup };
-				a_group = func(a_part.weapon);
-				a_system = System::Weapon;
-				return a_group < 3;
+				using func_t = ActorValueInfo* (*)(std::uint32_t);
+				static REL::Relocation<func_t> func{ ID::Spaceship::Power::GetWeaponPowerActorValue };
+				for (std::uint32_t group = 0; group < 3; ++group) {
+					if (a_part.allocation == func(group)) {
+						a_group = group;
+						a_system = System::Weapon;
+						return true;
+					}
+				}
+				return false;
 			}
 			static REL::Relocation<ActorValueInfo**> engine{ ID::Spaceship::Power::EnginePower };
 			static REL::Relocation<ActorValueInfo**> shield{ ID::Spaceship::Power::ShieldPower };
