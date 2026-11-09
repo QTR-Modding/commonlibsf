@@ -66,7 +66,8 @@ namespace RE
 		// world transition; they change shared world state and own their grid-mutation scope.
 		// The caller owns presentation, actor state, continuing focus and restoration.
 		static void LoadExterior(const NiPoint3& a_position);
-		static void LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position);
+		// A forced transition bypasses the same-cell focus-only path.
+		static void LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position, bool a_forceTransition = false);
 
 		// Submits the ordinary deferred exterior focus update. This is not a load-completion receipt.
 		void SubmitExteriorFocus(const NiPoint3& a_position);
