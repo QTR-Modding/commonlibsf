@@ -378,3 +378,10 @@ namespace RE
 		return func(this);
 	}
 }
+
+RE::TESBoundObject* RE::TESObjectREFR::GetBaseObjectForComponent(const BSFixedString& a_componentName)
+{
+	using func_t = TESBoundObject* (*)(TESObjectREFR*, const BSFixedString&);
+	static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetBaseObjectForComponent };
+	return func(this, a_componentName);
+}
