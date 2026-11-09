@@ -386,6 +386,8 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetAngleZ() const { return data.angle.z; }
 		[[nodiscard]] NiPointer<TESBoundObject>       GetBaseObject() { return data.objectReference; }
 		[[nodiscard]] NiPointer<const TESBoundObject> GetBaseObject() const { return data.objectReference; }
+		// Returns the borrowed base form supplying this component after native variant resolution.
+		[[nodiscard]] TESBoundObject* GetBaseObjectForComponent(const BSFixedString& a_componentName);
 		// Explicit ownership from this reference; returned pointers are borrowed.
 		// Call on the game thread and retain an actor owner before queuing it.
 		[[nodiscard]] Actor*                          GetActorRefOwner() const;
