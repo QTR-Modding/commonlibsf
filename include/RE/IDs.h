@@ -175,6 +175,11 @@ namespace RE::ID
 		inline constexpr REL::ID HandleEntryPoint{ 0 };  // 110912
 	}
 
+	namespace BGSGenericBaseForm
+	{
+		inline constexpr REL::ID BlueprintCellOwner{ 938393 };
+	}
+
 	namespace BGSInventoryInterface
 	{
 		inline constexpr REL::ID InvalidHandle{ 944496 };
@@ -308,6 +313,8 @@ namespace RE::ID
 
 	namespace BSComponentDB2
 	{
+		inline constexpr REL::ID AcquireRead{ 126655 };
+		inline constexpr REL::ID LowerBoundEdge{ 126701 };
 		inline constexpr REL::ID Lookup{ 126806 };
 		inline constexpr REL::ID IterateBegin{ 126805 };
 		inline constexpr REL::ID IterateAdvance{ 39372 };
