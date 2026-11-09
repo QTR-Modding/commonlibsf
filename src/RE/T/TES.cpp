@@ -92,11 +92,11 @@ void RE::TES::LoadExterior(const NiPoint3& a_position)
 	func(nullptr, std::addressof(a_position));
 }
 
-void RE::TES::LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position)
+void RE::TES::LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position, bool a_forceTransition)
 {
 	using func_t = void (*)(void*, TESObjectCELL*, const NiPoint3*, bool);
 	static REL::Relocation<func_t> func{ ID::TES::LoadInterior };
-	func(nullptr, a_cell, std::addressof(a_position), false);
+	func(nullptr, a_cell, std::addressof(a_position), a_forceTransition);
 }
 
 void RE::TES::SubmitExteriorFocus(const NiPoint3& a_position)
