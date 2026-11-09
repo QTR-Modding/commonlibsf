@@ -1690,6 +1690,7 @@ namespace RE::ID
 	namespace PlayerCharacter
 	{
 		inline constexpr REL::ID GetHomeShip{ 102957 };
+		inline constexpr REL::ID SetFirstPerson3D{ 102736 };
 		inline constexpr REL::ID Singleton{ 922868 };
 		inline constexpr REL::ID StartDialogueCamera{ 102807 };
 		inline constexpr REL::ID StopDialogueCamera{ 102808 };
