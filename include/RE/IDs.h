@@ -2700,6 +2700,9 @@ namespace RE::ID
 		inline constexpr REL::ID LookupByID{ 47401 };
 		inline constexpr REL::ID LookupByEditorID{ 47403 };
 		inline constexpr REL::ID AllFormsMap{ 883341 };
+		inline constexpr REL::ID GetFormLinkData{ 42212 };
+		inline constexpr REL::ID FindFormLink{ 41509 };
+		inline constexpr REL::ID ReleaseFormLinkData{ 37938 };
 	}
 
 	namespace TESFormDeleteEvent

@@ -8,6 +8,7 @@
 
 namespace RE
 {
+	class BGSKeyword;
 	class BGSLoadFormBuffer;
 	class BGSPreviewTransform;
 	class BGSSaveFormBuffer;
@@ -194,6 +195,8 @@ namespace RE
 		[[nodiscard]] auto      GetFormFlags() const noexcept { return formFlags; }
 		[[nodiscard]] TESFormID GetFormID() const noexcept { return formID; }
 		[[nodiscard]] FormType  GetFormType() const noexcept { return *formType; }
+		// Returns the borrowed form linked by this keyword in the form's component data.
+		[[nodiscard]] TESForm* GetLinkedForm(BGSKeyword* a_keyword);
 
 		[[nodiscard]] bool Is(FormType a_type) const noexcept { return GetFormType() == a_type; }
 
