@@ -105,3 +105,23 @@ void RE::TES::SubmitExteriorFocus(const NiPoint3& a_position)
 	static REL::Relocation<func_t> func{ ID::TES::SubmitExteriorFocus };
 	func(this, std::addressof(a_position), true, false, nullptr);
 }
+
+void RE::TES::BeginSceneLoad(BGSLocation* a_location)
+{
+	using func_t = void (*)(BGSLocation*, bool, std::uint32_t, bool, bool);
+	static REL::Relocation<func_t> func{ ID::TES::BeginSceneLoad };
+	func(a_location, false, 0, false, true);
+}
+
+bool RE::TES::IsSceneLoading()
+{
+	static REL::Relocation<const bool*> active{ ID::TES::SceneLoading };
+	return *active;
+}
+
+void RE::TES::FinishSceneLoad()
+{
+	using func_t = void (*)(bool, BGSLocation*, bool, float, bool);
+	static REL::Relocation<func_t> func{ ID::TES::FinishSceneLoad };
+	func(true, nullptr, false, -1.0F, false);
+}

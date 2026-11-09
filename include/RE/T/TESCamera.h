@@ -22,7 +22,7 @@ namespace RE
 		// members
 		NiPointer<NiNode> cameraRoot;    // 08
 		void*             currentState;  // 10 - BSTSmartPointer<TESCameraState>
-		std::uint64_t     unk18;         // 18
+		void*             viewSpace;     // 18 - owned native component view
 		bool              enabled;       // 20
 		float             unk24;         // 24
 		float             unk28;         // 28
@@ -34,5 +34,6 @@ namespace RE
 		float             unk40;         // 40
 		std::uint32_t     pad44;         // 44
 	};
+	static_assert(offsetof(TESCamera, viewSpace) == 0x18);
 	static_assert(sizeof(TESCamera) == 0x48);
 }

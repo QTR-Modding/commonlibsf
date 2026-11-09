@@ -234,7 +234,8 @@ namespace RE::ID
 
 	namespace BGSSaveLoadManager
 	{
-		inline constexpr REL::ID IsLoadingAllowed{ 98657 };
+		inline constexpr REL::ID IsLoadingAllowed{ 98659 };
+		inline constexpr REL::ID IsSavingAllowed{ 98657 };
 		inline constexpr REL::ID DeleteSaveFile{ 0 };          // 147844
 		inline constexpr REL::ID QueueBuildSaveGameList{ 0 };  // 147900
 		inline constexpr REL::ID QueueSaveLoadTask{ 0 };       // 1536882
@@ -2587,6 +2588,9 @@ namespace RE::ID
 
 	namespace TES
 	{
+		inline constexpr REL::ID BeginSceneLoad{ 46055 };
+		inline constexpr REL::ID FinishSceneLoad{ 46056 };
+		inline constexpr REL::ID SceneLoading{ 883330 };
 		inline constexpr REL::ID LoadExterior{ 46038 };
 		inline constexpr REL::ID LoadInterior{ 46037 };
 		inline constexpr REL::ID SetWorldSpace{ 46058 };
@@ -2966,6 +2970,14 @@ namespace RE::ID
 	namespace Workshop::ItemPlacedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 119426
+	}
+
+	namespace ViewSpace
+	{
+		inline constexpr REL::ID Manager{ 938414 };
+		inline constexpr REL::ID SelectSystem{ 57601 };
+		inline constexpr REL::ID Select{ 57602 };
+		inline constexpr REL::ID Release{ 126559 };
 	}
 
 	namespace Workshop::ItemProducedEvent

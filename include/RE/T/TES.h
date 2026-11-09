@@ -11,6 +11,7 @@ namespace RE
 		class StreamOpenedEvent;
 	}
 
+	class BGSLocation;
 	class NiPoint3;
 	class Sky;
 	class TESActorBase;
@@ -54,6 +55,12 @@ namespace RE
 
 		// Selects the shared primary world and invalidates its exterior grid.
 		void SetWorldSpace(TESWorldSpace* a_worldSpace);
+
+		// Game-thread loading lifecycle. Begin and Finish belong to the same caller.
+		// Begin requires no active transition; finish only this caller's loading work.
+		static void BeginSceneLoad(BGSLocation* a_location = nullptr);
+		[[nodiscard]] static bool IsSceneLoading();
+		static void FinishSceneLoad();
 
 		// Native scene-loading operations. Call on the game thread within a coordinated
 		// world transition; they change shared world state and own their grid-mutation scope.
