@@ -137,6 +137,8 @@ namespace RE
 			return a_name && !_strnicmp(a_name, "QuickSave", 9);
 		}
 
+		bool IsSavingAllowed(bool a_ignorePlayerStateChecks = false);
+
 		bool IsLoadingAllowed()
 		{
 			using func_t = decltype(&BGSSaveLoadManager::IsLoadingAllowed);

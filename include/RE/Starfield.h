@@ -507,6 +507,7 @@
 #include "RE/U/UIMessageQueue.h"
 #include "RE/U/UserEvents.h"
 #include "RE/V/Variable.h"
+#include "RE/V/ViewSpace.h"
 #include "RE/V/VirtualMachine.h"
 #include "RE/W/WritableStringTable.h"
 #include "RE/W/WritableTypeTable.h"
