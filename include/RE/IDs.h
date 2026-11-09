@@ -2587,6 +2587,10 @@ namespace RE::ID
 
 	namespace TES
 	{
+		inline constexpr REL::ID LoadExterior{ 46038 };
+		inline constexpr REL::ID LoadInterior{ 46037 };
+		inline constexpr REL::ID SetWorldSpace{ 46058 };
+		inline constexpr REL::ID SubmitExteriorFocus{ 46019 };
 		inline constexpr REL::ID ForEachCell{ 46103 };
 		inline constexpr REL::ID GetDeadCount{ 0 };    // 84704
 		inline constexpr REL::ID Singleton{ 883589 };  // 881024
