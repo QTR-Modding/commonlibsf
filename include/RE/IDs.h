@@ -2207,6 +2207,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetEquipment{ 120481 };
 		inline constexpr REL::ID SetAllocation{ 120468 };
 		inline constexpr REL::ID GetWeaponGroup{ 97884 };
+		inline constexpr REL::ID GetWeaponPowerActorValue{ 57329 };
 		inline constexpr REL::ID MaxAvailablePower{ 892971 };
 		inline constexpr REL::ID EnginePower{ 893077 };
 		inline constexpr REL::ID ShieldPower{ 893103 };
