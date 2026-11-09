@@ -202,3 +202,13 @@ namespace RE::Spaceship::Docking
 		return true;
 	}
 }
+
+bool RE::Spaceship::Docking::GetPhysicalPosition(TESObjectREFR* a_ship, std::array<double, 4>& a_out)
+{
+	NativeBodyPose body;
+	if (!QueryBodyPose(a_ship, body)) {
+		return false;
+	}
+	a_out = body.position;
+	return true;
+}

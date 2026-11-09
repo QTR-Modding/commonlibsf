@@ -46,6 +46,8 @@ namespace RE
 		// Copies the current physical body pose in current-origin common XYZ.
 		// Rotation rows are world-space axes. Failure leaves a_out unchanged.
 		[[nodiscard]] bool GetWorldPose(TESObjectREFR* a_ship, Pose& a_out);
+		// Copies the physical body position without reducing precision or subtracting the origin.
+		[[nodiscard]] bool GetPhysicalPosition(TESObjectREFR* a_ship, std::array<double, 4>& a_out);
 
 		// Copies the animation start and final docked poses using one target-body
 		// snapshot, with the target body origin and the stock start-facing point.

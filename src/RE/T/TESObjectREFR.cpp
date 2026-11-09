@@ -385,3 +385,10 @@ RE::TESBoundObject* RE::TESObjectREFR::GetBaseObjectForComponent(const BSFixedSt
 	static REL::Relocation<func_t> func{ ID::TESObjectREFR::GetBaseObjectForComponent };
 	return func(this, a_componentName);
 }
+
+bool RE::TESObjectREFR::HasDynamicState() const
+{
+	using func_t = bool (*)(TESFormID);
+	static REL::Relocation<func_t> query{ ID::TESObjectREFR::HasDynamicState };
+	return query(GetFormID());
+}

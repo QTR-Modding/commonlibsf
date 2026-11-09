@@ -1,6 +1,39 @@
 #include "RE/V/ViewSpace.h"
+#include "ViewSpaceOriginScope.h"
 
 #include "RE/P/PlayerCamera.h"
+#include "RE/T/TESObjectREFR.h"
+
+RE::ViewSpaceOriginScope::ViewSpaceOriginScope(void* a_view)
+{
+	using func_t = void** (*)(void* const*, void**);
+	static REL::Relocation<func_t> acquire{ ID::ViewSpace::AcquireWrite };
+	acquire(std::addressof(a_view), std::addressof(_view));
+}
+
+RE::ViewSpaceOriginScope::~ViewSpaceOriginScope()
+{
+	using func_t = void (*)(void**);
+	static REL::Relocation<func_t> release{ ID::ViewSpace::ReleaseWrite };
+	release(std::addressof(_view));
+}
+
+std::byte* RE::ViewSpaceOriginScope::GetData() const
+{
+	static REL::Relocation<const std::uint16_t*> component{ ID::ViewSpace::HighDetailInfo };
+	using func_t = bool (*)(void*, Cursor*, const std::uint64_t*);
+	static REL::Relocation<func_t> lookup{ ID::ViewSpace::LookupComponent };
+	const std::uint64_t key = static_cast<std::uint64_t>(*component) << 48;
+	Cursor cursor;
+	if (!lookup(_view, std::addressof(cursor), std::addressof(key))) {
+		return nullptr;
+	}
+	std::byte* page = reinterpret_cast<std::byte*>(cursor.pages[cursor.depth - 1]);
+	const std::uint32_t dataOffset = *reinterpret_cast<const std::uint32_t*>(page + 4);
+	const std::uint16_t entryOffset = *reinterpret_cast<const std::uint16_t*>(
+		page + dataOffset + (cursor.indices[cursor.depth - 1] + 1) * 2);
+	return page + dataOffset + entryOffset + 0x10;
+}
 
 RE::ViewSpace::ViewSpace() noexcept = default;
 
@@ -68,4 +101,55 @@ void RE::ViewSpace::Release() noexcept
 		static REL::Relocation<func_t> func{ ID::ViewSpace::Release };
 		func(std::addressof(previous));
 	}
+}
+
+void RE::ViewSpace::SelectReference(std::uint32_t a_systemID, TESObjectREFR* a_reference)
+{
+	using func_t = void (*)(std::uint32_t, TESFormID);
+	static REL::Relocation<func_t> select{ ID::ViewSpace::SelectReference };
+	select(a_systemID, a_reference->GetFormID());
+}
+
+void RE::ViewSpace::SetFloatingOrigin(const std::array<double, 4>& a_origin)
+{
+	using func_t = void (*)(const double*, bool, bool);
+	static REL::Relocation<func_t> set{ ID::ViewSpace::SetFloatingOrigin };
+	set(a_origin.data(), false, true);
+}
+
+bool RE::ViewSpace::CaptureOrigin(Origin& a_out) const
+{
+	if (!_space) {
+		return false;
+	}
+	ViewSpaceOriginScope scope{ _space };
+	const std::byte* data = scope.GetData();
+	if (!data) {
+		return false;
+	}
+	static REL::Relocation<const std::array<double, 4>*> floatingOrigin{ ID::Spaceship::Docking::FloatingOrigin };
+	a_out = { *floatingOrigin.get(), *reinterpret_cast<const std::array<double, 4>*>(data + 0x30),
+		*reinterpret_cast<const std::array<double, 4>*>(data + 0x50),
+		*reinterpret_cast<const NiPoint3*>(data + 0x70) };
+	return true;
+}
+
+bool RE::ViewSpace::RestoreOrigin(const Origin& a_origin) const
+{
+	if (!_space) {
+		return false;
+	}
+	{
+		ViewSpaceOriginScope scope{ _space };
+		std::byte* data = scope.GetData();
+		if (!data) {
+			return false;
+		}
+		*reinterpret_cast<std::uint32_t*>(static_cast<std::byte*>(_space) + 0x10) = 0;
+		*reinterpret_cast<std::array<double, 4>*>(data + 0x30) = a_origin.anchor;
+		*reinterpret_cast<std::array<double, 4>*>(data + 0x50) = a_origin.fittedPosition;
+		*reinterpret_cast<NiPoint3*>(data + 0x70) = a_origin.velocity;
+	}
+	SetFloatingOrigin(a_origin.floatingOrigin);
+	return true;
 }

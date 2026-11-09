@@ -2814,6 +2814,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetParentWorldSpace{ 63417 };
 		inline constexpr REL::ID GetScale{ 0 };  // 106658
 		inline constexpr REL::ID GetSpaceTransform{ 116271 };
+		inline constexpr REL::ID HasDynamicState{ 56957 };
 		inline constexpr REL::ID GetSpaceship{ 119881 };
 		inline constexpr REL::ID GetSpaceshipParentDock{ 0 };  // 174134
 		inline constexpr REL::ID GetSpaceshipPilot{ 119876 };
@@ -2994,6 +2995,12 @@ namespace RE::ID
 
 	namespace ViewSpace
 	{
+		inline constexpr REL::ID AcquireWrite{ 126563 };
+		inline constexpr REL::ID ReleaseWrite{ 126562 };
+		inline constexpr REL::ID LookupComponent{ 126584 };
+		inline constexpr REL::ID HighDetailInfo{ 938181 };
+		inline constexpr REL::ID SelectReference{ 97891 };
+		inline constexpr REL::ID SetFloatingOrigin{ 57652 };
 		inline constexpr REL::ID Manager{ 938414 };
 		inline constexpr REL::ID SelectSystem{ 57601 };
 		inline constexpr REL::ID Select{ 57602 };
