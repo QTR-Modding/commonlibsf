@@ -419,6 +419,8 @@ namespace RE
 		// The position needs 16-byte storage; false means the space pose is absent.
 		// Call on the game thread with a valid reference.
 		[[nodiscard]] bool GetSpaceTransform(NiPoint3A& a_position, NiMatrix3& a_rotation) const;
+		// Space-body queries include the native parent or carrier frame.
+		[[nodiscard]] std::uint32_t GetSpaceBodyID() const;
 		[[nodiscard]] bool HasDynamicState() const;
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();

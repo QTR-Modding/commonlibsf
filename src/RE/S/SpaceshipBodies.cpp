@@ -72,10 +72,7 @@ namespace RE::Spaceship::Travel
 		if (auto* ship = a_reference->GetSpaceship(true)) {
 			a_reference = ship;
 		}
-		std::uint32_t bodyID{};
-		using resolve_body_t = std::uint32_t* (*)(std::uint32_t*, TESObjectREFR*);
-		static REL::Relocation<resolve_body_t> resolveBody{ ID::Spaceship::Travel::ResolveReferenceBody };
-		resolveBody(std::addressof(bodyID), a_reference);
+		const std::uint32_t bodyID = a_reference->GetSpaceBodyID();
 		if (!bodyID) {
 			return 0;
 		}
