@@ -53,6 +53,8 @@ RE::Spaceship::InteriorLoad::Status RE::Spaceship::InteriorLoad::GetStatus() con
 
 RE::Spaceship::InteriorLoad::Status RE::Spaceship::InteriorLoad::GetResourceStatus() const
 {
+	static REL::Relocation<std::byte**> manager{ ID::Spaceship::InteriorLoad::IOManager };
+	BSAutoLock guard{ reinterpret_cast<BSSpinLock*>(*manager + 0x280) };
 	const std::byte* resource = static_cast<const std::byte*>(_resource);
 	const std::uint32_t state = *reinterpret_cast<const std::uint32_t*>(resource + 0x14) & 0x70000000U;
 	if (state == 0x10000000U || state == 0x20000000U) {
@@ -61,7 +63,13 @@ RE::Spaceship::InteriorLoad::Status RE::Spaceship::InteriorLoad::GetResourceStat
 	if (state != 0x30000000U && state != 0x40000000U) {
 		return Status::Failed;
 	}
-	if (*reinterpret_cast<const std::uint64_t*>(resource + 0x28) != 6) {
+	const std::uint64_t lifecycle = *reinterpret_cast<const std::uint64_t*>(resource + 0x28);
+	// The native queue lock excludes the transient pre-attach 4 through its callback.
+	// A 4 observed here is the completed detach state.
+	if (lifecycle == 4) {
+		return Status::Failed;
+	}
+	if (lifecycle != 6) {
 		return Status::Pending;
 	}
 	TESObjectCELL* cell = *reinterpret_cast<TESObjectCELL* const*>(resource + 0x30);

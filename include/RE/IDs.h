@@ -3177,6 +3177,7 @@ namespace RE::ID
 
 	namespace Spaceship::InteriorLoad
 	{
+		constexpr REL::ID IOManager{ 883707 };
 		constexpr REL::ID Request{ 57041 };
 		constexpr REL::ID Unload{ 57049 };
 		constexpr REL::ID ReleaseResource{ 41053 };
