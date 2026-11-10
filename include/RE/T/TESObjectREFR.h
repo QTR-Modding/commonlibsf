@@ -399,6 +399,8 @@ namespace RE
 		// Copies keyword-matching exterior references with owned lifetimes.
 		// Requires a valid ship and non-null keyword; call on the game thread.
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
+		// Retains this ship's runtime interior CELL; does not load it. Call on the game thread.
+		[[nodiscard]] NiPointer<TESObjectCELL> GetSpaceshipInteriorCell() const;
 		// Uses the engine's ramp keyword and exterior-reference collector.
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetLandingRamps();
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
