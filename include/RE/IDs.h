@@ -1684,6 +1684,14 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107120
 	}
 
+	namespace Physics
+	{
+		inline constexpr REL::ID AppendWorld{ 37126 };
+		inline constexpr REL::ID CollectWorlds{ 69120 };
+		inline constexpr REL::ID FindWorld{ 48475 };
+		inline constexpr REL::ID SpaceWorld{ 929664 };
+	}
+
 	namespace PlayerCamera
 	{
 		inline constexpr REL::ID Singleton{ 937788 };
