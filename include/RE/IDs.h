@@ -3166,4 +3166,21 @@ namespace RE::ID
 	inline constexpr REL::ID NET_WaitForData{ 0 };      // 211263
 	inline constexpr REL::ID RTDynamicCast{ 184372 };
 	inline constexpr REL::ID Sys_InitNetworking{ 0 };  // 211265
+
+	namespace BSJobs2
+	{
+		constexpr REL::ID AllocateJob{ 139459 };
+		constexpr REL::ID InvokePointerJob{ 49623 };
+	}
+
+	namespace Spaceship::Systems
+	{
+		constexpr REL::ID CollectShips{ 97814 };
+		constexpr REL::ID IsEligible{ 57632 };
+		constexpr REL::ID InvalidHandle{ 944496 };
+		constexpr REL::ID HandleManager{ 883285 };
+		constexpr REL::ID VisitHandle{ 139363 };
+		constexpr REL::ID UpdateShip{ 97772 };
+		constexpr REL::ID UpdateDisabledShip{ 97773 };
+	}
 }

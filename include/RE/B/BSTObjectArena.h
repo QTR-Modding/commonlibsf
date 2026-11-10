@@ -170,9 +170,11 @@ namespace RE
 
 		~BSTObjectArena()
 		{
-			const auto del = [](Page*& a_page) {
+			const auto del = [this](Page*& a_page) {
 				while (a_page != nullptr) {
-					delete std::exchange(a_page, a_page->next);
+					Page* page = std::exchange(a_page, a_page->next);
+					std::destroy_at(page);
+					allocator_type::deallocate_bytes(page);
 				}
 			};
 
