@@ -3175,6 +3175,13 @@ namespace RE::ID
 		constexpr REL::ID InvokePointerJob{ 49623 };
 	}
 
+	namespace Spaceship::InteriorLoad
+	{
+		constexpr REL::ID Request{ 57041 };
+		constexpr REL::ID Unload{ 57049 };
+		constexpr REL::ID ReleaseResource{ 41053 };
+	}
+
 	namespace Spaceship::Systems
 	{
 		constexpr REL::ID CollectShips{ 97814 };

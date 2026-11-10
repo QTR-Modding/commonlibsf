@@ -408,6 +408,7 @@
 #include "RE/S/SpaceshipPower.h"
 #include "RE/S/SpaceshipTravel.h"
 #include "RE/S/SpaceshipSystems.h"
+#include "RE/S/SpaceshipInteriorLoad.h"
 #include "RE/S/Setting.h"
 #include "RE/S/SettingCollection.h"
 #include "RE/S/SettingCollectionList.h"
