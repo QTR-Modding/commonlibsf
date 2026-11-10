@@ -369,6 +369,7 @@
 #include "RE/O/ObjectTypeInfo.h"
 #include "RE/P/PerkRankData.h"
 #include "RE/P/PlasmaProjectile.h"
+#include "RE/P/Physics.h"
 #include "RE/P/PlayerCamera.h"
 #include "RE/P/PlayerCharacter.h"
 #include "RE/P/PlayerControlsManager.h"
