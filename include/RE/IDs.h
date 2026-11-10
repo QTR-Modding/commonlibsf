@@ -2817,6 +2817,7 @@ namespace RE::ID
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
 		inline constexpr REL::ID GetCrewData{ 40770 };
 		inline constexpr REL::ID GetExteriorRefs{ 114920 };
+		constexpr REL::ID GetSpaceshipLinkedCells{ 57112 };
 		inline constexpr REL::ID GetDistance{ 0 };   // 106562
 		inline constexpr REL::ID GetLinkedRef{ 44922 };
 		inline constexpr REL::ID GetLock{ 0 };       // 107581

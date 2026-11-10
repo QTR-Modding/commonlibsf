@@ -1,4 +1,6 @@
 #include "RE/T/TESObjectREFR.h"
+#include "RE/T/TESObjectCELL.h"
+#include "../S/SpaceshipComponentLease.h"
 
 #include "RE/A/Actor.h"
 #include "RE/B/BGSInventoryItem.h"
@@ -401,4 +403,21 @@ bool RE::TESObjectREFR::HasDynamicState() const
 	static REL::Relocation<func_t> query{ ID::TESObjectREFR::HasDynamicState };
 	const std::uint32_t body = GetSpaceBodyID();
 	return body && query(body);
+}
+
+
+RE::NiPointer<RE::TESObjectCELL> RE::TESObjectREFR::GetSpaceshipInteriorCell() const
+{
+	struct LinkedCells
+	{
+		std::byte unknown00[0x8];
+		TESObjectCELL* interior;
+	};
+	static_assert(offsetof(LinkedCells, interior) == 0x8);
+	using Lease = Spaceship::detail::ComponentLease<LinkedCells>;
+	Lease cells;
+	using func_t = Lease* (*)(Lease*, TESFormID);
+	static REL::Relocation<func_t> get{ ID::TESObjectREFR::GetSpaceshipLinkedCells };
+	get(std::addressof(cells), GetFormID());
+	return cells.value ? NiPointer<TESObjectCELL>{ cells.value->interior } : nullptr;
 }
