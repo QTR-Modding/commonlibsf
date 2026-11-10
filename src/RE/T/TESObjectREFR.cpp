@@ -421,3 +421,10 @@ RE::NiPointer<RE::TESObjectCELL> RE::TESObjectREFR::GetSpaceshipInteriorCell() c
 	get(std::addressof(cells), GetFormID());
 	return cells.value ? NiPointer<TESObjectCELL>{ cells.value->interior } : nullptr;
 }
+
+void RE::TESObjectREFR::RefreshSpaceshipLights(ShipLightMode a_mode)
+{
+	using func_t = void (*)(TESObjectREFR*, ShipLightMode);
+	static REL::Relocation<func_t> refresh{ ID::TESObjectREFR::RefreshSpaceshipLights };
+	refresh(this, a_mode);
+}
