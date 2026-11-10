@@ -2780,6 +2780,7 @@ namespace RE::ID
 	namespace TESObjectCELL
 	{
 		inline constexpr REL::ID ForEachReference{ 63054 };
+		constexpr REL::ID LoadSpaceReferences{ 57565 };
 	}
 
 	namespace TESObjectLoadedEvent

@@ -99,6 +99,13 @@ void RE::TES::LoadInterior(TESObjectCELL* a_cell, const NiPoint3& a_position, bo
 	func(nullptr, a_cell, std::addressof(a_position), a_forceTransition);
 }
 
+void RE::TESObjectCELL::LoadSpaceReferences(bool a_updateLinkedRefs)
+{
+	using func_t = void (*)(TESObjectCELL*, bool, void*);
+	static REL::Relocation<func_t> func{ ID::TESObjectCELL::LoadSpaceReferences };
+	func(this, a_updateLinkedRefs, nullptr);
+}
+
 void RE::TES::SubmitExteriorFocus(const NiPoint3& a_position)
 {
 	using func_t = void (*)(TES*, const NiPoint3*, bool, bool, TESObjectCELL*);
