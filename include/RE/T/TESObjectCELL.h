@@ -92,6 +92,11 @@ namespace RE
 		[[nodiscard]] bool IsInterior() const noexcept { return cellFlags.any(Flag::kInterior); }
 		[[nodiscard]] bool UsesPlanetGravity() const noexcept { return cellFlags.any(Flag::kUsePlanetGravity); }
 
+		// Loads eligible ship references into the current space view using native filtering.
+		// Physics follows native model eligibility. Pass true to refresh linked-reference physics.
+		// Call on the game thread after loading this space CELL.
+		void LoadSpaceReferences(bool a_updateLinkedRefs);
+
 		void ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback) const;
 
 		void ForEachReferenceInRange(const NiPoint3A& a_origin, float a_radius, std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback) const
