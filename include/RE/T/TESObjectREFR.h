@@ -167,6 +167,15 @@ namespace RE
 			kClosing = 4
 		};
 
+		enum class ShipLightMode : std::int32_t
+		{
+			kAutomatic = 0,
+			kAboardSpace = 1,
+			kAboardLanded = 2,
+			kOutsideSpace = 3,
+			kOutsideLanded = 4
+		};
+
 		~TESObjectREFR() override;  // 00
 
 		// override (TESForm)
@@ -401,6 +410,7 @@ namespace RE
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
 		// Retains this ship's runtime interior CELL; does not load it. Call on the game thread.
 		[[nodiscard]] NiPointer<TESObjectCELL> GetSpaceshipInteriorCell() const;
+		void RefreshSpaceshipLights(ShipLightMode a_mode = ShipLightMode::kAutomatic);
 		// Uses the engine's ramp keyword and exterior-reference collector.
 		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetLandingRamps();
 		[[nodiscard]] float                           GetDistance(NiPointer<TESObjectREFR> a_other, bool a_disabledRefs = false, bool a_ignoreWorldspace = false) const;
