@@ -16,6 +16,7 @@ namespace RE
 			std::array<double, 4> anchor;
 			std::array<double, 4> fittedPosition;
 			NiPoint3 velocity;
+			bool hasHighDetailInfo{};
 		};
 
 		ViewSpace() noexcept;
@@ -30,11 +31,12 @@ namespace RE
 		// Selects a system component view and synchronizes PlayerCamera ownership.
 		// Coordinate cell and world loading separately.
 		static void SelectSystem(std::uint32_t a_systemID);
-		// Selects the reference's physical frame and fits the current camera to it.
+		// Selects the reference's native space body and fits the current camera to it.
 		// Apply caller-owned camera presentation afterward; this does not move the player.
 		static void SelectReference(std::uint32_t a_systemID, TESObjectREFR* a_reference);
 		static void SetFloatingOrigin(const std::array<double, 4>& a_origin);
 		// Copies or restores this view's anchor, fit and velocity plus the shared floating origin.
+		// A view without high-detail data captures only the floating origin.
 		// Failure leaves the output or native state unchanged.
 		[[nodiscard]] bool CaptureOrigin(Origin& a_out) const;
 		[[nodiscard]] bool RestoreOrigin(const Origin& a_origin) const;

@@ -107,7 +107,7 @@ void RE::ViewSpace::SelectReference(std::uint32_t a_systemID, TESObjectREFR* a_r
 {
 	using func_t = void (*)(std::uint32_t, TESFormID);
 	static REL::Relocation<func_t> select{ ID::ViewSpace::SelectReference };
-	select(a_systemID, a_reference->GetFormID());
+	select(a_systemID, a_reference->GetSpaceBodyID());
 }
 
 void RE::ViewSpace::SetFloatingOrigin(const std::array<double, 4>& a_origin)
@@ -122,15 +122,17 @@ bool RE::ViewSpace::CaptureOrigin(Origin& a_out) const
 	if (!_space) {
 		return false;
 	}
-	ViewSpaceOriginScope scope{ _space };
-	const std::byte* data = scope.GetData();
-	if (!data) {
-		return false;
-	}
 	static REL::Relocation<const std::array<double, 4>*> floatingOrigin{ ID::Spaceship::Docking::FloatingOrigin };
-	a_out = { *floatingOrigin.get(), *reinterpret_cast<const std::array<double, 4>*>(data + 0x30),
-		*reinterpret_cast<const std::array<double, 4>*>(data + 0x50),
-		*reinterpret_cast<const NiPoint3*>(data + 0x70) };
+	Origin origin{};
+	origin.floatingOrigin = *floatingOrigin.get();
+	ViewSpaceOriginScope scope{ _space };
+	if (const std::byte* data = scope.GetData()) {
+		origin.anchor = *reinterpret_cast<const std::array<double, 4>*>(data + 0x30);
+		origin.fittedPosition = *reinterpret_cast<const std::array<double, 4>*>(data + 0x50);
+		origin.velocity = *reinterpret_cast<const NiPoint3*>(data + 0x70);
+		origin.hasHighDetailInfo = true;
+	}
+	a_out = origin;
 	return true;
 }
 
@@ -139,7 +141,7 @@ bool RE::ViewSpace::RestoreOrigin(const Origin& a_origin) const
 	if (!_space) {
 		return false;
 	}
-	{
+	if (a_origin.hasHighDetailInfo) {
 		ViewSpaceOriginScope scope{ _space };
 		std::byte* data = scope.GetData();
 		if (!data) {

@@ -386,9 +386,19 @@ RE::TESBoundObject* RE::TESObjectREFR::GetBaseObjectForComponent(const BSFixedSt
 	return func(this, a_componentName);
 }
 
+std::uint32_t RE::TESObjectREFR::GetSpaceBodyID() const
+{
+	std::uint32_t body{};
+	using func_t = std::uint32_t* (*)(std::uint32_t*, const TESObjectREFR*);
+	static REL::Relocation<func_t> resolve{ ID::Spaceship::Travel::ResolveReferenceBody };
+	resolve(std::addressof(body), this);
+	return body;
+}
+
 bool RE::TESObjectREFR::HasDynamicState() const
 {
 	using func_t = bool (*)(TESFormID);
 	static REL::Relocation<func_t> query{ ID::TESObjectREFR::HasDynamicState };
-	return query(GetFormID());
+	const std::uint32_t body = GetSpaceBodyID();
+	return body && query(body);
 }
