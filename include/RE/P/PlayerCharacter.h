@@ -71,6 +71,28 @@ namespace RE
 			return *singleton;
 		}
 
+		// Selects the player's first- or third-person 3D without changing the camera state.
+		static void SetFirstPerson3D(bool a_firstPerson);
+
+		// Returns an owned reference to the current home ship. Game thread only.
+		[[nodiscard]] NiPointer<TESObjectREFR> GetHomeShip()
+		{
+			using func_t = NiPointer<TESObjectREFR>* (*)(PlayerCharacter*, NiPointer<TESObjectREFR>*);
+			static REL::Relocation<func_t> func{ ID::PlayerCharacter::GetHomeShip };
+			NiPointer<TESObjectREFR> ship;
+			func(this, std::addressof(ship));
+			return ship;
+		}
+
+		// Walking picked-reference updates. The source is borrowed for this player's
+		// lifetime. Native HUD registration uses this offset rather than the current
+		// inherited source layout. Register and unregister sinks on the game thread.
+		[[nodiscard]] BSTEventSource<PickRefUpdateEvent>* GetPickRefUpdateEventSource()
+		{
+			constexpr std::ptrdiff_t sourceOffset = 0x5F8;
+			return reinterpret_cast<BSTEventSource<PickRefUpdateEvent>*>(reinterpret_cast<std::byte*>(this) + sourceOffset);
+		}
+
 		[[nodiscard]] bool StartDialogueCamera(bool a_force = false)
 		{
 			using func_t = decltype(&PlayerCharacter::StartDialogueCamera);

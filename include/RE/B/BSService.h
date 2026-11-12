@@ -6,6 +6,41 @@ namespace RE
 {
 	namespace BSService
 	{
+		template <class Derived>
+		class TCommandBase
+		{
+		public:
+			virtual ~TCommandBase() = default;  // 00
+			virtual void Run() = 0;             // 01
+
+			// The service executes this thunk; shutdown instead calls the destructor with flags 0.
+			void (*executeAndDestroy)(TCommandBase*){ [](TCommandBase* a_command) {
+				auto* command = static_cast<Derived*>(a_command);
+				command->Run();
+				std::destroy_at(command);
+			} };  // 08
+		};
+
+		namespace Detail
+		{
+			template <class Fn, class Result = void>
+			class TCmd;
+
+			template <class Fn>
+			class TCmd<Fn, void> final :
+				public TCommandBase<TCmd<Fn, void>>
+			{
+			public:
+				explicit TCmd(Fn&& a_function) noexcept(std::is_nothrow_move_constructible_v<Fn>) :
+					function(std::move(a_function))
+				{}
+
+				void Run() override { function(); }
+
+				Fn function;  // 10
+			};
+		}
+
 		class QueuedDelegate
 		{
 		public:

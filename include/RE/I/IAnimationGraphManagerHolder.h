@@ -16,7 +16,8 @@ namespace RE
 		virtual ~IAnimationGraphManagerHolder();  // 00
 
 		// add
-		virtual bool          NotifyAnimationGraphImpl(const BSFixedString& a_eventName);                                                                         // 01
+		// Papyrus PlayAnimation passes false for the native trailing flag.
+		virtual bool          NotifyAnimationGraphImpl(const BSFixedString& a_eventName, bool a_unk3 = false);                                                    // 01
 		virtual void          Unk_02();                                                                                                                           // 02
 		virtual bool          GetAnimationGraphManagerImpl(BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr);                                             // 03
 		virtual void          Unk_04();                                                                                                                           // 04
@@ -40,6 +41,13 @@ namespace RE
 		virtual void          PostUpdateAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) const { return; }  // 16
 		virtual void          PreLoadAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) { return; }           // 17
 		virtual void          PostLoadAnimationGraphManager([[maybe_unused]] const BSTSmartPointer<BSAnimationGraphManager>& a_animGraphMgr) { return; }          // 18
+
+		bool SetGraphVariableBool(const BSFixedString& a_variable, bool a_value)
+		{
+			using func_t = bool (*)(IAnimationGraphManagerHolder*, const BSFixedString&, bool);
+			static REL::Relocation<func_t> func{ ID::IAnimationGraphManagerHolder::SetGraphVariableBool };
+			return func(this, a_variable, a_value);
+		}
 	};
 	static_assert(sizeof(IAnimationGraphManagerHolder) == 0x8);
 }

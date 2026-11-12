@@ -15,18 +15,30 @@ namespace RE::ID
 	namespace Actor
 	{
 		inline constexpr REL::ID EquipItem{ 101349 };
-		inline constexpr REL::ID EvaluatePackage{ 0 };    // 150640
+		inline constexpr REL::ID EvaluatePackage{ 100836 };
+		inline constexpr REL::ID RequestFurnitureExit{ 101828 };
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
+		inline constexpr REL::ID GetCrewAssignment{ 116687 };
 		inline constexpr REL::ID GetEquippedSpell{ 116694 };
+		inline constexpr REL::ID GetFactionReaction{ 116698 };
+		inline constexpr REL::ID GetFurnitureUsing{ 116699 };
+		inline constexpr REL::ID GetSitState{ 116731 };
 		inline constexpr REL::ID IsHostileToActor{ 0 };   // 150777
 		inline constexpr REL::ID IsJumping{ 0 };          // 150985
 		inline constexpr REL::ID IsOverEncumbered{ 0 };   // 150999
 		inline constexpr REL::ID IsSneaking{ 0 };         // 151014
+		inline constexpr REL::ID SetHeadTracking{ 116762 };
 		inline constexpr REL::ID SetSkinTone{ 97400 };
 		inline constexpr REL::ID UnequipSpell{ 116682 };
 		inline constexpr REL::ID UpdateAppearance{ 101306 };
 		inline constexpr REL::ID UpdateChargenAppearance{ 97399 };
 		inline constexpr REL::ID UseSpell{ 101916 };
+	}
+
+	namespace AIProcess
+	{
+		inline constexpr REL::ID ClearHeadTrackingTarget{ 102225 };
+		inline constexpr REL::ID RequestFurnitureExit{ 102415 };
 	}
 
 	namespace ActorUtils
@@ -43,6 +55,11 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID GetBaseValue{ 102018 };
 		inline constexpr REL::ID GetModifierSum{ 102012 };
+	}
+
+	namespace ActorValueEvents::ActorValueChangedEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64206 };
 	}
 
 	namespace ActorEquipManager
@@ -169,10 +186,12 @@ namespace RE::ID
 	namespace BGSGenericBaseForm
 	{
 		inline constexpr REL::ID IsSpaceshipBase{ 57346 };
+		inline constexpr REL::ID BlueprintCellOwner{ 938393 };
 	}
 
 	namespace BGSInventoryInterface
 	{
+		inline constexpr REL::ID InvalidHandle{ 944496 };
 		inline constexpr REL::ID Singleton{ 883301 };      // 825787
 		inline constexpr REL::ID GetInventoryObject{ 0 };  // 87520 - inlined
 		inline constexpr REL::ID GetInventoryObjectSub{ 63846 };
@@ -229,7 +248,8 @@ namespace RE::ID
 
 	namespace BGSSaveLoadManager
 	{
-		inline constexpr REL::ID IsLoadingAllowed{ 98657 };
+		inline constexpr REL::ID IsLoadingAllowed{ 98659 };
+		inline constexpr REL::ID IsSavingAllowed{ 98657 };
 		inline constexpr REL::ID DeleteSaveFile{ 0 };          // 147844
 		inline constexpr REL::ID QueueBuildSaveGameList{ 0 };  // 147900
 		inline constexpr REL::ID QueueSaveLoadTask{ 0 };       // 1536882
@@ -239,6 +259,11 @@ namespace RE::ID
 	namespace BGSScannerGuideEffectStatusUpdateEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 138080
+	}
+
+	namespace BGSScene
+	{
+		inline constexpr REL::ID ForceStart{ 67742 };
 	}
 
 	namespace BGSSceneActionPlayerDialogue::ActionEndEvent
@@ -271,6 +296,11 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153651
 	}
 
+	namespace BSAnimationGraphManager
+	{
+		inline constexpr REL::ID CollectAnimationEventSources{ 63835 };
+	}
+
 	namespace BSChargenAPI::BIDataUtils::PresetNPCChangedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 141184
@@ -292,6 +322,8 @@ namespace RE::ID
 
 	namespace BSComponentDB2
 	{
+		inline constexpr REL::ID AcquireRead{ 126655 };
+		inline constexpr REL::ID LowerBoundEdge{ 126701 };
 		inline constexpr REL::ID Lookup{ 126806 };
 		inline constexpr REL::ID IterateBegin{ 126805 };
 		inline constexpr REL::ID IterateAdvance{ 39372 };
@@ -415,6 +447,11 @@ namespace RE::ID
 				}
 			}
 		}
+	}
+
+	namespace BSService::CommandQueue
+	{
+		inline constexpr REL::ID Allocate{ 123895 };
 	}
 
 	namespace BSService::TaskQueue
@@ -754,6 +791,13 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 137011
 	}
 
+	namespace CollisionQuery
+	{
+		inline constexpr REL::ID Lock{ 929998 };
+		inline constexpr REL::ID ReadResult{ 125642 };
+		inline constexpr REL::ID Cancel{ 125646 };
+	}
+
 	namespace ConsoleLog
 	{
 		inline constexpr REL::ID Singleton{ 938104 };
@@ -907,6 +951,16 @@ namespace RE::ID
 		inline constexpr REL::ID ExecuteRenderPass{ 145956 };
 	}
 
+	namespace CrewAssignedEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64119 };
+	}
+
+	namespace CrewDismissedEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64120 };
+	}
+
 	namespace CriticalHitEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153653
@@ -952,6 +1006,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 148411
 	}
 
+	namespace DialogueCameraState
+	{
+		inline constexpr REL::ID SetCameraShot{ 74568 };
+		inline constexpr REL::ID EndCameraShot{ 74569 };
+	}
+
 	namespace DialogueMenu_OnDialogueSelect
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 166594
@@ -977,6 +1037,12 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 166599
 	}
 
+	namespace DialogueUIDataModel
+	{
+		inline constexpr REL::ID Singleton{ 938423 };
+		inline constexpr REL::ID RefreshChoices{ 90375 };
+	}
+
 	namespace EnteredUnity::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 153656
@@ -989,6 +1055,8 @@ namespace RE::ID
 
 	namespace ExtraDataList
 	{
+		inline constexpr REL::ID ForEachLinkedParent{ 45112 };
+		inline constexpr REL::ID GetEnableStateParent{ 44877 };
 		inline constexpr REL::ID HasQuestObjectAlias{ 45044 };
 	}
 
@@ -1023,12 +1091,16 @@ namespace RE::ID
 		inline constexpr REL::ID GetForForm{ 47393 };  // generic form-component lookup helper
 	}
 
+	namespace ControlMap
+	{
+		inline constexpr REL::ID Singleton{ 938003 };
+		inline constexpr REL::ID PushInputContext{ 124143 };
+		inline constexpr REL::ID PopInputContext{ 124144 };
+	}
+
 	namespace FreeCameraInputContext
 	{
-		inline constexpr REL::ID Manager{ 938003 };
 		inline constexpr REL::ID Descriptor{ 894502 };
-		inline constexpr REL::ID PushContext{ 124144 };
-		inline constexpr REL::ID PopContext{ 124143 };
 	}
 
 	namespace Game
@@ -1074,6 +1146,7 @@ namespace RE::ID
 
 	namespace GameVM
 	{
+		inline constexpr REL::ID GetCurrentTime{ 116524 };
 		inline constexpr REL::ID Singleton{ 937585 };
 		inline constexpr REL::ID BindEverythingToScript{ 117899 };
 	}
@@ -1081,6 +1154,11 @@ namespace RE::ID
 	namespace HideSubtitleEvent::Event
 	{
 		inline constexpr REL::ID GetEventSource{ 86875 };
+	}
+
+	namespace HomeShipSetEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64142 };
 	}
 
 	namespace HourPassed::Event
@@ -1095,7 +1173,13 @@ namespace RE::ID
 
 	namespace HUDModeEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 133039
+		inline constexpr REL::ID GetEventSource{ 86273 };
+	}
+
+	namespace HUDModeType
+	{
+		inline constexpr REL::ID Add{ 91180 };
+		inline constexpr REL::ID Remove{ 91181 };
 	}
 
 	namespace HUDNotification_MissionActiveWidgetUpdate
@@ -1130,6 +1214,11 @@ namespace RE::ID
 		inline constexpr REL::ID Listen{ 0 };  // 211259
 		inline constexpr REL::ID Read{ 0 };    // 211264
 		inline constexpr REL::ID Write{ 0 };   // 211266
+	}
+
+	namespace IAnimationGraphManagerHolder
+	{
+		inline constexpr REL::ID SetGraphVariableBool{ 73223 };
 	}
 
 	namespace IMenu
@@ -1326,6 +1415,18 @@ namespace RE::ID
 		inline constexpr REL::ID Singleton{ 938421 };
 	}
 
+	namespace MessageBox
+	{
+		inline constexpr REL::ID AssignText{ 36345 };
+		inline constexpr REL::ID ConstructData{ 83925 };
+		inline constexpr REL::ID ConstructInfo{ 83924 };
+		inline constexpr REL::ID DestroyButton{ 1015825 };
+		inline constexpr REL::ID DestroyButtons{ 83960 };
+		inline constexpr REL::ID DestroyInfo{ 43998 };
+		inline constexpr REL::ID Manager{ 938019 };
+		inline constexpr REL::ID MoveText{ 39033 };
+		inline constexpr REL::ID Queue{ 1016792 };
+	}
 	namespace MessageBoxMenu_OnBackOut
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 167116
@@ -1586,7 +1687,7 @@ namespace RE::ID
 
 	namespace PickRefUpdateEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 119433
+		inline constexpr REL::ID GetEventSource{ 73956 };
 	}
 
 	namespace PlayBink_CloseMenu
@@ -1604,22 +1705,38 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107120
 	}
 
+	namespace Physics
+	{
+		inline constexpr REL::ID AppendWorld{ 37126 };
+		inline constexpr REL::ID CollectWorlds{ 69120 };
+		inline constexpr REL::ID FindWorld{ 48475 };
+		inline constexpr REL::ID SpaceWorld{ 929664 };
+	}
+
 	namespace PlayerCamera
 	{
 		inline constexpr REL::ID Singleton{ 937788 };
 		inline constexpr REL::ID ForceFirstPerson{ 113397 };
 		inline constexpr REL::ID ForceThirdPerson{ 113398 };
 		inline constexpr REL::ID SetCameraState{ 113375 };
+		inline constexpr REL::ID SetWorldFOV{ 113443 };
 		inline constexpr REL::ID ToggleFreeCameraMode{ 113409 };
 		inline constexpr REL::ID QCameraEquals{ 0 };  // 166081
 	}
 
 	namespace PlayerCharacter
 	{
+		inline constexpr REL::ID GetHomeShip{ 102957 };
+		inline constexpr REL::ID SetFirstPerson3D{ 102736 };
 		inline constexpr REL::ID Singleton{ 922868 };
 		inline constexpr REL::ID StartDialogueCamera{ 102807 };
 		inline constexpr REL::ID StopDialogueCamera{ 102808 };
 		inline constexpr REL::ID SetControlsDriven{ 102880 };
+	}
+
+	namespace PlayerControlsManager
+	{
+		inline constexpr REL::ID Singleton{ 938464 };
 	}
 
 	namespace PlayerControls::PlayerIronSightsEndEvent
@@ -1686,6 +1803,11 @@ namespace RE::ID
 	namespace PlayerJailEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 107124
+	}
+
+	namespace PlayerModifiedShipEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64144 };
 	}
 
 	namespace PlayerMurderActorEvent
@@ -2077,6 +2199,17 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 167220
 	}
 
+	namespace Spaceship::Cruise
+	{
+		inline constexpr REL::ID CanStart{ 1016255 };
+		inline constexpr REL::ID IsActive{ 1016812 };
+		inline constexpr REL::ID Course{ 1141339 };
+		inline constexpr REL::ID ToggleCourse{ 1016246 };
+		inline constexpr REL::ID Start{ 1016257 };
+		inline constexpr REL::ID RequestExit{ 1016264 };
+		inline constexpr REL::ID Stop{ 1016263 };
+	}
+
 	namespace Spaceship::Docking
 	{
 		inline constexpr REL::ID IsInRange{ 120213 };
@@ -2085,6 +2218,82 @@ namespace RE::ID
 		inline constexpr REL::ID FindPort{ 120212 };
 		inline constexpr REL::ID GetInteractionLocations{ 48431 };
 		inline constexpr REL::ID BeginDock{ 120224 };
+		inline constexpr REL::ID GetPhysicalBodyPose{ 56975 };
+		inline constexpr REL::ID FloatingOrigin{ 893886 };
+		inline constexpr REL::ID GetMarkerPlacement{ 48445 };
+		inline constexpr REL::ID GetInverseDockerTransform{ 48447 };
+		inline constexpr REL::ID GetPortRotation{ 63286 };
+		inline constexpr REL::ID FacingPointDistance{ 923690 };
+	}
+
+	namespace Spaceship::Movement
+	{
+		inline constexpr REL::ID ResolveActor{ 120140 };
+		inline constexpr REL::ID CreateRequest{ 82053 };
+		inline constexpr REL::ID ConfigurePoint{ 100920 };
+		inline constexpr REL::ID Submit{ 100905 };
+		inline constexpr REL::ID QueryCurrent{ 82033 };
+		inline constexpr REL::ID GetController{ 82026 };
+		inline constexpr REL::ID LookupInterface{ 49356 };
+		inline constexpr REL::ID RegisterRequest{ 135799 };
+		inline constexpr REL::ID EventManager{ 938947 };
+		inline constexpr REL::ID ReleaseControllerLease{ 126666 };
+		inline constexpr REL::ID StateInterfaceKey{ 932460 };
+		inline constexpr REL::ID CancelRequest{ 82032 };
+		inline constexpr REL::ID SetAvoidanceExemption{ 135630 };
+		inline constexpr REL::ID RequestStop{ 100926 };
+	}
+
+	namespace Spaceship::Power
+	{
+		inline constexpr REL::ID GetEquipment{ 120481 };
+		inline constexpr REL::ID SetAllocation{ 120468 };
+		inline constexpr REL::ID GetWeaponGroup{ 97884 };
+		inline constexpr REL::ID GetWeaponPowerActorValue{ 57329 };
+		inline constexpr REL::ID MaxAvailablePower{ 892971 };
+		inline constexpr REL::ID EnginePower{ 893077 };
+		inline constexpr REL::ID ShieldPower{ 893103 };
+		inline constexpr REL::ID GravDrivePower{ 893109 };
+	}
+
+	namespace Spaceship::Travel
+	{
+		inline constexpr REL::ID CanLandAtMarker{ 119891 };
+		inline constexpr REL::ID GetLandingMarker{ 119963 };
+		inline constexpr REL::ID ActorServiceLock{ 923104 };
+		inline constexpr REL::ID CurrentInteractionLinkKeyword{ 888722 };
+		inline constexpr REL::ID EnableWithLanding{ 114876 };
+		inline constexpr REL::ID RequestShipLanding{ 119960 };
+		inline constexpr REL::ID ExecuteRoute{ 119842 };
+		inline constexpr REL::ID ResumeGravJump{ 119843 };
+		inline constexpr REL::ID GetStoredRoute{ 120359 };
+		inline constexpr REL::ID PendingGravInitiation{ 883572 };
+		inline constexpr REL::ID AbortGravJump{ 119863 };
+		inline constexpr REL::ID ShouldPlayLandingAnimation{ 94931 };
+		inline constexpr REL::ID RequestLanding{ 97897 };
+		inline constexpr REL::ID GetCurrentBodyID{ 97914 };
+		inline constexpr REL::ID ForEachCelestialBody{ 57665 };
+		inline constexpr REL::ID GetCelestialBodyName{ 47497 };
+		inline constexpr REL::ID BodyToSystem{ 124608 };
+		inline constexpr REL::ID ResolveReferenceBody{ 1015263 };
+		inline constexpr REL::ID BodyToOrbit{ 124610 };
+		inline constexpr REL::ID GetBodyType{ 124776 };
+		inline constexpr REL::ID RequestTakeOff{ 119907 };
+		inline constexpr REL::ID RequestUndock{ 120226 };
+		inline constexpr REL::ID CollectAuthoredWorlds{ 39360 };
+		inline constexpr REL::ID StockWorldCollectorVtable{ 446013 };
+		inline constexpr REL::ID CollectRegisteredWorlds{ 94196 };
+		inline constexpr REL::ID AddPlayerOutposts{ 93928 };
+		inline constexpr REL::ID AddCurrentSite{ 93931 };
+		inline constexpr REL::ID DestroyLandingRows{ 94118 };
+		inline constexpr REL::ID SharedLandingAdmission{ 1016672 };
+		inline constexpr REL::ID LocationAdmission{ 1016671 };
+		inline constexpr REL::ID CheckLandingAvailability{ 96248 };
+		inline constexpr REL::ID ShipFits{ 119890 };
+		inline constexpr REL::ID GetBodyKnowledge{ 52172 };
+		inline constexpr REL::ID GetPlayerScannerLevel{ 97847 };
+		inline constexpr REL::ID GetLandingSourceShip{ 97902 };
+		inline constexpr REL::ID FreeNativeSmallStringHeap{ 123786 };
 	}
 
 	namespace Spaceship::TakeOffEvent
@@ -2184,7 +2393,7 @@ namespace RE::ID
 
 	namespace Spaceship::SystemPowerAllocationEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 174591
+		inline constexpr REL::ID GetEventSource{ 120548 };
 	}
 
 	namespace Spaceship::SystemPowerChangeEvent
@@ -2249,6 +2458,7 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID RefreshQuestTargets{ 94682 };
 		inline constexpr REL::ID OnButtonEvent{ 94684 };
+		inline constexpr REL::ID FocusBody{ 94713 };
 		inline constexpr REL::ID GetGalaxyState{ 94752 };
 		inline constexpr REL::ID GetSystemState{ 94753 };
 		inline constexpr REL::ID GetSurfaceMapState{ 94755 };
@@ -2423,6 +2633,16 @@ namespace RE::ID
 
 	namespace TES
 	{
+		inline constexpr REL::ID BeginSceneLoad{ 46055 };
+		inline constexpr REL::ID FinishSceneLoad{ 46056 };
+		inline constexpr REL::ID SceneLoading{ 883330 };
+		inline constexpr REL::ID LoadExterior{ 46038 };
+		inline constexpr REL::ID LoadInterior{ 46037 };
+		inline constexpr REL::ID SetWorldSpace{ 46058 };
+		inline constexpr REL::ID SubmitExteriorFocus{ 46019 };
+		inline constexpr REL::ID ForEachCell{ 46103 };
+		inline constexpr REL::ID GetGroundHeight{ 46087 };
+		inline constexpr REL::ID QueueBoxCast{ 46083 };
 		inline constexpr REL::ID GetDeadCount{ 0 };    // 84704
 		inline constexpr REL::ID Singleton{ 883589 };  // 881024
 	}
@@ -2465,7 +2685,7 @@ namespace RE::ID
 
 	namespace TESCombatEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 107148
+		inline constexpr REL::ID GetEventSource{ 64116 };
 	}
 
 	namespace TESCondition
@@ -2496,12 +2716,22 @@ namespace RE::ID
 
 	namespace TESDeathEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 107156
+		inline constexpr REL::ID GetEventSource{ 64123 };
 	}
 
 	namespace TESEquipEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 64135 };
+	}
+
+	namespace TESExitFurnitureEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64101 };
+	}
+
+	namespace TESFaction
+	{
+		inline constexpr REL::ID GetFactionReaction{ 100956 };
 	}
 
 	namespace TESForm
@@ -2511,6 +2741,9 @@ namespace RE::ID
 		inline constexpr REL::ID LookupByID{ 47401 };
 		inline constexpr REL::ID LookupByEditorID{ 47403 };
 		inline constexpr REL::ID AllFormsMap{ 883341 };
+		inline constexpr REL::ID GetFormLinkData{ 42212 };
+		inline constexpr REL::ID FindFormLink{ 41509 };
+		inline constexpr REL::ID ReleaseFormLinkData{ 37938 };
 	}
 
 	namespace TESFormDeleteEvent
@@ -2525,7 +2758,7 @@ namespace RE::ID
 
 	namespace TESFurnitureEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 107168
+		inline constexpr REL::ID GetEventSource{ 64139 };
 	}
 
 	namespace TESGrabReleaseEvent
@@ -2581,35 +2814,58 @@ namespace RE::ID
 	namespace TESObjectCELL
 	{
 		inline constexpr REL::ID GetParentRef{ 1015271 };
+		inline constexpr REL::ID ForEachReference{ 63054 };
+		constexpr REL::ID LoadSpaceReferences{ 57565 };
 	}
 
 	namespace TESObjectLoadedEvent
 	{
-		inline constexpr REL::ID GetEventSource{ 0 };  // 107177
+		inline constexpr REL::ID GetEventSource{ 64151 };
 	}
 
 	namespace TESObjectREFR
 	{
-		inline constexpr REL::ID GetBodyPose{ 56975 };
-		inline constexpr REL::ID GetSpaceTransform{ 116271 };
+		inline constexpr REL::ID SpaceshipRampKeyword{ 892876 };
+		inline constexpr REL::ID Disable{ 63387 };
+		inline constexpr REL::ID Enable{ 63386 };
+		inline constexpr REL::ID SetLinkedRef{ 64299 };
+		inline constexpr REL::ID SetMarkerReserved{ 64244 };
+		inline constexpr REL::ID GetOpenState{ 47134 };
+		inline constexpr REL::ID SetOpen{ 118464 };
+		inline constexpr REL::ID PushActorAway{ 118412 };
+		inline constexpr REL::ID DamageValue{ 118265 };
 		inline constexpr REL::ID GetSpaceLinearVelocity{ 1015264 };
 		inline constexpr REL::ID IsPlayerPilotedSpaceship{ 119880 };
 		inline constexpr REL::ID ActivateRef{ 0 };    // 106374
 		inline constexpr REL::ID AddLockChange{ 0 };  // 106386
 		inline constexpr REL::ID GetCalcLevel{ 0 };   // 107531
+		inline constexpr REL::ID GetAvailableFurnitureMarker{ 64248 };
+		inline constexpr REL::ID GetBaseObjectForComponent{ 119969 };
+		inline constexpr REL::ID GetActorRefOwner{ 44765 };
+		inline constexpr REL::ID GetFactionOwner{ 44763 };
 		inline constexpr REL::ID GetCurrentLocation{ 63412 };
+		inline constexpr REL::ID GetCrewData{ 40770 };
+		inline constexpr REL::ID GetExteriorRefs{ 114920 };
+		constexpr REL::ID GetSpaceshipLinkedCells{ 57112 };
+		constexpr REL::ID RefreshSpaceshipLights{ 119932 };
 		inline constexpr REL::ID GetDistance{ 63359 };
-		inline constexpr REL::ID GetLinkedRef{ 0 };  // 107578
+		inline constexpr REL::ID GetLinkedRef{ 44922 };
 		inline constexpr REL::ID GetLock{ 0 };       // 107581
 		inline constexpr REL::ID GetParentWorldSpace{ 63417 };
 		inline constexpr REL::ID GetScale{ 63258 };
+		inline constexpr REL::ID GetSpaceTransform{ 116271 };
+		inline constexpr REL::ID HasDynamicState{ 56957 };
 		inline constexpr REL::ID GetSpaceship{ 119881 };
 		inline constexpr REL::ID GetSpaceshipParentDock{ 120236 };
 		inline constexpr REL::ID GetSpaceshipPilot{ 119876 };
+		inline constexpr REL::ID GetSpaceshipPilotSeat{ 119873 };
+		inline constexpr REL::ID GetSpaceshipPilotSeatOccupant{ 119875 };
 		inline constexpr REL::ID GetValue{ 0 };  // 107605
 		inline constexpr REL::ID HasKeyword{ 42794 };
 		inline constexpr REL::ID IsCrimeToActivate{ 0 };  // 106755
+		inline constexpr REL::ID IsFurnitureMarkerInUse{ 64240 };
 		inline constexpr REL::ID IsInSpace{ 63482 };
+		inline constexpr REL::ID IsInSameSpace{ 63349 };
 		inline constexpr REL::ID IsInSpaceship{ 119881 };
 		inline constexpr REL::ID IsObjectEquipped{ 0 };  // 106991
 		inline constexpr REL::ID IsDockedWith{ 120231 };
@@ -2630,6 +2886,16 @@ namespace RE::ID
 
 	namespace TESQuest
 	{
+		inline constexpr REL::ID IsRunning{ 119068 };
+		inline constexpr REL::ID IsStarting{ 119069 };
+		inline constexpr REL::ID StartNoWait{ 119056 };
+		inline constexpr REL::ID AddAliasReference{ 68454 };
+		inline constexpr REL::ID ClearAlias{ 68458 };
+		inline constexpr REL::ID CollectAliasActors{ 117237 };
+		inline constexpr REL::ID GetAliasIndex{ 68420 };
+		inline constexpr REL::ID RemoveAliasReference{ 68455 };
+		inline constexpr REL::ID FillAliasReference{ 68460 };
+		inline constexpr REL::ID GetAliasReferenceHandle{ 68501 };
 		inline constexpr REL::ID IsStageDone{ 0 };       // 112585
 		inline constexpr REL::ID ToggleTracking{ 91440 };
 	}
@@ -2637,6 +2903,11 @@ namespace RE::ID
 	namespace TESQuestRewardEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 95698
+	}
+
+	namespace TESQuestStartStopEvent
+	{
+		inline constexpr REL::ID GetEventSource{ 64162 };
 	}
 
 	namespace TESResetEvent
@@ -2761,6 +3032,20 @@ namespace RE::ID
 	namespace Workshop::ItemPlacedEvent
 	{
 		inline constexpr REL::ID GetEventSource{ 0 };  // 119426
+	}
+
+	namespace ViewSpace
+	{
+		inline constexpr REL::ID AcquireWrite{ 126563 };
+		inline constexpr REL::ID ReleaseWrite{ 126562 };
+		inline constexpr REL::ID LookupComponent{ 126584 };
+		inline constexpr REL::ID HighDetailInfo{ 938181 };
+		inline constexpr REL::ID SelectReference{ 97891 };
+		inline constexpr REL::ID SetFloatingOrigin{ 57652 };
+		inline constexpr REL::ID Manager{ 938414 };
+		inline constexpr REL::ID SelectSystem{ 57601 };
+		inline constexpr REL::ID Select{ 57602 };
+		inline constexpr REL::ID Release{ 126559 };
 	}
 
 	namespace Workshop::ItemProducedEvent
@@ -2913,4 +3198,29 @@ namespace RE::ID
 	inline constexpr REL::ID NET_WaitForData{ 0 };      // 211263
 	inline constexpr REL::ID RTDynamicCast{ 184372 };
 	inline constexpr REL::ID Sys_InitNetworking{ 0 };  // 211265
+
+	namespace BSJobs2
+	{
+		constexpr REL::ID AllocateJob{ 139459 };
+		constexpr REL::ID InvokePointerJob{ 49623 };
+	}
+
+	namespace Spaceship::InteriorLoad
+	{
+		constexpr REL::ID IOManager{ 883707 };
+		constexpr REL::ID Request{ 57041 };
+		constexpr REL::ID Unload{ 57049 };
+		constexpr REL::ID ReleaseResource{ 41053 };
+	}
+
+	namespace Spaceship::Systems
+	{
+		constexpr REL::ID CollectShips{ 97814 };
+		constexpr REL::ID IsEligible{ 57632 };
+		constexpr REL::ID InvalidHandle{ 944496 };
+		constexpr REL::ID HandleManager{ 883285 };
+		constexpr REL::ID VisitHandle{ 139363 };
+		constexpr REL::ID UpdateShip{ 97772 };
+		constexpr REL::ID UpdateDisabledShip{ 97773 };
+	}
 }

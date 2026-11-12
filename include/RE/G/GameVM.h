@@ -171,6 +171,15 @@ namespace RE
 			return impl.get();
 		}
 
+		// Millisecond clock used by native real-time script timers. The engine
+		// synchronizes this read. Timer delivery must still respect IsVMFrozen().
+		[[nodiscard]] std::uint32_t GetCurrentTime() const
+		{
+			using func_t = std::uint32_t (*)(const GameVM*);
+			static REL::Relocation<func_t> func{ ID::GameVM::GetCurrentTime };
+			return func(this);
+		}
+
 		static void BindEverythingToScript(BSScript::IVirtualMachine** a_vm)
 		{
 			using func_t = decltype(&BindEverythingToScript);
@@ -209,16 +218,16 @@ namespace RE
 		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte renderSafeFunctorQueue1[0x28];  // 2828
 		BSTStaticFreeList<BSTSmartPointer<GameScript::DelayFunctor>, 512>                renderSafeFunctorPool2;         // 4840
 		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte renderSafeFunctorQueue2[0x28];  // 4868
-		BSTStaticFreeList<BSTSmartPointer<GameScript::DelayFunctor>, 512>                postRenderFunctorPool1;         // 6880
-		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte postRenderFunctorQueue1[0x28];  // 68A8
-		BSTStaticFreeList<BSTSmartPointer<GameScript::DelayFunctor>, 512>                postRenderFunctorPool2;         // 88C0
-		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte postRenderFunctorQueue2[0x28];  // 88E8
+		BSTStaticFreeList<BSTSmartPointer<GameScript::DelayFunctor>, 512>                postRenderFunctorPool1;         // 4868
+		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte postRenderFunctorQueue1[0x28];  // 6880
+		BSTStaticFreeList<BSTSmartPointer<GameScript::DelayFunctor>, 512>                postRenderFunctorPool2;         // 68A8
+		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>*/ std::byte postRenderFunctorQueue2[0x28];  // 88C0
 		BSSpinLock                                                                       renderSafeQueueLock;            // 88F0
 		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   renderSafeQueueToReadFrom;      // 88F8
 		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   renderSafeQueueToWriteTo;       // 8900
-		BSSpinLock                                                                       postRenderQueueLock;            // 8908
-		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   postRenderQueueToReadFrom;      // 8910
-		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   postRenderQueueToWriteTo;       // 8918
+		BSReadWriteLock                                                                  postRenderQueueLock;            // 8900
+		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   postRenderQueueToReadFrom;      // 8908
+		/*BSTCommonLLMessageQueue<BSTSmartPointer<GameScript::DelayFunctor>>* */ void*   postRenderQueueToWriteTo;       // 8910
 		BSSpinLock                                                                       userLogLock;                    // 8920
 		/*BSTHashMap<BSFixedString, BSScript::ErrorLogger*>*/ std::byte                  userLogs[0x38];                 // 8958
 		BSSpinLock                                                                       statsWarningLock;               // 8960
@@ -228,5 +237,11 @@ namespace RE
 		std::uint32_t                                                                    lastWarningTime;                // 8970
 		std::uint32_t                                                                    overflowFlags;                  // 8978
 	};
+	static_assert(offsetof(GameVM, postRenderFunctorPool1) == 0x4868);
+	static_assert(offsetof(GameVM, postRenderFunctorQueue1) == 0x6880);
+	static_assert(offsetof(GameVM, postRenderFunctorPool2) == 0x68A8);
+	static_assert(offsetof(GameVM, postRenderFunctorQueue2) == 0x88C0);
+	static_assert(offsetof(GameVM, postRenderQueueLock) == 0x8900);
+	static_assert(offsetof(GameVM, postRenderQueueToWriteTo) == 0x8910);
 	static_assert(sizeof(GameVM) == 0x8978);
 }

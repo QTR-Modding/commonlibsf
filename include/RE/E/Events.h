@@ -10,6 +10,7 @@
 namespace RE
 {
 	class Actor;
+	class ActorValueInfo;
 	class BGSAttackData;
 	class BGSLocation;
 	class bhkNPCollisionObject;
@@ -54,6 +55,30 @@ namespace RE
 		};
 	};
 
+	namespace ActorValueEvents
+	{
+		struct ActorValueChangedEvent
+		{
+			[[nodiscard]] static BSTEventSource<ActorValueChangedEvent>* GetEventSource()
+			{
+				using func_t = decltype(&ActorValueChangedEvent::GetEventSource);
+				static REL::Relocation<func_t> func{ ID::ActorValueEvents::ActorValueChangedEvent::GetEventSource };
+				return func();
+			}
+
+			// Pointers are borrowed during dispatch. The reported delta may be the
+			// requested modifier change; read the current value to obtain its result.
+			float           delta;      // 00
+			std::uint32_t   pad04;      // 04
+			ActorValueInfo* actorValue; // 08
+			TESObjectREFR*  reference;  // 10
+		};
+		static_assert(offsetof(ActorValueChangedEvent, delta) == 0x0);
+		static_assert(offsetof(ActorValueChangedEvent, actorValue) == 0x8);
+		static_assert(offsetof(ActorValueChangedEvent, reference) == 0x10);
+		static_assert(sizeof(ActorValueChangedEvent) == 0x18);
+	}
+
 	struct ActorCellChangeEvent
 	{
 		struct Event
@@ -72,6 +97,53 @@ namespace RE
 		};
 		static_assert(sizeof(ActorCellChangeEvent::Event) == 0x18);
 	};
+
+	struct CrewAssignedEvent
+	{
+		[[nodiscard]] static BSTEventSource<CrewAssignedEvent>* GetEventSource()
+		{
+			using func_t = decltype(&CrewAssignedEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::CrewAssignedEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		TESObjectREFR* assignment;          // 00
+		TESObjectREFR* previousAssignment;  // 08
+		Actor*        crew;                // 10
+	};
+	static_assert(sizeof(CrewAssignedEvent) == 0x18);
+
+	struct CrewDismissedEvent
+	{
+		[[nodiscard]] static BSTEventSource<CrewDismissedEvent>* GetEventSource()
+		{
+			using func_t = decltype(&CrewDismissedEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::CrewDismissedEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		TESObjectREFR* previousAssignment;  // 00
+		Actor*        crew;                // 08
+	};
+	static_assert(sizeof(CrewDismissedEvent) == 0x10);
+
+	struct HomeShipSetEvent
+	{
+		[[nodiscard]] static BSTEventSource<HomeShipSetEvent>* GetEventSource()
+		{
+			using func_t = decltype(&HomeShipSetEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::HomeShipSetEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain references before queuing work.
+		Actor*        actor;         // 00
+		TESObjectREFR* ship;          // 08
+		TESObjectREFR* previousShip;  // 10
+	};
+	static_assert(sizeof(HomeShipSetEvent) == 0x18);
 
 	struct ActorItemEquipped
 	{
@@ -2152,13 +2224,26 @@ namespace RE
 
 	struct PickRefUpdateEvent
 	{
+		// Global source for space-target cursor updates. Walking updates use
+		// PlayerCharacter::GetPickRefUpdateEventSource().
 		[[nodiscard]] static BSTEventSource<PickRefUpdateEvent>* GetEventSource()
 		{
 			using func_t = decltype(&PickRefUpdateEvent::GetEventSource);
 			static REL::Relocation<func_t> func{ ID::PickRefUpdateEvent::GetEventSource };
 			return func();
 		}
+
+		// Resolve an owned reference during dispatch before queuing asynchronous work.
+		BSPointerHandle<TESObjectREFR> pickedRef;     // 00
+		bool                           refChanged;    // 04
+		bool                           rangeChanged;  // 05
+		std::uint8_t                   unk06;         // 06
+		std::byte                      pad07;         // 07
 	};
+	static_assert(offsetof(PickRefUpdateEvent, pickedRef) == 0x0);
+	static_assert(offsetof(PickRefUpdateEvent, refChanged) == 0x4);
+	static_assert(offsetof(PickRefUpdateEvent, rangeChanged) == 0x5);
+	static_assert(sizeof(PickRefUpdateEvent) == 0x8);
 
 	struct PlayBink_CloseMenu
 	{
@@ -2371,6 +2456,20 @@ namespace RE
 		std::uint32_t value;     // 18
 	};
 	static_assert(sizeof(PlayerJailEvent) == 0x20);
+
+	struct PlayerModifiedShipEvent
+	{
+		[[nodiscard]] static BSTEventSource<PlayerModifiedShipEvent>* GetEventSource()
+		{
+			using func_t = decltype(&PlayerModifiedShipEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::PlayerModifiedShipEvent::GetEventSource };
+			return func();
+		}
+
+		// Borrowed during dispatch; retain the ship before queuing work.
+		TESObjectREFR* ship;  // 00
+	};
+	static_assert(sizeof(PlayerModifiedShipEvent) == 0x8);
 
 	struct PlayerMurderActorEvent
 	{
@@ -3150,17 +3249,17 @@ namespace RE
 				return func();
 			}
 
-			// References are borrowed for the callback; parentShip can be null during cleanup.
-			TESObjectREFR* dockingShip;  // 00
-			TESObjectREFR* parentShip;   // 08
-			std::uint32_t complete;     // 10 - 0 started, 1 finished
-			std::uint32_t undocking;    // 14 - 0 docking, 1 undocking
+			// Borrowed for dispatch. Retain explicitly before queuing later work.
+			TESObjectREFR* child;
+			TESObjectREFR* parent;
+			std::uint32_t completed;  // 0: start, 1: complete
+			std::uint32_t undocking;  // 0: dock, 1: undock
 		};
-		static_assert(offsetof(DockEvent, dockingShip) == 0x00);
-		static_assert(offsetof(DockEvent, parentShip) == 0x08);
-		static_assert(offsetof(DockEvent, complete) == 0x10);
-		static_assert(offsetof(DockEvent, undocking) == 0x14);
 		static_assert(sizeof(DockEvent) == 0x18);
+		static_assert(offsetof(DockEvent, child) == 0x00);
+		static_assert(offsetof(DockEvent, parent) == 0x08);
+		static_assert(offsetof(DockEvent, completed) == 0x10);
+		static_assert(offsetof(DockEvent, undocking) == 0x14);
 
 		struct DynamicNavmeshCompleted
 		{
@@ -3190,7 +3289,14 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::LandingEvent::GetEventSource };
 				return func();
 			}
+
+			// Borrowed for dispatch. Retain explicitly before queuing later work.
+			TESObjectREFR* ship;
+			std::uint32_t state;  // 0: start, 1: complete
 		};
+		static_assert(sizeof(LandingEvent) == 0x10);
+		static_assert(offsetof(LandingEvent, ship) == 0x00);
+		static_assert(offsetof(LandingEvent, state) == 0x08);
 
 		struct PlanetScanEvent
 		{
@@ -3300,7 +3406,16 @@ namespace RE
 				static REL::Relocation<func_t> func{ ID::Spaceship::SystemPowerAllocationEvent::GetEventSource };
 				return func();
 			}
+
+			// Borrowed during dispatch; retain the ship before queuing work.
+			TESObjectREFR*  ship;        // 00
+			ActorValueInfo* allocation;  // 08
+			std::uint8_t    reason;      // 10
+			std::byte       pad11[3];    // 11
+			std::int32_t    delta;       // 14
 		};
+		static_assert(offsetof(SystemPowerAllocationEvent, delta) == 0x14);
+		static_assert(sizeof(SystemPowerAllocationEvent) == 0x18);
 
 		struct SystemPowerChangeEvent
 		{
@@ -3853,6 +3968,20 @@ namespace RE
 	};
 	static_assert(sizeof(TESFormIDRemapEvent) == 0x8);
 
+	struct TESExitFurnitureEvent
+	{
+		[[nodiscard]] static BSTEventSource<TESExitFurnitureEvent>* GetEventSource()
+		{
+			using func_t = decltype(&TESExitFurnitureEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::TESExitFurnitureEvent::GetEventSource };
+			return func();
+		}
+
+		NiPointer<TESObjectREFR> furniture;  // 00
+		NiPointer<TESObjectREFR> actionRef;  // 08
+	};
+	static_assert(sizeof(TESExitFurnitureEvent) == 0x10);
+
 	struct TESFurnitureEvent
 	{
 		enum class Type : std::int32_t
@@ -3872,9 +4001,10 @@ namespace RE
 		[[nodiscard]] constexpr bool IsExit() const noexcept { return type == Type::kExit; }
 
 		// members
-		std::byte                pad00[0x8];  // 00 - wtf is this now? it used to be an NiPointer<Actor> in previous games
-		NiPointer<TESObjectREFR> furniture;   // 08
-		Type                     type;        // 10
+		BSPointerHandle<Actor>   actor;      // 00
+		std::uint32_t           pad04;      // 04
+		NiPointer<TESObjectREFR> furniture;  // 08
+		Type                    type;       // 10
 	};
 	static_assert(sizeof(TESFurnitureEvent) == 0x18);
 
@@ -4036,6 +4166,23 @@ namespace RE
 			return func();
 		}
 	};
+
+	struct TESQuestStartStopEvent
+	{
+		[[nodiscard]] static BSTEventSource<TESQuestStartStopEvent>* GetEventSource()
+		{
+			using func_t = decltype(&TESQuestStartStopEvent::GetEventSource);
+			static REL::Relocation<func_t> func{ ID::TESQuestStartStopEvent::GetEventSource };
+			return func();
+		}
+
+		TESFormID questID;  // 00
+		bool started;      // 04
+		std::uint8_t opaque05;  // 05
+		std::uint16_t pad06;  // 06
+	};
+	static_assert(offsetof(TESQuestStartStopEvent, started) == 0x4);
+	static_assert(sizeof(TESQuestStartStopEvent) == 0x8);
 
 	struct TESQuestRewardEvent
 	{

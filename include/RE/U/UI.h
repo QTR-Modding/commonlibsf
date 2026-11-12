@@ -89,6 +89,12 @@ namespace RE
 			return entry ? entry->menu : nullptr;
 		}
 
+		// Owns the callable until execution on the UI owner thread, after movie advancement.
+		// The callable must be nonempty and must not throw. UI teardown destroys pending callables
+		// without invoking them. Enqueue only while UI is alive;
+		// resolve the current menu/movie inside the callable instead of retaining borrowed pointers.
+		void QueueTask(std::move_only_function<void()> a_task);
+
 		// Returns a retained reference to the first menu considered during input dispatch.
 		[[nodiscard]] Scaleform::Ptr<IMenu> GetTopInputMenu() const;
 
@@ -155,29 +161,33 @@ namespace RE
 		std::uint8_t                    pad4A8[0x0C];    // 4A8
 		// Layout adapted from ozooma10/commonlibsf commit 008b431c455537f17179d9a8fc435c18fb628301.
 		std::uint32_t                   pauseRequestCount;  // 4B4
-		std::uint8_t                    pad4B8[0x28];    // 4B8
+		std::uint8_t                    pad4B8[0x18];    // 4B8
+		std::uint32_t                   messageBoxRequestCount;  // 4D0
+		std::uint8_t                    pad4D4[0x0C];    // 4D4
 		std::uint64_t                   unk4E0;          // 4E0
 		std::uint64_t                   unk4E8;          // 4E8
 		float                           unk4F0;          // 4F0
 		float                           advanceDelta;    // 4F4
 		uint16_t                        unk4F8;          // 4F8
-		bool                            menusVisible;    // 4FA
-		std::uint8_t                    pad4FB[5];       // 4FB
+		std::uint8_t                    pad4FA[6];       // 4FA
 		std::uint64_t                   unk500;          // 500
 		std::uint64_t                   unk508;          // 508
 		std::uint8_t                    pad510[0x28];    // 510
 		std::uint8_t                    unk538;          // 538
-		std::uint8_t                    pad539[7];       // 539
+		std::uint8_t                    unk539;          // 539
+		bool                            menusVisible;    // 53A
+		std::uint8_t                    pad53B[5];       // 53B
 	};
 	static_assert(offsetof(UI, menuStack) == 0x3F0);
 	static_assert(offsetof(UI, menuArray) == 0x430);
 	static_assert(offsetof(UI, menusToAdvance) == 0x440);
 	static_assert(offsetof(UI, menuMap) == 0x470);
 	static_assert(offsetof(UI, pauseRequestCount) == 0x4B4);
+	static_assert(offsetof(UI, messageBoxRequestCount) == 0x4D0);
 	static_assert(offsetof(UI, advanceDelta) == 0x4F4);
 	static_assert(offsetof(UI, unk500) == 0x500);
 	static_assert(offsetof(UI, unk538) == 0x538);
 	static_assert(sizeof(BSTScatterTableEntry<BSFixedString, UI::UIMenuEntry>) == 0x38);
-	static_assert(offsetof(UI, menusVisible) == 0x4FA);
+	static_assert(offsetof(UI, menusVisible) == 0x53A);
 	static_assert(sizeof(UI) == 0x540);
 }

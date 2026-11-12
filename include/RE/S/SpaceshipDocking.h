@@ -54,6 +54,24 @@ namespace RE
 		// This does not start or reserve a docking action; kRestricted supplies no reason code.
 		[[nodiscard]] Availability GetAvailability(TESObjectREFR* a_source, TESObjectREFR* a_target);
 
+		struct Pose
+		{
+			NiMatrix3 rotation;
+			NiPoint3  translation;
+		};
+
+		struct WorldDockingPoses
+		{
+			Pose     start;
+			Pose     docked;
+			NiPoint3 targetOrigin;
+			NiPoint3 facingPoint;
+		};
+
+		// Native XY target-bounds allowance used by HUD distance and docking range,
+		// in the same units as fSpaceshipMaxDockingDistance.
+		[[nodiscard]] float GetTargetRangeAllowance(TESObjectREFR* a_target);
+
 		// Selects a compatible target port for the source ship. The returned reference is borrowed.
 		[[nodiscard]] TESObjectREFR* FindPort(TESObjectREFR* a_source, TESObjectREFR* a_target);
 
@@ -67,6 +85,19 @@ namespace RE
 		// Does not move the ship; failure leaves a_out unchanged.
 		// Requires a valid source ship and a port returned by FindPort for that ship/target pair.
 		[[nodiscard]] bool GetStartPose(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, StartPose& a_out);
+
+		// Copies the current physical body pose in current-origin common XYZ.
+		// Rotation rows are world-space axes. Failure leaves a_out unchanged.
+		[[nodiscard]] bool GetWorldPose(TESObjectREFR* a_ship, Pose& a_out);
+		// Copies the physical body position without reducing precision or subtracting the origin.
+		[[nodiscard]] bool GetPhysicalPosition(TESObjectREFR* a_ship, std::array<double, 4>& a_out);
+
+		// Copies the animation start and final docked poses using one target-body
+		// snapshot, with the target body origin and the stock start-facing point.
+		// Translations and points use current-origin common XYZ for native movement;
+		// rotation rows are world-space axes. Does not move the ship.
+		// Requires a compatible source/target/port pair. Failure leaves a_out unchanged.
+		[[nodiscard]] bool GetWorldDockingPoses(TESObjectREFR* a_source, TESObjectREFR* a_target, TESObjectREFR* a_targetPort, WorldDockingPoses& a_out);
 
 		// Runs vanilla's final docking action with valid ship references and their selected port.
 		// True means the action was accepted, not completed. The player-associated branch can

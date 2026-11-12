@@ -67,8 +67,8 @@ namespace RE
 		std::uint64_t          unk14D8;                                           // 14D8
 		std::uint64_t          unk14E0;                                           // 14E0
 		std::uint64_t          unk14E8;                                           // 14E8
-		BSSimpleList<TESFile*> files;                                             // 14F0
-		std::byte              pad1500[0x80];                                     // 1500
+		std::byte              pad14F0[0x80];                                     // 14F0
+		BSSimpleList<TESFile*> files;                                             // 1570
 		TESFileCollection      compiledFileCollection;                            // 1580
 		std::uint64_t          unk15B0;                                           // 15B0
 		std::uint64_t          unk15B8;                                           // 15B8
@@ -121,5 +121,7 @@ namespace RE
 		std::uint64_t          unk1730;                                           // 1730
 		std::uint64_t          unk1738;                                           // 1738
 	};
+	static_assert(offsetof(TESDataHandler, files) == 0x1570);
+	static_assert(offsetof(TESDataHandler, compiledFileCollection) == 0x1580);
 	static_assert(sizeof(TESDataHandler) == 0x1740);
 }

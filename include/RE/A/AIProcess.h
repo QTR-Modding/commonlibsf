@@ -8,9 +8,12 @@
 #include "RE/B/BSTList.h"
 #include "RE/N/NiPoint.h"
 #include "RE/N/NiSmartPointer.h"
+#include "REL/Relocation.h"
+#include "RE/IDs.h"
 
 namespace RE
 {
+	class Actor;
 	class ActorKnowledge;
 	class bhkCharacterController;
 	class DialogueItem;
@@ -79,7 +82,10 @@ namespace RE
 		DialogueItem*                  greetTopic;              // 440
 		std::byte                      pad448[0x30];            // 448
 		float                          lightLevel;              // 478
-		std::byte                      pad47C[0x84];            // 47C
+		std::byte                      pad47C[0x5C];            // 47C
+		NiPoint3                       animationTranslation;    // 4D8
+		NiPoint3                       animationRotation;       // 4E4
+		std::byte                      pad4F0[0x10];            // 4F0
 		float                          tryTalkIdleTimer;        // 500
 		std::uint16_t                  tryTalk;                 // 504
 		std::byte                      pad506[0xA];             // 506
@@ -113,6 +119,8 @@ namespace RE
 	static_assert(offsetof(HighProcessData, idleToPlay) == 0x408);
 	static_assert(offsetof(HighProcessData, greetTopic) == 0x440);
 	static_assert(offsetof(HighProcessData, lightLevel) == 0x478);
+	static_assert(offsetof(HighProcessData, animationTranslation) == 0x4D8);
+	static_assert(offsetof(HighProcessData, animationRotation) == 0x4E4);
 	static_assert(offsetof(HighProcessData, tryTalkIdleTimer) == 0x500);
 	static_assert(offsetof(HighProcessData, commandType) == 0x510);
 	static_assert(offsetof(HighProcessData, pickNewIdle) == 0x55C);
@@ -181,6 +189,14 @@ namespace RE
 	class AIProcess
 	{
 	public:
+		// Type 0 selects normal focus.
+		void ClearHeadTrackingTarget(Actor* a_actor, std::int32_t a_targetType, bool a_restore)
+		{
+			using func_t = decltype(&AIProcess::ClearHeadTrackingTarget);
+			static REL::Relocation<func_t> func{ ID::AIProcess::ClearHeadTrackingTarget };
+			func(this, a_actor, a_targetType, a_restore);
+		}
+
 		float GetActorLightLevel() const
 		{
 			return high ? high->lightLevel : 0.0f;

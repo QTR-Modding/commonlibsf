@@ -13,6 +13,12 @@ namespace RE
 		SF_RTTI_VTABLE(BGSScene);
 		SF_FORMTYPE(SCEN);
 
-		//
+		// The parent quest must be running.
+		void ForceStart()
+		{
+			using func_t = decltype(&BGSScene::ForceStart);
+			static REL::Relocation<func_t> func{ ID::BGSScene::ForceStart };
+			func(this);
+		}
 	};
 }

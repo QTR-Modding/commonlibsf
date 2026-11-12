@@ -231,8 +231,8 @@ namespace RE
 		virtual void         Unk_168();                                                                              // 168
 		virtual void         UpdateAlpha();                                                                          // 169
 		virtual void         Unk_16A();                                                                              // 16A
-		virtual void         Unk_16B();                                                                              // 16B
-		virtual bool         IsInCombat() const;                                                                     // 16C
+		virtual bool         IsInCombat() const;                                                                     // 16B
+		virtual void         Unk_16C();                                                                              // 16C
 		virtual void         Unk_16D();                                                                              // 16D
 		virtual void         StopCombat();                                                                           // 16E
 		virtual void         Unk_16F();                                                                              // 16F
@@ -296,11 +296,39 @@ namespace RE
 			func(this, a_object, a_preventRemoval, a_silent);
 		}
 
+		// Papyrus EvaluatePackage(resetAI) defers evaluation: use (false, resetAI).
 		void EvaluatePackage(bool a_immediate = false, bool a_resetAI = false)
 		{
 			using func_t = decltype(&Actor::EvaluatePackage);
 			static REL::Relocation<func_t> func{ ID::Actor::EvaluatePackage };
 			func(this, a_immediate, a_resetAI);
+		}
+
+		// Borrowed crew-assignment reference; call on the game thread.
+		[[nodiscard]] TESObjectREFR* GetCrewAssignment()
+		{
+			using func_t = TESObjectREFR* (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetCrewAssignment };
+			return func(nullptr, 0, this);
+		}
+
+		// Call on the game thread. State 3 means fully seated.
+		[[nodiscard]] std::uint32_t GetSitState()
+		{
+			using func_t = std::uint32_t (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetSitState };
+			return func(nullptr, 0, this);
+		}
+
+		// Borrowed furniture reference; retain it if it must outlive this game-thread call.
+		void RequestFurnitureExit();
+		[[nodiscard]] bool RequestNormalFurnitureExit();
+
+		[[nodiscard]] TESObjectREFR* GetFurnitureUsing()
+		{
+			using func_t = TESObjectREFR* (*)(void*, std::uint32_t, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetFurnitureUsing };
+			return func(nullptr, 0, this);
 		}
 
 		[[nodiscard]] SpellItem* GetEquippedSpell(MagicSystem::CastingSource a_source)
@@ -340,6 +368,14 @@ namespace RE
 			using func_t = decltype(&Actor::GetActorKnowledge);
 			static REL::Relocation<func_t> func{ ID::Actor::GetActorKnowledge };
 			return func(this, a_actor);
+		}
+
+		// Call on the game thread with a valid other actor.
+		[[nodiscard]] std::uint32_t GetFactionReaction(Actor* a_other)
+		{
+			using func_t = std::uint32_t (*)(void*, std::uint32_t, Actor*, Actor*);
+			static REL::Relocation<func_t> func{ ID::Actor::GetFactionReaction };
+			return func(nullptr, 0, this, a_other);
 		}
 
 		[[nodiscard]] TESNPC* GetNPC()
@@ -403,6 +439,13 @@ namespace RE
 			using func_t = decltype(&Actor::IsSneaking);
 			static REL::Relocation<func_t> func{ ID::Actor::IsSneaking };
 			return func(this);
+		}
+
+		void SetHeadTracking(bool a_enable)
+		{
+			using func_t = void (*)(void*, std::uint32_t, Actor*, bool);
+			static REL::Relocation<func_t> func{ ID::Actor::SetHeadTracking };
+			func(nullptr, 0, this, a_enable);
 		}
 
 		void SetSkinTone(std::uint32_t a_index)

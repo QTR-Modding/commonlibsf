@@ -19,12 +19,15 @@
 #include "RE/T/TESBoundObject.h"
 #include "RE/T/TESHandleForm.h"
 
+#include <vector>
+
 namespace RE
 {
 	enum class LOCK_LEVEL;
 	enum class IO_TASK_PRIORITY;
 
 	class TESContainer;
+	class TESFaction;
 	class Actor;
 	class ActorCause;
 	class BGSEquipSlot;
@@ -35,6 +38,7 @@ namespace RE
 	class BSAnimationGraphEvent;
 	class BSTransformDeltaEvent;
 	class NiAVObject;
+	class NiMatrix3;
 	class TESModel;
 	class TESObjectCELL;
 	class TESRace;
@@ -155,6 +159,24 @@ namespace RE
 		SF_RTTI_VTABLE(TESObjectREFR);
 		SF_FORMTYPE(REFR);
 
+		enum class OpenState : std::uint8_t
+		{
+			kNone = 0,
+			kOpen = 1,
+			kOpening = 2,
+			kClosed = 3,
+			kClosing = 4
+		};
+
+		enum class ShipLightMode : std::int32_t
+		{
+			kAutomatic = 0,
+			kAboardSpace = 1,
+			kAboardLanded = 2,
+			kOutsideSpace = 3,
+			kOutsideLanded = 4
+		};
+
 		~TESObjectREFR() override;  // 00
 
 		// override (TESForm)
@@ -183,7 +205,7 @@ namespace RE
 		virtual bool         IsInZeroGravity();                                                                                                                                                                                                                                                       // 078
 		virtual void         Unk_79();                                                                                                                                                                                                                                                                // 079
 		virtual BGSScene*    GetCurrentScene() const;                                                                                                                                                                                                                                                 // 07A
-		virtual void         Unk_7B();                                                                                                                                                                                                                                                                // 07B
+		virtual void         SetCurrentScene(BGSScene* a_scene);                                                                                                                                                                                                                                      // 07B
 		virtual void         Unk_7C();                                                                                                                                                                                                                                                                // 07C
 		virtual void         Unk_7D();                                                                                                                                                                                                                                                                // 07D
 		virtual void         Unk_7E();                                                                                                                                                                                                                                                                // 07E
@@ -375,16 +397,37 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetAngleZ() const { return data.angle.z; }
 		[[nodiscard]] NiPointer<TESBoundObject>       GetBaseObject() { return data.objectReference; }
 		[[nodiscard]] NiPointer<const TESBoundObject> GetBaseObject() const { return data.objectReference; }
+		// Returns the borrowed base form supplying this component after native variant resolution.
+		[[nodiscard]] TESBoundObject* GetBaseObjectForComponent(const BSFixedString& a_componentName);
+		// Explicit ownership from this reference; returned pointers are borrowed.
+		// Call on the game thread and retain an actor owner before queuing it.
+		[[nodiscard]] Actor*                          GetActorRefOwner() const;
+		[[nodiscard]] TESFaction*                     GetFactionOwner() const;
+		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
+		// Copies assigned crew in native order with owned lifetimes. Clears stale
+		// handles as GetAllCrewMembers does; call on the game thread.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetCrewMembers();
+		// Copies keyword-matching exterior references with owned lifetimes.
+		// Requires a valid ship and non-null keyword; call on the game thread.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetExteriorRefs(BGSKeyword* a_keyword);
+		// Retains this ship's runtime interior CELL; does not load it. Call on the game thread.
+		[[nodiscard]] NiPointer<TESObjectCELL> GetSpaceshipInteriorCell() const;
+		void RefreshSpaceshipLights(ShipLightMode a_mode = ShipLightMode::kAutomatic);
+		// Uses the engine's ramp keyword and exterior-reference collector.
+		[[nodiscard]] std::vector<NiPointer<TESObjectREFR>> GetLandingRamps();
+
 		// Copies the current native body pose; failure leaves a_out unchanged.
 		// A reference without its own DynamicState can resolve to its containing body's pose.
 		// Call on the game thread; no pointer into the component database escapes this call.
 		[[nodiscard]] bool GetBodyPose(Spaceship::BodyPose& a_out) const;
 
-		[[nodiscard]] BGSLocation*                    GetCurrentLocation();
 		// Physical-aware native distance; FLT_MAX for a missing/deleted target, a disallowed
 		// disabled target, or incompatible coordinate frames. Call on the game thread.
 		[[nodiscard]] float GetDistance(const TESObjectREFR* a_other, bool a_allowDisabled = false) const;
 		[[nodiscard]] TESObjectREFR*                  GetLinkedRef(BGSKeyword* a_keyword);
+		// Visits resolved incoming links, including alias links, on the game thread.
+		// Callback pointers are borrowed; do not modify links during traversal.
+		void ForEachLinkedParent(std::function<void(BGSKeyword*, TESObjectREFR*)> a_callback) const;
 		[[nodiscard]] REFR_LOCK*                      GetLock() const;
 		[[nodiscard]] LOCK_LEVEL                      GetLockLevel() const;
 		[[nodiscard]] TESWorldSpace*                  GetParentWorldSpace();
@@ -393,6 +436,15 @@ namespace RE
 		[[nodiscard]] constexpr float                 GetPositionY() const noexcept { return data.location.y; }
 		[[nodiscard]] constexpr float                 GetPositionZ() const noexcept { return data.location.z; }
 		[[nodiscard]] float                           GetScale() const;
+		// Copies the native space-frame position and rotation, matching Papyrus
+		// GetSpaceTransform. This does not convert to an interior/render frame.
+		// The position needs 16-byte storage; false means the space pose is absent.
+		// Call on the game thread with a valid reference.
+		[[nodiscard]] bool GetSpaceTransform(NiPoint3A& a_position, NiMatrix3& a_rotation) const;
+		// Space-body queries include the native parent or carrier frame.
+		[[nodiscard]] std::uint32_t GetSpaceBodyID() const;
+		[[nodiscard]] bool HasDynamicState() const;
+
 		// In a qualifying space context, physical ships use the parent cell's body frame and
 		// other references use local data. Outside that context this returns world reference data.
 		// Failure leaves both outputs unchanged. Do not mix this frame with GetBodyPose.
@@ -402,15 +454,33 @@ namespace RE
 		// The native call retains the provider; failure leaves a_out unchanged.
 		// Call on the game thread. Separate calls do not form a coherent physics snapshot.
 		[[nodiscard]] bool GetSpaceLinearVelocity(NiPoint3& a_out) const;
-
 		[[nodiscard]] TESObjectREFR*                  GetSpaceship(bool a_arg1 = true);
 		// Resolves the marker-linked docking partner; borrowed, and null when no partner resolves.
 		[[nodiscard]] TESObjectREFR*                  GetSpaceshipParentDock();
 		[[nodiscard]] Actor*                          GetSpaceshipPilot();
+		// Physical cockpit queries for a valid ship on the game thread.
+		// The seat is borrowed; the occupant owns its resolved reference.
+		[[nodiscard]] TESObjectREFR*                  GetSpaceshipPilotSeat();
+		[[nodiscard]] NiPointer<Actor>                GetSpaceshipPilotSeatOccupant();
 		[[nodiscard]] std::int32_t                    GetValue();
 		[[nodiscard]] bool                            HasKeyword(BGSKeyword* a_keyword);
 		[[nodiscard]] bool                            IsCrimeToActivate();
+		// Includes native linked-user and reservation checks. Non-furniture markers
+		// accept any reference user, including a ship; furniture requires an Actor.
+		// Returns UINT32_MAX if unavailable.
+		[[nodiscard]] std::uint32_t GetAvailableMarker(TESObjectREFR* a_user, bool a_ignoreReservations = false);
+		// Reserves or releases one marker. Reserving without force refuses another
+		// current user or reservation. Release clears the slot; the caller must own
+		// that reservation. Game thread only.
+		[[nodiscard]] bool SetMarkerReserved(std::uint32_t a_marker, TESObjectREFR* a_user, bool a_reserved, bool a_force = false);
+		// Returns UINT32_MAX when no marker is usable by this actor. Does not reserve it. Game thread only.
+		[[nodiscard]] std::uint32_t GetAvailableFurnitureMarker(Actor* a_actor, bool a_ignoreReservations = false);
+		// Includes marker reservations unless a_ignoreReservations is true. Game thread only.
+		[[nodiscard]] bool IsFurnitureMarkerInUse(std::uint32_t a_marker, bool a_ignoreReservations = false);
 		[[nodiscard]] bool                            IsInSpace(bool a_arg1);
+		// Resolves ship-interior ownership before comparing cells or worldspaces.
+		// Optional parent-world matching follows the native worldspace flags.
+		[[nodiscard]] bool IsInSameSpace(const TESObjectREFR* a_other, bool a_allowParentWorld = false) const;
 		[[nodiscard]] bool                            IsLocked() const;
 		[[nodiscard]] bool                            IsObjectEquipped(TESBoundObject* a_object);
 		// The native docking camera predicate: the ship's resolved pilot is the player.
@@ -427,6 +497,17 @@ namespace RE
 
 		[[nodiscard]] bool                            IsSpaceshipDocked();
 		[[nodiscard]] bool                            IsSpaceshipLanded();
+		// Game thread only. Matches Papyrus PlayAnimation's non-actor graph dispatch.
+		[[nodiscard]] bool PlayAnimation(const BSFixedString& a_eventName);
+		// Game thread only; a_value must be script-modifiable. Preserves native
+		// health handling and actor-value depletion behavior without an attacker.
+		void DamageValue(const ActorValueInfo& a_value, float a_amount);
+		// Game thread only. Uses this reference as the push source, including
+		// native source-handle resolution. False means the actor is not in high process.
+		[[nodiscard]] bool PushActorAway(Actor& a_actor, float a_force);
+		[[nodiscard]] OpenState GetOpenState() const;
+		// Uses native interaction and animation dispatch. Game thread only.
+		void                                          SetOpen(bool a_open);
 		void                                          Lock();
 		void                                          Unlock();
 		[[nodiscard]] bool                            WornHasKeyword(BGSKeyword* a_keyword);

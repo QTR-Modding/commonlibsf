@@ -4,9 +4,12 @@
 #include "RE/B/BGSNavmeshableObject.h"
 #include "RE/T/TESBoundObject.h"
 
+#include <vector>
+
 namespace RE
 {
 	class BGSGenericBaseFormTemplate;
+	class TESObjectCELL;
 
 	class BGSGenericBaseForm :
 		public TESBoundObject,       // 00
@@ -30,6 +33,9 @@ namespace RE
 		// Broader native base-form predicate: spaceship flag OR spaceship-equipment component.
 		// Equipment alone does not qualify references for Papyrus SpaceshipReference.
 		[[nodiscard]] bool IsSpaceshipBase() const;
+
+		// Returns retained blueprint cells without loading their scenes.
+		[[nodiscard]] std::vector<NiPointer<TESObjectCELL>> GetBlueprintCells() const;
 
 		// members
 		BGSEditorID                 formEditorID;             // F0
