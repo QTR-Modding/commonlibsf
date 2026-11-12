@@ -9,27 +9,7 @@ namespace RE::Spaceship::Docking
 {
 	namespace
 	{
-		struct InteractionEntry
-		{
-			NiQuaternion  rotation;     // 00
-			NiPoint3      translation;  // 10
-			std::uint32_t unk1C;        // 1C
-			TESIdleForm*  idle;         // 20 - borrowed
-			std::byte     unk28[0x18];  // 28
-		};
 		static_assert(offsetof(TESIdleForm, conditions) == 0x48);
-		static_assert(offsetof(InteractionEntry, translation) == 0x10);
-		static_assert(offsetof(InteractionEntry, idle) == 0x20);
-		static_assert(sizeof(InteractionEntry) == 0x40);
-
-		struct InteractionGroup
-		{
-			std::uint32_t                  index;    // 00
-			std::uint32_t                  unk04;    // 04
-			BSScrapArray<InteractionEntry> entries;  // 08
-		};
-		static_assert(offsetof(InteractionGroup, entries) == 0x08);
-		static_assert(sizeof(InteractionGroup) == 0x20);
 
 		// The docking caller initializes these two references and zeroes the tail.
 		struct DockConditionContext
@@ -46,30 +26,6 @@ namespace RE::Spaceship::Docking
 			std::uint32_t markerIndex;
 		};
 
-		// The native query copies DynamicState or BodyDraw and releases its own
-		// database views. This output contains no owned references or allocations.
-		struct NativeBodyPose
-		{
-			std::array<double, 4> position{};
-			NiMatrix3             rotation;
-			std::byte             stateFlag{};
-			std::byte             pad51[0x0F]{};
-			bool                  valid{};
-			std::byte             pad61[0x0F]{};
-		};
-		static_assert(offsetof(NativeBodyPose, rotation) == 0x20);
-		static_assert(offsetof(NativeBodyPose, stateFlag) == 0x50);
-		static_assert(offsetof(NativeBodyPose, valid) == 0x60);
-		static_assert(sizeof(NativeBodyPose) == 0x70);
-
-		bool QueryBodyPose(TESObjectREFR* a_reference, NativeBodyPose& a_out)
-		{
-			using body_t = NativeBodyPose* (*)(NativeBodyPose*, TESObjectREFR*);
-			static REL::Relocation<body_t> query{ ID::Spaceship::Docking::GetPhysicalBodyPose };
-			query(std::addressof(a_out), a_reference);
-			return a_out.valid;
-		}
-
 		std::array<double, 3> CurrentOrigin()
 		{
 			static REL::Relocation<const std::array<double, 3>*> floatingOrigin{ ID::Spaceship::Docking::FloatingOrigin };
@@ -78,10 +34,8 @@ namespace RE::Spaceship::Docking
 
 		bool QueryStartSelection(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, StartSelection& a_out)
 		{
-			using query_t = bool (*)(TESObjectREFR*, void*, std::int32_t, bool, bool, void*, TESObjectREFR*, BSScrapArray<InteractionGroup>&, bool, bool, bool);
-			static REL::Relocation<query_t> query{ ID::Spaceship::Docking::GetInteractionLocations };
-			BSScrapArray<InteractionGroup>  groups;
-			if (!query(a_source, nullptr, -1, false, false, nullptr, a_targetPort, groups, true, true, true) || groups.empty() || groups.front().entries.empty()) {
+			BSScrapArray<InteractionGroup> groups;
+			if (!GetStartLocations(a_source, a_targetPort, groups) || groups.empty() || groups.front().entries.empty()) {
 				return false;
 			}
 
@@ -132,7 +86,7 @@ namespace RE::Spaceship::Docking
 			return docked;
 		}
 
-		Pose ComposeWorld(const Pose& a_local, const NativeBodyPose& a_target, const std::array<double, 3>& a_origin)
+		Pose ComposeWorld(const Pose& a_local, const BodyPose& a_target, const std::array<double, 3>& a_origin)
 		{
 			Pose world;
 			world.rotation = a_local.rotation * a_target.rotation;
@@ -143,7 +97,7 @@ namespace RE::Spaceship::Docking
 			const double z = a_local.translation.z;
 			for (std::size_t axis = 0; axis < 3; ++axis) {
 				const double offset = y * a_target.rotation[1][axis] + x * a_target.rotation[0][axis] + z * a_target.rotation[2][axis];
-				world.translation[axis] = static_cast<float>((offset + a_target.position[axis]) - a_origin[axis]);
+				world.translation[axis] = static_cast<float>((offset + a_target.translation[axis]) - a_origin[axis]);
 			}
 			return world;
 		}
@@ -161,15 +115,15 @@ namespace RE::Spaceship::Docking
 
 	bool GetWorldPose(TESObjectREFR* a_ship, Pose& a_out)
 	{
-		NativeBodyPose body;
-		if (!QueryBodyPose(a_ship, body)) {
+		BodyPose body;
+		if (!a_ship->GetBodyPose(body)) {
 			return false;
 		}
 		const auto origin = CurrentOrigin();
 		Pose       result;
 		result.rotation = body.rotation;
 		for (std::size_t axis = 0; axis < 3; ++axis) {
-			result.translation[axis] = static_cast<float>(body.position[axis] - origin[axis]);
+			result.translation[axis] = static_cast<float>(body.translation[axis] - origin[axis]);
 		}
 		a_out = result;
 		return true;
@@ -186,8 +140,8 @@ namespace RE::Spaceship::Docking
 		start.translation = selected.pose.translation;
 		const auto docked = QueryDockedPose(a_source, a_targetPort, selected.markerIndex);
 
-		NativeBodyPose target;
-		if (!QueryBodyPose(a_target, target)) {
+		BodyPose target;
+		if (!a_target->GetBodyPose(target)) {
 			return false;
 		}
 		const auto                           origin = CurrentOrigin();
@@ -195,7 +149,7 @@ namespace RE::Spaceship::Docking
 		static REL::Relocation<const float*> facingDistance{ ID::Spaceship::Docking::FacingPointDistance };
 		const float                          distance = *facingDistance.get();
 		for (std::size_t axis = 0; axis < 3; ++axis) {
-			result.targetOrigin[axis] = static_cast<float>(target.position[axis] - origin[axis]);
+			result.targetOrigin[axis] = static_cast<float>(target.translation[axis] - origin[axis]);
 			result.facingPoint[axis] = result.start.translation[axis] + result.start.rotation[1][axis] * distance;
 		}
 		a_out = result;
@@ -205,10 +159,18 @@ namespace RE::Spaceship::Docking
 
 bool RE::Spaceship::Docking::GetPhysicalPosition(TESObjectREFR* a_ship, std::array<double, 4>& a_out)
 {
-	NativeBodyPose body;
-	if (!QueryBodyPose(a_ship, body)) {
+	BodyPose body;
+	if (!a_ship->GetBodyPose(body)) {
 		return false;
 	}
-	a_out = body.position;
+	a_out = body.translation;
 	return true;
+}
+
+bool RE::Spaceship::Docking::GetStartLocations(TESObjectREFR* a_source, TESObjectREFR* a_targetPort, BSScrapArray<InteractionGroup>& a_out)
+{
+	using func_t = bool (*)(TESObjectREFR*, void*, std::int32_t, bool, bool, void*, TESObjectREFR*, BSScrapArray<InteractionGroup>&, bool, bool, bool);
+	static REL::Relocation<func_t> func{ ID::Spaceship::Docking::GetInteractionLocations };
+	a_out.clear();
+	return func(a_source, nullptr, -1, false, false, nullptr, a_targetPort, a_out, true, true, true);
 }

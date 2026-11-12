@@ -13,6 +13,12 @@ namespace RE::GameScript
 	public:
 		SF_RTTI_VTABLE(GameScript__HandlePolicy);
 
+		// Extended VM object type IDs; these are not TESForm record types.
+		enum class TypeID : std::uint32_t
+		{
+			kSpaceshipReference = 0xE3
+		};
+
 		// override (BSScript::IObjectHandlePolicy)
 		bool        HandleIsType(std::uint32_t a_type, std::size_t a_handle) const override;              // 01
 		bool        GetHandleType(std::size_t a_handle, std::uint32_t& a_type) const override;            // 02

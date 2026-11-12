@@ -71,3 +71,10 @@ std::vector<RE::NiPointer<RE::TESObjectCELL>> RE::BGSGenericBaseForm::GetBluepri
 	}
 	return cells;
 }
+
+bool RE::BGSGenericBaseForm::IsSpaceshipBase() const
+{
+	using func_t = decltype(&BGSGenericBaseForm::IsSpaceshipBase);
+	static REL::Relocation<func_t> func{ ID::BGSGenericBaseForm::IsSpaceshipBase };
+	return func(this);
+}
