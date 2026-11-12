@@ -321,6 +321,8 @@ namespace RE
 		}
 
 		// Borrowed furniture reference; retain it if it must outlive this game-thread call.
+		void RequestFurnitureExit();
+
 		[[nodiscard]] TESObjectREFR* GetFurnitureUsing()
 		{
 			using func_t = TESObjectREFR* (*)(void*, std::uint32_t, Actor*);
