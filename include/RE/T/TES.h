@@ -53,6 +53,19 @@ namespace RE
 		// under the cell read lock; copy a NiPointer to retain one, and do not change cell membership.
 		BSContainer::ForEachResult ForEachReference(std::function<BSContainer::ForEachResult(const NiPointer<TESObjectREFR>&)> a_callback);
 
+		enum class BoxCastResult
+		{
+			kInvalid,
+			kPending,
+			kClear,
+			kHit
+		};
+
+		[[nodiscard]] std::optional<float> GetGroundHeight(const NiPoint3& a_position, std::uint64_t a_collisionLayers, float a_startOffset, float a_distance) const;
+		[[nodiscard]] std::optional<std::uint64_t> QueueBoxCast(const NiPoint3& a_center, const NiPoint3& a_halfExtents, float a_startOffset, float a_distance) const;
+		[[nodiscard]] static BoxCastResult ReadBoxCast(std::uint64_t a_handle);
+		[[nodiscard]] static bool CancelBoxCast(std::uint64_t a_handle);
+
 		// Selects the shared primary world and invalidates its exterior grid.
 		void SetWorldSpace(TESWorldSpace* a_worldSpace);
 
