@@ -38,6 +38,7 @@ namespace RE::ID
 	namespace AIProcess
 	{
 		inline constexpr REL::ID ClearHeadTrackingTarget{ 102225 };
+		inline constexpr REL::ID RequestFurnitureExit{ 102415 };
 	}
 
 	namespace ActorUtils
