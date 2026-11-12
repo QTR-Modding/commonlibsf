@@ -78,6 +78,85 @@ namespace RE
 	}
 }
 
+std::optional<float> RE::TES::GetGroundHeight(const NiPoint3& a_position, std::uint64_t a_collisionLayers, float a_startOffset, float a_distance) const
+{
+	using func_t = float (*)(const TES*, const NiPoint3&, std::uint64_t, float, float);
+	static REL::Relocation<func_t> func{ ID::TES::GetGroundHeight };
+	const float height = func(this, a_position, a_collisionLayers, a_startOffset, a_distance);
+	if (height == std::numeric_limits<float>::lowest()) {
+		return std::nullopt;
+	}
+	return height;
+}
+
+std::optional<std::uint64_t> RE::TES::QueueBoxCast(const NiPoint3& a_center, const NiPoint3& a_halfExtents, float a_startOffset, float a_distance) const
+{
+	struct Bounds
+	{
+		NiPoint3 center;
+		NiPoint3 halfExtents;
+	};
+	static_assert(sizeof(Bounds) == 0x18);
+	static_assert(offsetof(Bounds, halfExtents) == 0xC);
+
+	const Bounds bounds{ a_center, a_halfExtents };
+	constexpr std::uint64_t invalidHandle = std::numeric_limits<std::uint64_t>::max();
+	std::uint64_t handle = invalidHandle;
+	using func_t = void (*)(const TES*, std::uint64_t&, const Bounds&, std::uint8_t, float, float);
+	static REL::Relocation<func_t> func{ ID::TES::QueueBoxCast };
+	func(this, handle, bounds, 1, a_startOffset, a_distance);
+	if (handle == invalidHandle) {
+		return std::nullopt;
+	}
+	return handle;
+}
+
+RE::TES::BoxCastResult RE::TES::ReadBoxCast(std::uint64_t a_handle)
+{
+	struct Hit
+	{
+		std::byte unused[0x68];
+		std::uint32_t queryType;
+		std::byte tail[4];
+	};
+	struct ResultView
+	{
+		const Hit* hits{};
+		std::uint32_t count{};
+		std::uint32_t category{ 7 };
+	};
+	static_assert(sizeof(Hit) == 0x70);
+	static_assert(offsetof(Hit, queryType) == 0x68);
+	static_assert(sizeof(ResultView) == 0x10);
+	static_assert(offsetof(ResultView, count) == 0x8);
+
+	using func_t = std::uint32_t (*)(const std::uint64_t&, ResultView&, void*, std::uintptr_t);
+	static REL::Relocation<func_t> func{ ID::CollisionQuery::ReadResult };
+	static REL::Relocation<BSReadWriteLock*> lock{ ID::CollisionQuery::Lock };
+	const BSAutoWriteLock locked{ lock.get() };
+	ResultView result;
+	switch (func(a_handle, result, nullptr, 0)) {
+	case 1:
+		if (result.count != 1 || !result.hits) {
+			return BoxCastResult::kInvalid;
+		}
+		return result.hits->queryType == 0 ? BoxCastResult::kClear : BoxCastResult::kHit;
+	case 2:
+		return BoxCastResult::kPending;
+	default:
+		return BoxCastResult::kInvalid;
+	}
+}
+
+bool RE::TES::CancelBoxCast(std::uint64_t a_handle)
+{
+	using func_t = bool (*)(const std::uint64_t&);
+	static REL::Relocation<func_t> func{ ID::CollisionQuery::Cancel };
+	static REL::Relocation<BSReadWriteLock*> lock{ ID::CollisionQuery::Lock };
+	const BSAutoWriteLock locked{ lock.get() };
+	return func(a_handle);
+}
+
 void RE::TES::SetWorldSpace(TESWorldSpace* a_worldSpace)
 {
 	using func_t = decltype(&TES::SetWorldSpace);

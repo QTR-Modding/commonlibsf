@@ -782,6 +782,13 @@ namespace RE::ID
 		inline constexpr REL::ID GetEventSource{ 0 };  // 137011
 	}
 
+	namespace CollisionQuery
+	{
+		inline constexpr REL::ID Lock{ 929998 };
+		inline constexpr REL::ID ReadResult{ 125642 };
+		inline constexpr REL::ID Cancel{ 125646 };
+	}
+
 	namespace ConsoleLog
 	{
 		inline constexpr REL::ID Singleton{ 938104 };
@@ -2617,6 +2624,8 @@ namespace RE::ID
 		inline constexpr REL::ID SetWorldSpace{ 46058 };
 		inline constexpr REL::ID SubmitExteriorFocus{ 46019 };
 		inline constexpr REL::ID ForEachCell{ 46103 };
+		inline constexpr REL::ID GetGroundHeight{ 46087 };
+		inline constexpr REL::ID QueueBoxCast{ 46083 };
 		inline constexpr REL::ID GetDeadCount{ 0 };    // 84704
 		inline constexpr REL::ID Singleton{ 883589 };  // 881024
 	}
