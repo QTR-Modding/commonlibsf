@@ -16,6 +16,7 @@ namespace RE::ID
 	{
 		inline constexpr REL::ID EquipItem{ 101349 };
 		inline constexpr REL::ID EvaluatePackage{ 100836 };
+		inline constexpr REL::ID RequestFurnitureExit{ 101828 };
 		inline constexpr REL::ID GetActorKnowledge{ 0 };  // 150669
 		inline constexpr REL::ID GetCrewAssignment{ 116687 };
 		inline constexpr REL::ID GetEquippedSpell{ 116694 };
