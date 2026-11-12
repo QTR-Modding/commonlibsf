@@ -322,6 +322,7 @@ namespace RE
 
 		// Borrowed furniture reference; retain it if it must outlive this game-thread call.
 		void RequestFurnitureExit();
+		[[nodiscard]] bool RequestNormalFurnitureExit();
 
 		[[nodiscard]] TESObjectREFR* GetFurnitureUsing()
 		{
